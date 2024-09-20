@@ -1,0 +1,11 @@
+.menu {
+    transition: transform 0.3s ease;
+}
+
+.menu-open {
+    transform: translateX(0);
+}
+
+.menu-closed {
+    transform: translateX(-100%);
+}

@@ -10,6 +10,21 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:qwik/recommended",
   ],
+  ignores: [
+    "**/*.log",
+    "**/.DS_Store",
+    "*.",
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/",
+    "public/",
+    "scripts/",
+    "vite.config.ts",
+    ".netlify/",
+    "/*.d.ts",
+    "/*.d.ts"
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     tsconfigRootDir: __dirname,

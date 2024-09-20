@@ -1,0 +1,15 @@
+/* ThemeSwitch.css */
+.switch input[type="checkbox"] {
+    display: none;
+    /* Oculta el checkbox */
+}
+
+.switch span {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.switch span:hover {
+    opacity: 0.75;
+}

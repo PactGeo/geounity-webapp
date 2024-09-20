@@ -1,5 +1,10 @@
 import { component$, Slot } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { Link, type RequestHandler } from "@builder.io/qwik-city";
+import Footer from "~/components/footer/footer";
+import Header from "~/components/header/header";
+
+import { useServerTimeLoader } from "~/shared/loaders";
+export { useServerTimeLoader } from '~/shared/loaders';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -13,5 +18,21 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <Slot />;
+  const serverTime = useServerTimeLoader();
+  const currentYear = new Date(serverTime.value.date).getFullYear();
+  return (
+    <div class="flex flex-col min-h-screen">
+      <Header />
+      <Link href="/">Home</Link>
+      <Link href="/debates">Debates</Link>
+      <br />
+      <br />
+      <div class="flex flex-grow">
+        <main>
+          <Slot />
+        </main>        
+      </div>
+      <Footer currentYear={currentYear} />
+    </div>
+  )
 });
