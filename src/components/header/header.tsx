@@ -3,7 +3,7 @@ import { useSession, useSignOut } from '~/routes/plugin@auth';
 import { Avatar } from "~/components/ui";
 import { Button } from "~/components/ui";
 import { Link, useLocation } from "@builder.io/qwik-city";
-import { LuChevronDown, LuGlobe, LuLogOut, LuMapPin, LuMenu, LuSun, LuUser } from "@qwikest/icons/lucide";
+import { LuChevronDown, LuGlobe, LuLogOut, LuMapPin, LuMenu, LuSun, LuUser, LuX } from "@qwikest/icons/lucide";
 import { Dropdown } from "@qwik-ui/headless";
 import Logo from '~/icons/logo.svg?jsx';
 import styles from "./header.css?inline";
@@ -23,9 +23,9 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
 
     return (
         <Dropdown.Root>
-            <Dropdown.Trigger class="dropdown-trigger">
+            <Dropdown.Trigger class="bg-light-purple rounded-full px-2 py-1 focus:outline-none focus:ring focus:ring-white">
                 {props.image ? (
-                    <div class="flex items-center group">
+                    <div class="flex items-center space-x-2">
                         <Avatar.Root class="transition-transform duration-300 ease-in-out">
                             <Avatar.Image
                                 src={props.image}
@@ -34,12 +34,14 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
                             />
                             <Avatar.Fallback>{props.name}</Avatar.Fallback>
                         </Avatar.Root>
-                        <LuChevronDown class="ml-1 transition-transform duration-300 ease-in-out group-hover:rotate-180" />
+                        <div style={{ fontSize: '16px' }}>
+                            <LuChevronDown />
+                        </div>
                     </div>
                 ) : null}
             </Dropdown.Trigger>
-            <Dropdown.Popover class="dropdown-popover dropdown-animation" gutter={8}>
-                <Dropdown.Group class="dropdown-group">
+            <Dropdown.Popover class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 dropdown-popover">
+                <Dropdown.Group class="py-1">
                     <Dropdown.Item>
                         <Link href="/profile/sebacc" class="dropdown-item">
                             <LuUser /><span>My profile</span>
@@ -89,7 +91,6 @@ export const LoggedOutMenu = component$(() => {
 
 export default component$(() => {
     useStylesScoped$(styles);
-    const slug = useLocation().params.slug
     const session = useSession();
     const showMenu = useSignal(true);
 
@@ -99,29 +100,31 @@ export default component$(() => {
     const onCloseMenu = $(() => showMenu.value = false)
 
     return (
-        <div class="w-full h-full container-header">
-            <header class="flex justify-center w-full text-white border-0 bg-primary-700 h-14 md:h-20 border-neutral-200">
-                <div class="flex items-center flex-row flex-nowrap justify-start h-full w-full px-4 md:px-10">
-                    {slug && <span class="text-2xl p-4 mr-2 cursor-pointer" onClick$={() => showMenu.value = !showMenu.value}><LuMenu /></span>}
-                    <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
-                        <Logo
-                            style={{ width: '48px', height: '48px' }}
-                            class="animate-spin-fast"
-                        />
-                    </Link>
-
-                    {/* <ThemeSwitch /> */}
-
-                    {session.value?.user
-                        ? <LoggedInMenu
-                            name={session.value?.user?.name ?? ''}
-                            email={session.value?.user?.email ?? ''}
-                            image={session.value?.user?.image ?? ''}
-                        />
-                        : <LoggedOutMenu />
-                    }
-                </div>
-            </header>
-        </div>
+        <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
+            <div class="flex items-center">
+                <button
+                    class="p-4 mr-2 cursor-pointer"
+                    onClick$={() => showMenu.value = !showMenu.value}
+                >
+                    <span style={{ fontSize: '24px' }}><LuMenu /></span>
+                </button>
+                <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
+                    <Logo
+                        style={{ width: '48px', height: '48px' }}
+                        class="animate-spin-fast"
+                    />
+                </Link>
+            </div>
+            <div class="relative">
+                {session.value?.user
+                    ? <LoggedInMenu
+                        name={session.value?.user?.name ?? ''}
+                        email={session.value?.user?.email ?? ''}
+                        image={session.value?.user?.image ?? ''}
+                    />
+                    : <LoggedOutMenu />
+                }
+            </div>
+        </header>
     );
 });

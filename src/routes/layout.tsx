@@ -1,9 +1,11 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { Link, type RequestHandler } from "@builder.io/qwik-city";
+import { type RequestHandler } from "@builder.io/qwik-city";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
+import Menu from "~/components/menu/menu";
 
 import { useServerTimeLoader } from "~/shared/loaders";
+import { useSession } from "./plugin@auth";
 export { useServerTimeLoader } from '~/shared/loaders';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
@@ -18,17 +20,15 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  const session = useSession();
   const serverTime = useServerTimeLoader();
   const currentYear = new Date(serverTime.value.date).getFullYear();
   return (
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col h-screen">
       <Header />
-      <Link href="/">Home</Link>
-      <Link href="/debates">Debates</Link>
-      <br />
-      <br />
-      <div class="flex flex-grow">
-        <main>
+      <div class="flex flex-1 overflow-hidden">
+        {session.value?.user && <Menu />}
+        <main class="flex-1 overflow-hidden flex flex-col">
           <Slot />
         </main>        
       </div>

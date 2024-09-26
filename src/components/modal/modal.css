@@ -1,0 +1,62 @@
+.modal-trigger {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-trigger:hover {
+    background-color: #45a049;
+}
+
+.modal-panel {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    z-index: 1000;
+}
+
+.modal-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-save:hover {
+    background-color: #45a049;
+}
+
+.modal-save:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+/* Alignment adjustments */
+
+.separator {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}

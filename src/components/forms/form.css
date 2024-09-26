@@ -1,0 +1,94 @@
+/* form.css */
+.modal-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-save:hover {
+    background-color: #45a049;
+}
+
+.modal-save:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input:focus, .textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    outline: none;
+}
+
+.label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    display: block;
+    color: #333;
+}
+
+.select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.select-trigger:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    outline: none;
+}
+
+.select-popover {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    margin-top: 4px;
+}
+
+.select-item {
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.select-item:hover {
+    background-color: #f0f0f0;
+}
+
+.select-item.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.select-item-indicator {
+    margin-left: auto;
+    color: white;
+}
+

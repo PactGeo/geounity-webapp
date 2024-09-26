@@ -41,10 +41,12 @@
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.01);
     --transform-press: scale(0.95);
 
+    --qwik-light-purple: #ac7ff4;
+    --qwik-purple: #9b60ed;
+    --qwik-dark-purple: #713fc2;
+    --qwik-darker-purple: #4e2d99;
     --qwik-dark-blue: #006ce9;
     --qwik-light-blue: #18b6f6;
-    --qwik-light-purple: #ac7ff4;
-    --qwik-dark-purple: #713fc2;
     --qwik-dirty-black: #1d2033;
     --qwik-dark-background: #151934;
     --qwik-light-background: #fefefe;
@@ -52,6 +54,11 @@
     --qwik-light-text: #000000;
   }
   .dark {
+    --qwik-light-purple: #ac7ff4;
+    --qwik-purple: #9b60ed;
+    --qwik-dark-purple: #713fc2;
+    --qwik-darker-purple: #4e2d99;
+    
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
@@ -159,5 +166,20 @@
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 1);
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.01);
     --transform-press: scale(0.95);
+  }
+}
+
+@layer utilities {
+  .bg-light-purple {
+    @apply bg-[var(--qwik-light-purple)];
+  }
+  .bg-purple {
+    @apply bg-[var(--qwik-purple)];
+  }
+  .focus\:ring-offset-darker-purple:focus {
+    @apply ring-offset-[var(--qwik-darker-purple)];
+  }
+  .focus\:ring-purple:focus {
+    @apply ring-[var(--qwik-purple)];
   }
 }

@@ -20,32 +20,6 @@ header {
   align-items: center;
 }
 
-.dropdown-trigger {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin-right: 1rem;
-}
-
-.dropdown-popover {
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  padding: 0.5rem 0;
-  width: 220px;
-  max-width: calc(100vw - 2rem);
-  position: absolute;
-  right: 1rem;
-  top: 100%;
-  margin-top: 0.5rem;
-  z-index: 1000;
-}
-
-.dropdown-group {
-  display: flex;
-  flex-direction: column;
-}
-
 .dropdown-item {
   display: flex;
   align-items: center;
