@@ -46,3 +46,7 @@ export function formatDateForUser(string: string) {
 
     return formattedDate;
 }
+
+export function capitalizeFirst(text: string) {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}

@@ -1,6 +1,5 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
-import { useGetTags, usePostPoll } from "~/shared/loaders";
 import Modal from '~/components/modal/modal';
 import NavResources from "~/components/navs/NavResources";
 import { useSession } from "~/routes/plugin@auth";
@@ -8,13 +7,17 @@ import { Button } from "~/components/ui";
 import FormPoll from "~/components/forms/FormPoll";
 import { LuPlusCircle } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
+import ListPolls from "~/components/list/ListPolls";
+import { useGetPolls } from '~/shared/loaders';
 
-export { useGetTags, usePostPoll } from '~/shared/loaders';
+export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
+export { useGetPolls, usePostPoll } from '~/shared/loaders';
 
 export default component$(() => {
     const nav = useNavigate();
-    const tags = useGetTags();
     const session = useSession();
+
+    const polls = useGetPolls()
 
     const isOpenModal = useSignal(false);
 
@@ -22,7 +25,6 @@ export default component$(() => {
     const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
-    const polls = []
 
     return (
         <div>
@@ -32,7 +34,7 @@ export default component$(() => {
                     <h1 class="text-5xl font-extrabold text-gray-900 text-center drop-shadow-md">
                         Polls
                     </h1>
-                    {polls.length > 0 && (
+                    {polls.value.length > 0 && (
                         <Button
                             class="mr-4"
                             look="primary"
@@ -44,7 +46,8 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {polls.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
+            {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
+            <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
                     description="Share the most important challenge facing your community."
@@ -52,7 +55,7 @@ export default component$(() => {
                     onClickExpand={onClickExpand}
                     title="New Poll"
                 >
-                    <FormPoll onSubmitCompleted={onSubmitCompleted} tags={tags.value} />
+                    <FormPoll onSubmitCompleted={onSubmitCompleted} />
                 </Modal>
             ) : (
                 <Modal

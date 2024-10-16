@@ -1,4 +1,13 @@
 import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
+interface Poll {
+    status: string;
+    poll_type: string;
+    title: string;
+    description?: string;
+    options: string[];
+    community_id: number;
+    token?: string;
+}
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -17,6 +26,21 @@ export const useGetTags = routeLoader$(async () => {
         id: string;
         name: string;
     }>;
+});
+
+export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
+    console.log('useGetPolls')
+    const session = sharedMap.get('session');
+    const token = session?.accessToken;
+    console.log('token', token)
+    const response = await fetch('http://localhost:8000/polls', {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    });
+    const data = await response.json();
+    return data as Array<any>
 });
 
 export const useGetGlobalDebates = routeLoader$(async () => {
@@ -100,7 +124,7 @@ export const usePostDebate = routeAction$(
         return (await response.json());
     },
     zod$({
-        community_id: z.string(),
+        community_id: z.number(),
         creator_id: z.string(),
         description: z.string({
             required_error: "Description is required",
@@ -120,24 +144,33 @@ export const usePostDebate = routeAction$(
 );
 
 export const usePostPoll = routeAction$(
-    async (poll) => {
-        console.log('============================================')
+    async (poll, { sharedMap }) => {
+        const session = sharedMap.get('session');
+        const token = session?.accessToken;
+        console.log('====================================== usePostPoll ====================================================')
         console.log('usePostPoll')
         console.log('poll', poll)
+        console.log('token', token)
 
-        const response = await fetch('http://localhost:8000/polls', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Basic c2ViYToxMjM0NTY='
-            },
-            body: JSON.stringify(poll),
-        });
-        return (await response.json());
+        try{
+            const response = await fetch('http://localhost:8000/polls', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(poll),
+            });
+            console.log('response', response)
+            return (await response.json());
+        } catch (err) {
+            console.log('err', err)
+            return err
+        }
     },
     zod$({
-        status: z.string(),
+        status: z.enum(["OPEN", "CLOSED"]),
         poll_type: z.string(),
         title: z
             .string()
@@ -150,5 +183,6 @@ export const usePostPoll = routeAction$(
         options: z.array(z.string()).min(2, { message: "Must have at least 2 options" }),
         community_id: z.string(),
         tags: z.array(z.string()).optional(),
+        token: z.string(),
     })
 );

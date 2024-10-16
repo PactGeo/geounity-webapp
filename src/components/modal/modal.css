@@ -60,3 +60,8 @@
     color: #666;
     margin-bottom: 20px;
 }
+
+.modal-panel {
+    max-height: 90vh; /* Limits the height to 90% of the viewport */
+    overflow-y: auto; /* Adds scroll if the content is taller than the modal */
+}
