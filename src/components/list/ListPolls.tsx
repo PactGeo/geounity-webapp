@@ -21,13 +21,13 @@ export default component$<ListPolls>(({
 }) => {
     
     const viewMode = useSignal('cards');
-    
+
     return (
         <div class="flex-1 overflow-y-auto p-4">
             {viewMode.value === 'cards' && (
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+                <ul class="grid grid-cols-1 gap-6 p-4">
                     {polls.map((poll) => (
-                        <li key={`debate-${poll.id}`} class="flex">
+                        <li key={`poll-${poll.id}`} class="flex">
                             <CardPoll
                                 slug={poll.slug}
                                 title={poll.title}
@@ -35,13 +35,12 @@ export default component$<ListPolls>(({
                                 type={poll.poll_type}
                                 is_anonymous={poll.is_anonymous}
                                 status={poll.status}
+                                votesCount={poll.options.reduce((total: number, option: { votes: number }) => total + option.votes, 0)}
+                                options={poll.options}
                                 created_at={poll.created_at}
                                 ends_at={poll.ends_at}
-                                images={poll.images}
                                 creator_username={poll.creator_username}
                                 comments_count={poll.comments_count}
-                                last_comment_at={poll.last_comment_at}
-                                tags={poll.tags}
                             />
                         </li>
                     ))}

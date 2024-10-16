@@ -1,7 +1,7 @@
 // export * from './accordion/accordion';
 // export * from './alert/alert';
 export * from './avatar/avatar';
-// export * from './badge/badge';
+export * from './badge/badge';
 // export * from './breadcrumb/breadcrumb';
 export * from './button/button';
 // export * from './card/card';
@@ -12,7 +12,7 @@ export * from './input/input';
 export * from './label/label';
 export * from './modal/modal';
 // export * from './popover/popover';
-// export * from './progress/progress';
+export * from './progress/progress';
 // export * from './radio-group/radio-group';
 export * from './separator/separator';
 // export * from './skeleton/skeleton';
