@@ -1,4 +1,4 @@
-import { $, component$ } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical } from '@qwikest/icons/lucide';
 import { useNavigate } from "@builder.io/qwik-city";
 import { timeAgo } from "~/utils";
@@ -13,7 +13,7 @@ interface CardPollProps {
     is_anonymous: boolean;
     status: string;
     votesCount: number;
-    options: { text: string; votes: number }[];
+    options: { id: number, text: string; votes: number }[];
     created_at: string;
     ends_at: string;
     creator_username: string;
@@ -34,12 +34,42 @@ export default component$<CardPollProps>(({
     creator_username,
     comments_count
 }) => {
+    console.log('options', options)
+    console.log('type', type)
     const nav = useNavigate();
+
+    const votedOptions = useSignal<number[]>([]);  // Opciones que ha votado el usuario
+    console.log('votedOptions', votedOptions.value)
+    const userReaction = useSignal<string | null>(null);  // Reacción (LIKE o DISLIKE)
+
     const onClickUsername = $((username: string) => nav(`/profile/${username}`));
 
-    // Calcular el porcentaje de votos por opción
+    // Calculate the percentage of votes per option
     const totalVotes = options.reduce((acc, option) => acc + option.votes, 0) || 1; // Evitar división por 0
     const getPercentage = (votes: number) => Math.round((votes / totalVotes) * 100);
+
+    const handleVote = $((ev: Event) => {
+        const optionId = Number((ev.target as HTMLElement).id);
+        if(type === 'BINARY' || type === 'SINGLE_CHOICE') {
+            if (!votedOptions.value.includes(optionId)) {
+                votedOptions.value = [optionId];
+            } else {
+                votedOptions.value = [];
+            }
+        } else if (type === 'MULTIPLE_CHOICE') {
+            if (!votedOptions.value.includes(optionId)) {
+                votedOptions.value = [...votedOptions.value, optionId];
+            } else {
+                votedOptions.value = votedOptions.value.filter((id) => id !== optionId);
+            }
+        } else {
+            console.error('Invalid poll type');
+        }
+    });
+
+    const handleReaction = $((reaction: string) => {
+        userReaction.value = userReaction.value === reaction ? null : reaction;
+    });
 
     return (
         <div class="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow w-full">
@@ -58,7 +88,14 @@ export default component$<CardPollProps>(({
             {/* Opciones con porcentajes */}
             <div class="space-y-2 mt-4">
                 {options.map((option, idx) => (
-                    <Progress key={idx} label={option.text} percentage={getPercentage(option.votes)} />
+                    <Progress
+                        key={idx}
+                        id={option.id}
+                        label={option.text}
+                        percentage={getPercentage(option.votes)}
+                        voted={votedOptions.value.includes(option.id)}
+                        onClick$={handleVote}
+                    />
                 ))}
             </div>
 
@@ -85,11 +122,11 @@ export default component$<CardPollProps>(({
                     <button class="text-gray-600 hover:text-red-500">
                         <LuThumbsDown class="h-5 w-5" />
                     </button>
-                    <button class="text-gray-600 hover:text-green-500">
-                        <LuShare class="h-5 w-5" />
-                    </button>
                     <button class="text-gray-600 hover:text-purple-500">
                         <LuMessageSquare class="h-5 w-5" />
+                    </button>
+                    <button class="text-gray-600 hover:text-green-500">
+                        <LuShare class="h-5 w-5" />
                     </button>
                 </div>
                 <div class="relative">

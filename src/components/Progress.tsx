@@ -1,25 +1,31 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, QRL } from "@builder.io/qwik";
 
 interface ProgressProps {
-    label: string;  // El texto de la opción
-    percentage: number;  // El porcentaje que se debe mostrar en la barra
+    label: string;  // The text of the option
+    id: number;  // The id of the option
+    percentage: number;  // The percentage to be displayed in the bar
+    voted?: boolean;  // Indicates if the user has already voted
+    onClick$: QRL<(ev: Event, el: HTMLInputElement) => void>;  // Function to be executed on click
 }
 
-export const Progress = component$<ProgressProps>(({ label, percentage }) => {
+export const Progress = component$<ProgressProps>(({ label, id, percentage, voted = false, onClick$ }) => {
     return (
-        <div class="relative w-full bg-gray-200 rounded-full h-8 overflow-hidden">
+        <div
+            id={id.toString()}
+            class={`relative w-full rounded-full h-8 overflow-hidden cursor-pointer transition-all duration-200 ${voted ? "bg-green-100" : "bg-gray-200 hover:bg-blue-100 active:bg-blue-200"}`}
+            onClick$={onClick$}
+            // onClick$={() => console.log('HEY!')}
+        >
             {/* Progress bar */}
-            {percentage > 0 && (
-                <div
-                    class="absolute top-0 left-0 h-full bg-blue-500 text-white rounded-full flex items-center justify-start px-4"
-                    style={{ width: `${percentage}%` }}
-                >
-                    {/* The label stays on the bar */}
-                    <span class="text-gray-800">{label}</span>
-                </div>
-            )}
+            <div
+                class={`absolute top-0 left-0 h-full text-white rounded-full flex items-center px-4 ${percentage > 0 ? (voted ? "bg-green-500" : "bg-blue-500") : ""}`}
+                style={{ width: `${percentage}%` }}
+            >
+                {/* Show label even if percentage is 0 */}
+                <span class="text-gray-800 whitespace-nowrap">{label}</span>
+            </div>
 
-            {/* The percentage always at the end of the bar, on the right */}
+            {/* The percentage always at the end of the bar */}
             <div class="absolute top-0 right-4 h-full flex items-center text-gray-800">
                 <span class="text-sm">{percentage}%</span>
             </div>
