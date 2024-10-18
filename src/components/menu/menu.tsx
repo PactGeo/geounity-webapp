@@ -4,6 +4,7 @@ import styles from './menu.css?inline';
 import { LuDatabase, LuGlobe2, LuHome, LuLandmark, LuLogOut, LuMapPin, LuMessageCircle, LuMessageSquare, LuSettings, LuUser } from '@qwikest/icons/lucide';
 import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
+import { _ } from 'compiled-i18n';
 
 interface MenuProps {
     isOpen?: boolean;
@@ -15,8 +16,8 @@ export default component$<MenuProps>((props) => {
     const { url } = useLocation();
 
     const geography = [
-        { name: 'Global', path: '/global/', icon: <>🌐</> },
-        { name: 'International', path: '/international/', icon: <><LuGlobe2 /></> },
+        { name: _`Global`, path: '/global/', icon: <>🌐</> },
+        { name: _`International`, path: '/international/', icon: <><LuGlobe2 /></> },
         { name: 'America', path: '/continents/america/', icon: <LuMapPin /> },
         { name: 'Argentina', path: '/countries/argentina/', icon: <LuMapPin /> },
         { name: 'Buenos Aires', path: '/countries/argentina/buenos-aires/', icon: <LuMapPin />, disabled: true },
@@ -50,13 +51,13 @@ export default component$<MenuProps>((props) => {
                 >
                     <Link href="/" class="flex gap-2 items-center text-slate-500 rounded-lg">
                         <span><LuHome /></span>
-                        <span>Home</span>
+                        <span>{_`Home`}</span>
                     </Link>
                 </li>
             </ul>
             <Separator orientation="horizontal" class="separator-top my-2" />
             <h3 class='m-2 text-lg text-gray-700 font-bold'>
-                Communities
+                {_`Communities`}
             </h3>
             <ul class='m-2 pl-0'>
                 {geography.map(item => (

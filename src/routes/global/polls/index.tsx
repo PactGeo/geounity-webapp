@@ -9,6 +9,7 @@ import { LuPlusCircle } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls } from '~/shared/loaders';
+import { _ } from "compiled-i18n";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
 export { useGetPolls, usePostPoll } from '~/shared/loaders';
@@ -32,7 +33,7 @@ export default component$(() => {
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
                     <h1 class="text-5xl font-extrabold text-gray-900 text-center drop-shadow-md">
-                        Polls
+                        {_`Polls`}
                     </h1>
                     {polls.value.length > 0 && (
                         <Button
@@ -41,7 +42,7 @@ export default component$(() => {
                             onClick$={() => isOpenModal.value = true}
                         >
                             <LuPlusCircle class="text-4xl mr-2" />
-                            Create
+                            {_`Create`}
                         </Button>
                     )}
                 </div>
@@ -50,21 +51,21 @@ export default component$(() => {
             <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
-                    description="Share the most important challenge facing your community."
+                    description={_`Share the most important challenge facing your community.`}
                     isOpen={isOpenModal}
                     onClickExpand={onClickExpand}
-                    title="New Poll"
+                    title={_`New Poll`}
                 >
                     <FormPoll onSubmitCompleted={onSubmitCompleted} />
                 </Modal>
             ) : (
                 <Modal
-                    description="You must log in to create a new debate"
+                    description={_`You must log in to create a new debate`}
                     isOpen={isOpenModal}
-                    title="You must log in"
+                    title={_`You must log in`}
                 >
                     <Button look="primary">
-                        <Link href="/login/">Log in</Link>
+                        <Link href="/login/">{_`Login`}</Link>
                     </Button>
                 </Modal>
             )}
@@ -73,11 +74,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-    title: "Global Polls",
+    title: _`Global Polls`,
     meta: [
         {
             name: "description",
-            content: "Global Polls description",
+            content: _`Global Polls description`,
         },
     ],
 };

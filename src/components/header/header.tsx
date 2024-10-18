@@ -10,6 +10,7 @@ import styles from "./header.css?inline";
 
 import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
 import Menu from "~/components/menu/menu";
+import { _ } from "compiled-i18n";
 
 interface LoggedInMenuProps {
     name?: string,
@@ -44,21 +45,21 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
                 <Dropdown.Group class="py-1">
                     <Dropdown.Item>
                         <Link href="/profile/sebacc" class="dropdown-item">
-                            <LuUser /><span>My profile</span>
+                            <LuUser /><span>{_`My profile`}</span>
                         </Link>
                     </Dropdown.Item>
                     <Dropdown.Item class="dropdown-item" onClick$={() => signOut.submit({ redirectTo: "/" })}>
-                        <LuLogOut /> <span>Log Out</span>
+                        <LuLogOut /> <span>{_`Log Out`}</span>
                     </Dropdown.Item>
                     <Dropdown.Separator class="dropdown-separator" />
                     <Dropdown.Item class="dropdown-item">
-                        <LuMapPin /> <span>Location: Argentina</span>
+                        <LuMapPin /> <span>{_`Location`}: Argentina</span>
                     </Dropdown.Item>
                     <Dropdown.Item class="dropdown-item">
-                        <LuGlobe /> <span>Language: Español</span>
+                        <LuGlobe /> <span>{_`Language`}: Español</span>
                     </Dropdown.Item>
                     <Dropdown.Item class="dropdown-item">
-                        <LuSun /> <span>Theme</span>
+                        <LuSun /> <span>{_`Theme`}</span>
                     </Dropdown.Item>
                 </Dropdown.Group>
             </Dropdown.Popover>
@@ -68,8 +69,8 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
 
 export const LoggedOutMenu = component$(() => {
     const navItems = [
-        { label: 'Login', href: '/login' },
-        { label: 'Sign Up', href: '/register' },
+        { label: _`Login`, href: '/login' },
+        { label: _`Sign Up`, href: '/register' },
     ];
     return (
         <nav class="flex flex-row flex-nowrap">

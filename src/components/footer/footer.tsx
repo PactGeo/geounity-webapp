@@ -3,6 +3,7 @@ import { Link } from '@builder.io/qwik-city';
 import { LuFacebook, LuTwitter, LuInstagram, LuYoutube } from "@qwikest/icons/lucide";
 import { QwikLogo } from '~/icons/qwik';
 import { Button } from "~/components/ui";
+import { _ } from 'compiled-i18n';
 
 interface FooterProps {
     currentYear: number;
@@ -31,18 +32,17 @@ const socialMedia = [
     },
 ];
 
-const bottomLinks = [
-    {
-        label: 'Terms',
-        link: '/terms-of-service',
-    },
-    {
-        label: 'Privacy policy',
-        link: '/privacy-policy',
-    },
-];
-
 export default component$<FooterProps>(({ currentYear }) => {
+    const bottomLinks = [
+        {
+            label: _`Terms`,
+            link: '/terms-of-service',
+        },
+        {
+            label: _`Privacy policy`,
+            link: '/privacy-policy',
+        },
+    ];
     return (
         <footer class="bg-neutral-100 mt-auto w-full">
             <hr />
@@ -79,7 +79,7 @@ export default component$<FooterProps>(({ currentYear }) => {
                 <p class="flex items-center justify-center py-2 leading-5 text-center typography-text-sm text-white/50 font-body md:ml-6">
                     <span class="ml-2">©{currentYear} Geounity.&nbsp;</span>
                     <span class="flex items-center">
-                        Developed with &nbsp; <a href="https://qwik.dev/"><QwikLogo height={20} width={55} /></a> &nbsp; by &nbsp; <a href="https://sebastiancardoso.com/" target="_blank">SC</a>
+                        {_`Developed with`} &nbsp; <a href="https://qwik.dev/"><QwikLogo height={20} width={55} /></a> &nbsp; {_`by`} &nbsp; <a href="https://sebastiancardoso.com/" target="_blank">SC</a>
                     </span>
                 </p>
             </div>
