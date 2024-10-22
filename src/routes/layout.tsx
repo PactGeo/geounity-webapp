@@ -34,7 +34,7 @@ export default component$(() => {
   return (
     <div class="flex flex-col h-screen">
       <Header />
-      <div class="flex flex-1 overflow-hidden">
+      <div class="flex flex-1">
         {session.value?.user && <Menu />}
         <main class="flex-1 overflow-hidden flex flex-col">
           <Slot />

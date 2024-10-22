@@ -1,14 +1,6 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link, useNavigate } from '@builder.io/qwik-city';
 import CardPoll from "~/components/cards/CardPoll";
-import EmptyDebates from "~/components/empty-state/EmptyDebates";
-import FormDebateGlobal from "~/components/forms/FormDebateGlobal";
-import Modal from '~/components/modal/modal';
-import { useSession } from "~/routes/plugin@auth";
-import TableDebates from "~/components/table/TableDebates";
-import { Button } from "~/components/ui";
-import { LuPlusCircle } from "@qwikest/icons/lucide";
 
 interface ListPolls {
     polls: any[];
@@ -29,6 +21,7 @@ export default component$<ListPolls>(({
                     {polls.map((poll) => (
                         <li key={`poll-${poll.id}`} class="flex">
                             <CardPoll
+                                id={poll.id}
                                 slug={poll.slug}
                                 title={poll.title}
                                 description={poll.description}
@@ -36,10 +29,14 @@ export default component$<ListPolls>(({
                                 is_anonymous={poll.is_anonymous}
                                 status={poll.status}
                                 votesCount={poll.options.reduce((total: number, option: { votes: number }) => total + option.votes, 0)}
+                                likes_count={poll.likes_count}
+                                dislikes_count={poll.dislikes_count}
                                 options={poll.options}
                                 created_at={poll.created_at}
                                 ends_at={poll.ends_at}
                                 creator_username={poll.creator_username}
+                                user_voted_options={poll.user_voted_options}
+                                user_reaction_type={poll.user_reaction_type}
                                 comments_count={poll.comments_count}
                             />
                         </li>

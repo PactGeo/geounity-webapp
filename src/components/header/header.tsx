@@ -22,6 +22,12 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     useStyles$(styles);
     const signOut = useSignOut();
 
+    const actions = [
+        { key: 'location', icon: <LuMapPin />, label: _`Location`, href: '/profile/sebacc', disabled: false },
+        { key: 'language', icon: <LuGlobe />, label: _`Language`, href: '/profile/sebacc', disabled: false },
+        { key: 'theme', icon: <LuSun />, label: _`Theme`, href: '/profile/sebacc', disabled: false },
+    ]
+
     return (
         <Dropdown.Root>
             <Dropdown.Trigger class="bg-light-purple rounded-full px-2 py-1 focus:outline-none focus:ring focus:ring-white">
@@ -41,26 +47,28 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
                     </div>
                 ) : null}
             </Dropdown.Trigger>
-            <Dropdown.Popover class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 dropdown-popover">
-                <Dropdown.Group class="py-1">
-                    <Dropdown.Item>
-                        <Link href="/profile/sebacc" class="dropdown-item">
-                            <LuUser /><span>{_`My profile`}</span>
+            <Dropdown.Popover class="mt-2 pt-2 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5">
+                <Dropdown.Group>
+                    <Dropdown.Item class="dropdown-item">
+                        <Link href="/profile/sebacc">
+                            <div class="flex items-center">
+                                <LuUser /><span>{_`My profile`}</span>
+                            </div>
                         </Link>
                     </Dropdown.Item>
                     <Dropdown.Item class="dropdown-item" onClick$={() => signOut.submit({ redirectTo: "/" })}>
-                        <LuLogOut /> <span>{_`Log Out`}</span>
+                        <div class="flex items-center">
+                            <LuLogOut /> <span>{_`Log Out`}</span>
+                        </div>
                     </Dropdown.Item>
                     <Dropdown.Separator class="dropdown-separator" />
-                    <Dropdown.Item class="dropdown-item">
-                        <LuMapPin /> <span>{_`Location`}: Argentina</span>
-                    </Dropdown.Item>
-                    <Dropdown.Item class="dropdown-item">
-                        <LuGlobe /> <span>{_`Language`}: Español</span>
-                    </Dropdown.Item>
-                    <Dropdown.Item class="dropdown-item">
-                        <LuSun /> <span>{_`Theme`}</span>
-                    </Dropdown.Item>
+                    {actions.map((action) => (
+                        <Dropdown.Item key={action.label} class="dropdown-item" disabled={action.disabled}>
+                            <div class="flex items-center">
+                                {action.icon} {action.label}
+                            </div>
+                        </Dropdown.Item>
+                    ))}
                 </Dropdown.Group>
             </Dropdown.Popover>
         </Dropdown.Root>

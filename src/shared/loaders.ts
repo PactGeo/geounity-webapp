@@ -186,3 +186,50 @@ export const usePostPoll = routeAction$(
         token: z.string(),
     })
 );
+
+export const useVotePoll = routeAction$(
+    async (data, { sharedMap }) => {
+        console.log('data', data)
+        const session = sharedMap.get('session');
+        const token = session?.accessToken;
+        console.log('useVotePoll')
+        console.log('ids', data.option_ids)
+        console.log('token', token)
+        const { pollId } = data 
+        console.log('pollId', pollId)
+        try {
+            const response = await fetch(`http://localhost:8000/polls/${pollId}/vote`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ option_ids: data.optionIds }),
+            });
+            return (await response.json());
+        } catch (err) {
+            console.log('err', err)
+            return err
+        }
+    }
+)
+
+export const useReactToPoll = routeAction$(
+    async (data, { sharedMap }) => {
+        const session = sharedMap.get('session');
+        const token = session?.accessToken;
+        const { pollId } = data;
+        const response = await fetch(`http://localhost:8000/polls/${pollId}/react`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ reaction_type: data.reactionType }),
+        });
+        const result = await response.json();
+        return result;
+    }
+);

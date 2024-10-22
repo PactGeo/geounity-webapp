@@ -12,7 +12,7 @@ import { useGetPolls } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
-export { useGetPolls, usePostPoll } from '~/shared/loaders';
+export { useGetPolls, usePostPoll, useVotePoll, useReactToPoll } from '~/shared/loaders';
 
 export default component$(() => {
     const nav = useNavigate();
@@ -25,7 +25,6 @@ export default component$(() => {
     const onClickExpand = $(() => nav('/polls/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
-
 
     return (
         <div>
