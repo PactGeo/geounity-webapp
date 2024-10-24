@@ -101,7 +101,6 @@ export const LoggedOutMenu = component$(() => {
 export default component$(() => {
     useStylesScoped$(styles);
     const session = useSession();
-    console.log('SESSION:  ', session.value)
     const showMenu = useSignal(true);
 
     const onCloseMenu = $(() => showMenu.value = false)

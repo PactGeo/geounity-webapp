@@ -40,35 +40,35 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
         console.log('session', session)
         console.log('account', account)
         // if (trigger === "update") token.name = session.user.name
-        if (account?.provider === "github") {
-          console.log('Obteniendo token de GitHub');
+        if (account?.provider === "github" || account?.provider === "google") {
+          console.log(`Fetching ${account.provider} token`);
           try {
-            const githubResponse = await fetch('http://localhost:8000/auth/github', {
+            const response = await fetch(`http://localhost:8000/auth/${account.provider}`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${account.access_token}`,
                 'Content-Type': 'application/json'
               }
             });
+            console.log(`Account provider Response ${account.provider}`, response)
             
-            console.log('githubResponse', githubResponse)
-            if (!githubResponse.ok) {
-              console.error('Error al obtener el token de GitHub');
+            if (!response.ok) {
+              console.error(`Error to get the token from the provider ${account.provider}`);
               return token;
             }
             
-            const githubData = await githubResponse.json();
-            console.log('Respuesta de GitHub:', githubData);
+            const data = await response.json();
+            console.log(`Account provider data ${account.provider}`, response)
             
-            // Asumiendo que el backend devuelve un nuevo token en la respuesta
-            if (githubData.access_token) {
-              return { ...token, accessToken: githubData.access_token };
+            if (data.access_token) {
+              return { ...token, accessToken: data.access_token };
             }
           } catch (error) {
-            console.error('Error al hacer la petición a GitHub:', error);
+            console.error(`Error making request to ${account.provider}: `, error);
           }
           return { ...token, accessToken: account.access_token }
         }
+        console.log('==============================')
         return token
       },
       session: async ({ session, token }) => {

@@ -15,8 +15,18 @@ export default component$(() => {
                         <li>💬 <a href="#" class="text-blue-400 hover:underline">{_`Join structured discussions.`}</a> {_`Discover perspectives from around the world.`}</li>
                         <li>⚠️ <a href="#" class="text-blue-400 hover:underline">{_`Report community issues`}</a> {_`and collaborate on solutions.`}</li>
                         <li>📊 <a href="#" class="text-blue-400 hover:underline">{_`Access real-time data`}</a> {_`that reflects community needs.`}</li>
-                        <li>🤝 <a href="#" class="text-blue-400 hover:underline">{_`Start projects`}</a> {_`that make a real impact on your environment.`}</li>
-                        <li>🤖 <a href="#" class="text-blue-400 hover:underline">{_`Help develop AI solutions`}</a> {_`that learn from community feedback.`}</li>
+                        
+                        {/* Start projects item with development label */}
+                        <li>🤝 <a href="#" class="text-blue-400 hover:underline">{_`Start projects `}</a> 
+                            {_`that make a real impact on your environment.`}
+                            <span class="bg-yellow-500 text-white text-xs rounded px-2 py-1 ml-2 whitespace-nowrap">{_`In development`}</span>
+                        </li>
+
+                        {/* Help develop AI solutions item with development label */}
+                        <li>🤖 <a href="#" class="text-blue-400 hover:underline">{_`Help develop AI solutions `}</a> 
+                            {_`that learn from community feedback.`}
+                            <span class="bg-yellow-500 text-white text-xs rounded px-2 py-1 ml-2 whitespace-nowrap">{_`In development`}</span>
+                        </li>
                     </ul>
                 </div>
                 <div class="md:col-span-2 flex justify-center items-center">

@@ -1,14 +1,15 @@
 import { $, component$, useStyles$ } from "@builder.io/qwik";
 import { routeLoader$ } from '@builder.io/qwik-city';
-import { Button, Label, Textarea } from '~/components/ui';
+import { Button, Textarea } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
-import styles from "./form.css?inline";
 import { formAction$, insert, remove, SubmitHandler, useForm, valiForm$, type InitialValues } from '@modular-forms/qwik';
 import * as v from 'valibot'
 import { TextInput } from "~/components/input/TextInput";
 import { ChipGroup } from "~/components/input/ChipGroup";
 import { FormHeader } from "./FormHeader";
 import { FormFooter } from "./FormFooter";
+import styles from "./form.css?inline";
+import { _ } from "compiled-i18n";
 
 // As TypeScript enum
 enum PollType {
@@ -95,7 +96,7 @@ export const useFormAction = formAction$<PollForm, ResponseData>(
         const data = await response.json();
         return {
             success: true,
-            message: 'Poll created successfully',
+            message: _`Poll created successfully`,
             data: data
         }
         // Runs on server
@@ -139,7 +140,7 @@ export default component$<FormPollProps>(() => {
                             label={field.name}
                             value={field.value}
                             error={field.error}
-                            placeholder="Enter a title"
+                            placeholder={_`Enter a title`}
                             required
                         />
                     )}
@@ -213,7 +214,7 @@ export default component$<FormPollProps>(() => {
                                 >
                                     <LuPlus class="mr-2" />
                                     
-                                    Add option
+                                    {_`Add option`}
                                 </Button>
                             )}
                             {fieldArray.error && <div class="text-red-500">{fieldArray.error}</div>}

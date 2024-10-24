@@ -11,6 +11,7 @@ export default component$<ListPolls>(({
     polls,
     type,
 }) => {
+    console.log('polls', polls)
     
     const viewMode = useSignal('cards');
 
@@ -21,6 +22,7 @@ export default component$<ListPolls>(({
                     {polls.map((poll) => (
                         <li key={`poll-${poll.id}`} class="flex">
                             <CardPoll
+                                poll={poll}
                                 id={poll.id}
                                 slug={poll.slug}
                                 title={poll.title}
@@ -28,10 +30,8 @@ export default component$<ListPolls>(({
                                 type={poll.poll_type}
                                 is_anonymous={poll.is_anonymous}
                                 status={poll.status}
-                                votesCount={poll.options.reduce((total: number, option: { votes: number }) => total + option.votes, 0)}
                                 likes_count={poll.likes_count}
                                 dislikes_count={poll.dislikes_count}
-                                options={poll.options}
                                 created_at={poll.created_at}
                                 ends_at={poll.ends_at}
                                 creator_username={poll.creator_username}
@@ -43,19 +43,10 @@ export default component$<ListPolls>(({
                     ))}
                 </ul>
             )}
+            {/* TODO: create table view */}
             {viewMode.value === 'table' && (
                 <h3>Tabla de polls</h3>
             )}
         </div>
     );
 });
-
-export const head: DocumentHead = {
-    title: "Welcome to Qwik",
-    meta: [
-        {
-            name: "description",
-            content: "Qwik site description",
-        },
-    ],
-};

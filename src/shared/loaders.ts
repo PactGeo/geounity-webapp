@@ -29,11 +29,25 @@ export const useGetTags = routeLoader$(async () => {
 });
 
 export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
-    console.log('useGetPolls')
+    const session = sharedMap.get('session');
+    const token = session?.accessToken;
+    const response = await fetch('http://localhost:8000/polls', {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    });
+    const data = await response.json();
+    return data as Array<any>
+});
+
+export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
+    console.log('useGetDiscussions')
     const session = sharedMap.get('session');
     const token = session?.accessToken;
     console.log('token', token)
-    const response = await fetch('http://localhost:8000/polls', {
+    return []
+    const response = await fetch('http://localhost:8000/debates', {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
@@ -207,6 +221,7 @@ export const useVotePoll = routeAction$(
                 },
                 body: JSON.stringify({ option_ids: data.optionIds }),
             });
+            console.log('response ################', response)
             return (await response.json());
         } catch (err) {
             console.log('err', err)

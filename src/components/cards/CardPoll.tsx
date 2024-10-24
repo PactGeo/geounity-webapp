@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
 import { routeAction$, useNavigate } from "@builder.io/qwik-city";
 import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical } from '@qwikest/icons/lucide';
 import { timeAgo } from "~/utils";
@@ -7,6 +7,7 @@ import { Progress } from "~/components/Progress";
 import { useReactToPoll, useVotePoll } from "~/shared/loaders";
 
 interface CardPollProps {
+    poll: any;
     id: number;
     slug: string;
     title: string;
@@ -14,18 +15,17 @@ interface CardPollProps {
     type: string;
     is_anonymous: boolean;
     status: string;
-    votesCount: number;
     likes_count: number;
     dislikes_count: number;
-    options: { id: number, text: string; votes: number }[];
+    // options: { id: number, text: string; votes: number }[];
     created_at: string;
     ends_at: string;
     creator_username: string;
     comments_count: number;
     user_voted_options: number[];
     user_reaction_type: string | null;
-}
 
+}
 interface CommentRead {
     id: number;
     poll_id: number;
@@ -43,29 +43,29 @@ export default component$<CardPollProps>(({
     type,
     is_anonymous,
     status,
-    votesCount,
     likes_count,
     dislikes_count,
-    options,
     created_at,
     ends_at,
     creator_username,
     comments_count,
     user_voted_options,
-    user_reaction_type
+    user_reaction_type,
+    poll
 }) => {
-    console.log('##### CARD POLL #####')
-    console.log('id', id)
-    console.log('options', options)
-    console.log('type', type)
-    console.log('user_voted_options', user_voted_options)
+    console.log('==========================CardPollProps=======================')
     const nav = useNavigate();
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
 
+    const pollState = useStore({ poll });
+
+    // const optionsStore = useStore({ options: [...options] });
+    // console.log('optionsStore', optionsStore.options)
     const likesCount = useSignal(likes_count);
     const dislikesCount = useSignal(dislikes_count);
-    const votedOptions = useSignal<number[]>(user_voted_options);  // Options voted by the user
+    const userVotedOptions = useSignal<number[]>(user_voted_options);  // Options voted by the user
+    console.log('userVotedOptions', userVotedOptions.value)
     const userReaction = useSignal<string | null>(user_reaction_type);  // Reaction of the user (like or dislike)
     const showComments = useSignal(false);
     const comments = useSignal<CommentRead[]>([]);
@@ -73,32 +73,44 @@ export default component$<CardPollProps>(({
 
     const onClickUsername = $((username: string) => nav(`/profile/${username}`));
 
+    const votesCount = useComputed$(() =>
+        pollState.poll.options.reduce((total, option) => total + option.votes, 0)
+    )
+
     const handleVote = $(async (ev: Event) => {
+        console.log('handleVote')
         const optionId = Number((ev.target as HTMLElement).id);
-        console.log('optionId', optionId)
-        console.log(333)
+        let result;
+        
         if(type === 'BINARY' || type === 'SINGLE_CHOICE') {
-            if (!votedOptions.value.includes(optionId)) {
-                votedOptions.value = [optionId];
+            if (!userVotedOptions.value.includes(optionId)) {
+                userVotedOptions.value = [optionId];
             } else {
-                votedOptions.value = [];
+                userVotedOptions.value = [];
             }
-            const result = await actionVote.submit({ pollId: id, optionIds: [optionId] });
-            console.log('result1', result)
+            result = await actionVote.submit({ pollId: id, optionIds: [optionId] });
         } else if (type === 'MULTIPLE_CHOICE') {
-            if (!votedOptions.value.includes(optionId)) {
-                const newValues = [...votedOptions.value, optionId]
-                votedOptions.value = newValues;
-                const result = await actionVote.submit({ pollId: id, optionIds: newValues });
-                console.log('result3', result)
+            let newValues;
+            if (!userVotedOptions.value.includes(optionId)) {
+                newValues = [...userVotedOptions.value, optionId]
             } else {
-                const newValues = votedOptions.value.filter((id) => id !== optionId)
-                votedOptions.value = newValues;
-                const result = await actionVote.submit({ pollId: id, optionIds: newValues });
-                console.log('result4', result)
+                newValues = userVotedOptions.value.filter((id) => id !== optionId)
             }
+            userVotedOptions.value = newValues;
+            result = await actionVote.submit({ pollId: id, optionIds: newValues });
         } else {
             console.error('Invalid poll type');
+            return;
+        }
+        // Update optionsStore.options with the updated options from the backend
+        console.log('result.value', result.value)
+        if (result.value && result.value.detail === "Vote updated successfully") {
+            pollState.poll.options = result.value.options;
+        } else if (result.value && result.value.detail ===  "Vote canceled successfully") {
+            pollState.poll.options = result.value.options;
+        } 
+        else {
+            console.log('Error')
         }
     });
 
@@ -151,6 +163,16 @@ export default component$<CardPollProps>(({
         // TODO: Enviar comentario
     });
 
+    const listOptions = useComputed$(() => {
+        return pollState.poll.options.map((option) => {
+            return {
+                id: option.id,
+                text: option.text,
+                votes: option.votes,
+            };
+        });
+    })
+
     return (
         <div class="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow w-full">
             {/* Title and type badge */}
@@ -168,17 +190,22 @@ export default component$<CardPollProps>(({
 
             {/* Opciones con porcentajes */}
             <div class="space-y-2 mt-4">
-                {options.map((option) => (
-                    <Progress
-                        key={`option-${option.id}`}
-                        id={option.id}
-                        label={option.text}
-                        votes={option.votes}
-                        votesCount={votesCount}
-                        voted={votedOptions.value.includes(option.id)}
-                        onClick$={handleVote}
-                    />
-                ))}
+                {listOptions.value.map((option) => {
+                    console.log('###### option ######')
+                    console.log(option)
+                    return (
+                        <Progress
+                            key={`option-${option.id}`}
+                            option={option}
+                            id={option.id}
+                            label={option.text}
+                            votes={option.votes}
+                            votesCount={votesCount.value}
+                            userVotedOptions={userVotedOptions.value}
+                            onClick$={handleVote}
+                        />
+                    )
+                })}
             </div>
 
             {/* Información del usuario y fecha */}

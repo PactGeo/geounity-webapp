@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { LuList } from "@qwikest/icons/lucide";
+import { _ } from "compiled-i18n";
 import { Button } from '~/components/ui';
 
 interface EmptyDebatesProps {
@@ -13,15 +14,15 @@ export default component$<EmptyDebatesProps>(({ onClickAction }) => {
                 <div class="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                     <LuList class="w-6 h-6 text-muted-foreground" />
                 </div>
-                <h3 class="text-lg font-semibold">There are no debates in the list</h3>
+                <h3 class="text-lg font-semibold">{_`There are no disscusion in the list`}</h3>
                 <p class="text-sm text-muted-foreground">
-                    No one seems to have created any discussions for this community, why don't you start by adding one?
+                    {_`No one seems to have created any discussions for this community, why don't you start by adding one?`}
                 </p>
                 <Button
                     look="primary"
                     onClick$={onClickAction}
                 >
-                    Create New Global Debate
+                    {_`Create New Disscussion`}
                 </Button>
             </div>
         </div>

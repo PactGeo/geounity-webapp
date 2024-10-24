@@ -16,7 +16,6 @@ type ChipGroupProps = {
 
 export const ChipGroup = component$((props: ChipGroupProps) => {
     const { name, value, options, label, error, required } = props;
-    console.log('value', value)
     return (
         <div>
             <InputLabel name={name} label={label} required={required} />
