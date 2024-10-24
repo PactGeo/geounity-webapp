@@ -1,6 +1,7 @@
 import { component$, createContextId, type Signal, useContextProvider, useSignal, useStylesScoped$ } from "@builder.io/qwik";
 import { LuMoon, LuSun } from "@qwikest/icons/lucide";
 import styles from './ThemeSwitch.css?inline';
+import { _ } from "compiled-i18n";
 
 export const ThemeContext = createContextId<Signal<string>>(
     'docs.theme-context'
@@ -12,7 +13,7 @@ export const ThemeSwitch = component$(() => {
     useContextProvider(ThemeContext, theme);
 
     return (
-        <div class="flex items-center gap-3 switch">
+        <div class="switch">
             <label>
                 <input
                     type="checkbox"
@@ -28,7 +29,10 @@ export const ThemeSwitch = component$(() => {
                         }
                     }}
                 />
-                <span>{theme.value === "light"?<LuSun />:<LuMoon />}</span>
+                <span>
+                    <span class="theme-icon">{theme.value === "light" ? <LuSun /> : <LuMoon />}</span>
+                    {_`Theme`}: {theme.value === "light" ? _`Light` : _`Dark`}
+                </span>
             </label>
         </div>
     );

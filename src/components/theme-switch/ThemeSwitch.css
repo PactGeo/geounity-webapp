@@ -1,15 +1,30 @@
 /* ThemeSwitch.css */
+.switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .switch input[type="checkbox"] {
     display: none;
     /* Oculta el checkbox */
 }
 
 .switch span {
-    font-size: 2rem;
+    font-size: 1rem;  /* Ajuste del tamaño de la fuente */
     cursor: pointer;
-    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;  /* Espacio entre el ícono y el texto */
+    transition: opacity 0.2s, color 0.2s;
 }
 
 .switch span:hover {
-    opacity: 0.75;
+    opacity: 0.8;
+}
+
+.switch .theme-icon {
+    font-size: 1.25rem;  /* Tamaño del ícono */
+    display: flex;
+    align-items: center;
 }

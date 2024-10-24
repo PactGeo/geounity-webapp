@@ -25,7 +25,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     const actions = [
         { key: 'location', icon: <LuMapPin />, label: _`Location`, href: '/profile/sebacc', disabled: false },
         { key: 'language', icon: <LuGlobe />, label: _`Language`, href: '/profile/sebacc', disabled: false },
-        { key: 'theme', icon: <LuSun />, label: _`Theme`, href: '/profile/sebacc', disabled: false },
+        { key: 'theme', label: <ThemeSwitch />, href: '/profile/sebacc', disabled: false },
     ]
 
     return (
