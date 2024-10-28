@@ -46,8 +46,7 @@ export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
     const session = sharedMap.get('session');
     const token = session?.accessToken;
     console.log('token', token)
-    return []
-    const response = await fetch('http://localhost:8000/debates', {
+    const response = await fetch('http://localhost:8000/debates/global', {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`

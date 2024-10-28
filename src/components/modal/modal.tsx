@@ -10,6 +10,7 @@ interface ModalProps {
     isOpen?: {
         value: boolean;
     };
+    onClickPreview?: () => void;
     showFooter?: boolean;
     onClose?: () => void;
     onClickExpand?: () => void;
@@ -25,10 +26,10 @@ export default component$<ModalProps>((props) => {
             <Modal.Panel class="modal-panel pt-2">
                 <div class="flex justify-between items-center gap-2 py-2">
                     <div class="flex items-center gap-2">
-                        <LuEye 
+                        {!!props.onClickPreview && <LuEye 
                             class="text-xl cursor-pointer" 
                             onClick$={() => isPreview.value = !isPreview.value} 
-                        />
+                        />}
                         {props.onClickExpand && <Modal.Close onClick$={props.onClickExpand}><LuExpand class="text-lg" /></Modal.Close>}
                     </div>
                     <div class="flex items-center gap-2">

@@ -60,12 +60,9 @@ export default component$<CardPollProps>(({
 
     const pollState = useStore({ poll });
 
-    // const optionsStore = useStore({ options: [...options] });
-    // console.log('optionsStore', optionsStore.options)
     const likesCount = useSignal(likes_count);
     const dislikesCount = useSignal(dislikes_count);
     const userVotedOptions = useSignal<number[]>(user_voted_options);  // Options voted by the user
-    console.log('userVotedOptions', userVotedOptions.value)
     const userReaction = useSignal<string | null>(user_reaction_type);  // Reaction of the user (like or dislike)
     const showComments = useSignal(false);
     const comments = useSignal<CommentRead[]>([]);
@@ -78,7 +75,6 @@ export default component$<CardPollProps>(({
     )
 
     const handleVote = $(async (ev: Event) => {
-        console.log('handleVote')
         const optionId = Number((ev.target as HTMLElement).id);
         let result;
         
@@ -103,7 +99,6 @@ export default component$<CardPollProps>(({
             return;
         }
         // Update optionsStore.options with the updated options from the backend
-        console.log('result.value', result.value)
         if (result.value && result.value.detail === "Vote updated successfully") {
             pollState.poll.options = result.value.options;
         } else if (result.value && result.value.detail ===  "Vote canceled successfully") {
@@ -115,10 +110,7 @@ export default component$<CardPollProps>(({
     });
 
     const handleReaction = $(async (reactionType: string) => {
-        console.log('handleReaction')
-        console.log('reactionType', reactionType)
         const result = await actionReact.submit({ pollId: id, reactionType });
-        console.log('result', result)
         if (result.value.detail === "Reaction canceled successfully") {
             if (reactionType === 'LIKE') {
                 likesCount.value -= 1;
@@ -178,7 +170,9 @@ export default component$<CardPollProps>(({
             {/* Title and type badge */}
             <h2 class="text-xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
-                <Badge look="secondary">{type}</Badge>
+                <span class={`badge ${poll.poll_type === 'BINARY' ? 'bg-red-300' : poll.poll_type === 'SINGLE_CHOICE' ? 'bg-blue-300' : 'bg-green-300'}`}>
+                    {type}
+                </span>
             </h2>
 
             {/* Description */}
@@ -191,15 +185,10 @@ export default component$<CardPollProps>(({
             {/* Opciones con porcentajes */}
             <div class="space-y-2 mt-4">
                 {listOptions.value.map((option) => {
-                    console.log('###### option ######')
-                    console.log(option)
                     return (
                         <Progress
                             key={`option-${option.id}`}
                             option={option}
-                            id={option.id}
-                            label={option.text}
-                            votes={option.votes}
                             votesCount={votesCount.value}
                             userVotedOptions={userVotedOptions.value}
                             onClick$={handleVote}

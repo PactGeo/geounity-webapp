@@ -17,7 +17,7 @@ export function FormFooter({
     form,
 }: FormFooterProps) {
     return (
-        <footer class="flex space-x-6 px-8 md:space-x-8 lg:hidden">
+        <footer class="flex space-x-6 px-8 md:space-x-8">
             <ActionButton
                 variant="primary"
                 label="Submit"

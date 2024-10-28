@@ -1,17 +1,15 @@
 import { $, component$, NoSerialize, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Button, Input, Label, Select, Textarea } from '~/components/ui';
-import { LuCheck, LuLoader2 } from "@qwikest/icons/lucide";
-import { usePostDebate } from "~/shared/loaders";
+import { Textarea } from '~/components/ui';
 import styles from "./form.css?inline";
 import { formAction$, InitialValues, SubmitHandler, useForm, valiForm$ } from "@modular-forms/qwik";
 import * as v from 'valibot'
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { FormHeader } from "./FormHeader";
 import { FormFooter } from "./FormFooter";
 import { TextInput } from "~/components/input/TextInput";
-import InputFile from "~/components/input/InputFile";
 import { _ } from "compiled-i18n";
 import { FileInput } from "~/components/input/FileInput";
+import { Select } from "~/components/input/Select";
+import { DebateStatus, CommunityType } from '~/constants';
 
 const isBlob = (input: unknown) => input instanceof Blob;
 
@@ -21,8 +19,6 @@ interface FormDebateProps {
 }
 
 const DebateSchema = v.object({
-    type: v.string(),
-    status: v.string(),
     title: v.pipe(
         v.string(),
         v.nonEmpty(_`Please enter a title.`),
@@ -35,38 +31,35 @@ const DebateSchema = v.object({
     ),
     tags: v.array(v.string()),
     file: v.object({
-        list: v.optional(v.array(v.custom<NoSerialize<Blob>>(isBlob))),
-        item: v.optional(v.custom<NoSerialize<Blob>>(isBlob)),
+        images: v.optional(v.array(v.custom<NoSerialize<Blob>>(isBlob))),
     }),
-    community: v.string(),
+    type: v.enum(CommunityType),
 });
 
 type DebateForm = v.InferInput<typeof DebateSchema>;
 
-type ResponseData = {
-    type: string;
-    status: string;
-    title: string;
-    description: string;
-    tags: string[];
-    creator_id: number;
-    community: string;
-}
-
 export const useFormLoader = routeLoader$<InitialValues<DebateForm>>(({ pathname }) => {
     return {
-        type: 'GLOBAL',
-        status: 'OPEN',
         title: '',
         description: '',
         tags: [],
         file: {
-            list: [],
-            item: null,
+            images: [],
         },
-        community: pathname.includes('/global/') ? 'Global' : 'private',
+        type: CommunityType.GLOBAL,
+        public: true,
+        status: DebateStatus.OPEN,
     }
 });
+
+type ResponseData = {
+    title: string;
+    description: string;
+    status: string;
+    type: string;
+    // tags: string[];
+    // creator_id: number;
+}
 
 export const useFormAction = formAction$<DebateForm, ResponseData>(
     async (values, event) => {
@@ -74,15 +67,16 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
         console.log('values', values)
         const session = event.sharedMap.get('session');
         const token = session?.accessToken;
+        
         const payload = {
-            type: values.type,
-            status: values.status,
             title: values.title,
             description: values.description,
+            status: DebateStatus.OPEN,
+            type: values.type,
             tags: values.tags,
-            community_id: values.community === 'Global' ? 1 : 2,
         }
         console.log('payload: ', payload)
+        
         const response = await fetch('http://localhost:8000/debates', {
             method: 'POST',
             headers: {
@@ -91,7 +85,9 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
             },
             body: JSON.stringify(payload),
         });
+        console.log('response', response)
         const data = await response.json();
+        console.log('data', data)
         return {
             success: true,
             message: _`Debate created successfully`,
@@ -110,16 +106,7 @@ export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
         validate: valiForm$(DebateSchema),
     });
     
-    const isLoading = useSignal(false);
-    const isPreview = useSignal(false);
-    const title = useSignal('');
-    const description = useSignal('');
     const file_example = useSignal<string>('https://images.unsplash.com/photo-1724963475892-a3274091955e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-    const display = useSignal<string[]>([]);
-    const creatorId = useSignal(1);  // Ejemplo de ID de creador
-    const communityId = useSignal(1); // Ejemplo de ID de comunidad
-    
-    const action = usePostDebate();
 
     const handleSubmit = $<SubmitHandler<DebateForm>>((values, event) => {
         console.log('== handleSubmit ==')
@@ -133,8 +120,8 @@ export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
             onSubmit$={handleSubmit}
             class="space-y-4 md:space-y-6 lg:space-y-8"
         >
-            <FormHeader of={debateForm} />
             <div class="space-y-4 md:space-y-6 lg:space-y-8">
+
                 <Field name="title">
                     {(field, props) => (
                         <TextInput
@@ -160,90 +147,46 @@ export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
                     )}
                 </Field>
 
-                {/* <Field name="file.list" type="File[]">
+                <Field name="tags" type="string[]">
+                    {(field, props) => (
+                        <Select
+                            {...props}
+                            label={_`Tags`}
+                            options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
+                            value={field.value}
+                            error={field.error}
+                            multiple
+                        />
+                    )}
+                </Field>
+
+                <Field name="file.images" type="File[]">
                     {(field, props) => (
                         <FileInput
                             {...props}
-                            hidden={true}
                             value={field.value}
                             error={field.error}
                             label="File list"
                             multiple
                         />
                     )}
-                </Field> */}
-
-                <Field name="file.item" type="File">
-                    {(field, props) => (
-                        <FileInput
-                            {...props}
-                            value={field.value}
-                            error={field.error}
-                            label={_`File item`}
-                        />
-                    )}
                 </Field>
 
-                <Field name="community">
-                    {(field, props) => (
-                        <TextInput
+                <Field name="type">
+                    {(field, props) => field.value != CommunityType.GLOBAL && (
+                        <Select
                             {...props}
-                            type="text"
-                            label={field.name}
+                            label={_`Type`}
+                            options={[
+                                { label: 'Global', value: CommunityType.GLOBAL }
+                            ]}
                             value={field.value}
                             error={field.error}
                         />
                     )}
                 </Field>
+
             </div>
-
-            {/* <div class="grid w-full max-w-sm items-center gap-1.5 mb-4">
-                <InputFile action={action} />
-            </div> */}
-
-
-            {/* <div class="grid w-full max-w-sm items-center gap-1.5 mb-4">
-                <Label for="tags">Tags</Label>
-                <Select.Root bind:displayValue={display} multiple class="select" name="tags">
-                    <Select.Trigger class="select-trigger">
-                        <Select.DisplayValue>{display.value.join(', ')}</Select.DisplayValue>
-                    </Select.Trigger>
-                    <Select.Popover class="select-popover select-max-height">
-                        {tags.map((tag) => (
-                            <Select.Item value={tag.id} class="select-item" key={tag.id}>
-                                <Select.ItemLabel>{tag.name}</Select.ItemLabel>
-                                <Select.ItemIndicator><LuCheck /></Select.ItemIndicator>
-                            </Select.Item>
-                        ))}
-                    </Select.Popover>
-                </Select.Root>
-            </div>
-
-            {display.value.map((item, index) => (
-                <input type="hidden" name={`tags.${index}`} value={item}></input>
-            ))}
-
-            <input type="hidden" name="creator_id" value={creatorId.value} />
-            <input type="hidden" name="community_id" value={communityId.value} />
-
-            <Button
-                class="modal-save w-full"
-                onClick$={() => isLoading.value = true}
-                disabled={isLoading.value}
-                type="submit"
-            >
-                {isLoading.value && <LuLoader2 class="mr-2 h-5 w-5 animate-spin" />}
-                {isLoading.value ? <span>Creating Debate</span> : <span>Create Debate</span>}
-            </Button>
-
-            {isPreview.value && (
-                <div class="mt-4 p-4 bg-gray-100 rounded-md">
-                    <h3 class="text-lg font-bold">{title.value || "Preview Title"}</h3>
-                    <p>{description.value || "Preview Description"}</p>
-                    <img src={file_example.value} alt="Preview" class="mt-2 max-w-full h-auto" />
-                    <p class="mt-2 text-sm text-gray-500">Tags: {display.value.join(', ') || "No tags selected"}</p>
-                </div>
-            )} */}
             <FormFooter of={debateForm} />
         </Form>
     );

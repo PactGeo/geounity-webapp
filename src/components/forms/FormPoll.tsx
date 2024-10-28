@@ -130,7 +130,6 @@ export default component$<FormPollProps>(() => {
             onSubmit$={handleSubmit}
             class="space-y-4 md:space-y-6 lg:space-y-8"
         >
-            <FormHeader of={pollForm} />
             <div class="space-y-4 md:space-y-6 lg:space-y-8">
                 <Field name="title">
                     {(field, props) => (

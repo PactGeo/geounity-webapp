@@ -1,4 +1,4 @@
-const data = [
+export const dataArray = [
     { name: "Afghanistan", flag: "🇦🇫" },
     { name: "Albania", flag: "🇦🇱" },
     { name: "Germany", flag: "🇩🇪" },
@@ -170,5 +170,14 @@ const data = [
     { name: "Zambia", flag: "🇿🇲" },
     { name: "Zimbabwe", flag: "🇿🇼" }
 ]
+
+export interface CountriesMap {
+    [key: string]: string;
+}
+
+const data: CountriesMap = dataArray.reduce((acc, country) => {
+    acc[country.name] = country.flag;
+    return acc;
+}, {} as CountriesMap);
 
 export default data;

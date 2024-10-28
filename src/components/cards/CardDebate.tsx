@@ -27,7 +27,7 @@ export default component$<CardDebateProps>(({ title, description, images, creato
     const mainImage = images?.[0]
 
     return (
-        <Link href={`/debates/${slug}`}>
+        <Link href={`/discussion/${slug}`}>
             <div class="border rounded-lg shadow-md hover:shadow-lg transition-shadow bg-white flex flex-col justify-between">
                 <div>
                     {mainImage && (

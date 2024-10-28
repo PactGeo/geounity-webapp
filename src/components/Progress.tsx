@@ -2,42 +2,27 @@ import { component$, QRL, useComputed$ } from "@builder.io/qwik";
 import { LuCheck } from '@qwikest/icons/lucide';
 
 interface ProgressProps {
-    label: string;  // The text of the option
-    id: number;  // The id of the option
     userVotedOptions: number[];  // The options that the user has voted for
-    votes: number;  // The number of votes for the option
     votesCount: number;  // The total number of votes
     onClick$: QRL<(ev: Event) => void>;  // Function to be executed on click
     option: any;  // The option object
 }
 
 export const Progress = component$<ProgressProps>(({
-    label,
-    id,
     userVotedOptions,
-    votes,
     votesCount,
     option,
     onClick$
 }) => {
-    console.log('########## Progress ##########')
-    console.log('id', id)
-    console.log('label', label)
-    console.log('votesCount', votesCount)
-    console.log('votes', votes)
-    console.log('option', option)
-
-    const voted = userVotedOptions.includes(id)
+    const voted = userVotedOptions.includes(option.id)
     const percentage = useComputed$(() =>
         votesCount > 0 ? (option.votes / (votesCount)) * 100 : 0
     )
-    console.log('percentage', percentage.value)
-
     return (
         <div
-            id={id.toString()}
+            id={option.id.toString()}
             class={`relative w-full rounded-sm h-12 overflow-hidden cursor-pointer transition-all duration-200 border ${
-                voted ? 'bg-blue-100 border-blue-300' : 'bg-white'
+                voted ? 'bg-blue-200 border-2 border-blue-500' : 'bg-gray-100 border border-gray-300'
             } hover:bg-blue-50 active:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400`}
             onClick$={onClick$}
             aria-pressed={voted}
@@ -61,8 +46,10 @@ export const Progress = component$<ProgressProps>(({
 
             {/* Label */}
             <div class="absolute inset-0 flex items-center px-4 pointer-events-none">
-                <span class="text-gray-800 whitespace-nowrap flex items-center">
-                    {label}
+                <span class={`whitespace-nowrap flex items-center ${
+                    voted ? 'text-gray-900' : 'text-gray-800'
+                }`}>
+                    {option.text}
                     {voted && <LuCheck class="ml-2 h-4 w-4 text-green-600" />}
                 </span>
             </div>
