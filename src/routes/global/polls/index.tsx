@@ -8,23 +8,23 @@ import FormPoll from "~/components/forms/FormPoll";
 import { LuPlusCircle } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
-import { useGetPolls } from '~/shared/loaders';
+import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 
-export { useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
+export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
 export { useFormAction } from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
 
+    const tags = useGetTags()
     const polls = useGetPolls()
 
     const isOpenModal = useSignal(false);
 
     const onClickExpand = $(() => nav('/polls/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
-    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
     return (
         <div>
@@ -46,7 +46,7 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
+            {polls.value.length === 0 && <EmptyPolls onClickAction={() => isOpenModal.value = !isOpenModal.value} />}
             <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
@@ -55,7 +55,10 @@ export default component$(() => {
                     onClickExpand={onClickExpand}
                     title={_`Create a New Global Poll`}
                 >
-                    <FormPoll onSubmitCompleted={onSubmitCompleted} />
+                    <FormPoll
+                        onSubmitCompleted={onSubmitCompleted}
+                        tags={tags.value}
+                    />
                 </Modal>
             ) : (
                 <Modal

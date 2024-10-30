@@ -273,6 +273,7 @@ export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }
         endDate: {
             active: false,
             value: '',
-        }
+        },
+        tags: [],
     };
 });

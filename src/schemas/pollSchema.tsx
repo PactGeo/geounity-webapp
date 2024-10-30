@@ -25,7 +25,8 @@ export const PollSchema = v.object({
     endDate: v.object({
         active: v.boolean(),
         value: v.string(),
-    })
+    }),
+    tags: v.array(v.string()),
 });
 
 export type PollForm = v.InferInput<typeof PollSchema>;

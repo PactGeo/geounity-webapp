@@ -1,24 +1,22 @@
 import { $, component$, useStyles$ } from "@builder.io/qwik";
-import { routeLoader$ } from '@builder.io/qwik-city';
 import { Button, Textarea } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
 import { getValue, insert, remove, SubmitHandler, useForm, valiForm$, type InitialValues } from '@modular-forms/qwik';
-import { TextInput } from "~/components/input/TextInput";
-import { ChipGroup } from "~/components/input/ChipGroup";
 import { FormFooter } from "./FormFooter";
-import styles from "./form.css?inline";
 import { _ } from "compiled-i18n";
-import { Checkbox } from "~/components/input/Checkbox";
+import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
 import { PollType } from "~/constants";
 import { PollForm, PollSchema } from "~/schemas";
 import { PollResponseData, useFormAction } from "~/shared/actions";
 import { useFormLoader } from "~/shared/loaders";
+import styles from "./form.css?inline";
 
 interface FormPollProps {
     onSubmitCompleted?: () => void;
+    tags: { id: string, name: string }[];
 }
 
-export default component$<FormPollProps>(() => {
+export default component$<FormPollProps>(({ tags }) => {
     useStyles$(styles);
 
     const [pollForm, { Form, Field, FieldArray }] = useForm<PollForm, PollResponseData>({
@@ -63,7 +61,7 @@ export default component$<FormPollProps>(() => {
                         {...props}
                         value={field.value}
                         error={field.error}
-                        placeholder="Enter a description"
+                        placeholder={_`Enter a description`}
                     />
                 )}
             </Field>
@@ -166,6 +164,18 @@ export default component$<FormPollProps>(() => {
                     )}
                 </Field>
             )}
+            <Field name="tags" type="string[]">
+                {(field, props) => (
+                    <Select
+                        {...props}
+                        label={_`Tags`}
+                        options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
+                        value={field.value}
+                        error={field.error}
+                        multiple
+                    />
+                )}
+            </Field>
             <FormFooter of={pollForm} />
         </Form>
     )
