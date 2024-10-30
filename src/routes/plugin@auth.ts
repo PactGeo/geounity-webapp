@@ -12,11 +12,6 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [GitHub, Google],
     callbacks: {
       jwt: async ({ token, trigger, session, account }) => {
-        console.log('======= callback jwt =======')
-        console.log('token', token)
-        console.log('trigger', trigger)
-        console.log('session', session)
-        console.log('account', account)
         // if (trigger === "update") token.name = session.user.name
         if (account?.provider === "github" || account?.provider === "google") {
           console.log(`Fetching ${account.provider} token`);
@@ -46,7 +41,6 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
           }
           return { ...token, accessToken: account.access_token }
         }
-        console.log('==============================')
         return token
       },
       session: async ({ session, token }) => {

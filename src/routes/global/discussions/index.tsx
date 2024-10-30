@@ -24,19 +24,16 @@ export default component$(() => {
     const debates = useGetDiscussions();
 
     const selectedTag = useSignal('all');
-    console.log('selectedTag', selectedTag.value)
     const isOpenModal = useSignal(false);
     const onClickExpand = $(() => nav('/discussions/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
     const getDebeteByTag = useResource$<string>(async ({ track }) => {
-        console.log('####################################getDebeteByTag###################################')
         track(() => selectedTag.value)
 
         if(selectedTag.value === 'all') {
             const token = session?.value?.accessToken;
-            console.log('token', token)
             // const response = await fetch(`http://localhost:8000/debates/global`, {
             //     headers: {
             //         method: 'GET',
@@ -45,14 +42,11 @@ export default component$(() => {
             //     }
             // });
             return ['a']
-            console.log('response', response)
             const data = await response.json();
-            console.log('data1', data)
             return data
         }
         // const response = await fetch(`http://localhost:8000/debates?debate_type=GLOBAL&tag=${selectedTag.value}`);
         // const data = await response.json();
-        // console.log('data', data)
         return []
         // return data
     })

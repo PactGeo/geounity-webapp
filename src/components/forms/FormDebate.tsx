@@ -63,8 +63,6 @@ type ResponseData = {
 
 export const useFormAction = formAction$<DebateForm, ResponseData>(
     async (values, event) => {
-        console.log('=== useFormAction ===')
-        console.log('values', values)
         const session = event.sharedMap.get('session');
         const token = session?.accessToken;
         
@@ -75,7 +73,6 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
             type: values.type,
             tags: values.tags,
         }
-        console.log('payload: ', payload)
         
         const response = await fetch('http://localhost:8000/debates', {
             method: 'POST',
@@ -85,9 +82,7 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
             },
             body: JSON.stringify(payload),
         });
-        console.log('response', response)
         const data = await response.json();
-        console.log('data', data)
         return {
             success: true,
             message: _`Debate created successfully`,
@@ -109,9 +104,6 @@ export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
     const file_example = useSignal<string>('https://images.unsplash.com/photo-1724963475892-a3274091955e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
 
     const handleSubmit = $<SubmitHandler<DebateForm>>((values, event) => {
-        console.log('== handleSubmit ==')
-        console.log('event', event)
-        console.log('values', values)
         // Runs on client
     });
 

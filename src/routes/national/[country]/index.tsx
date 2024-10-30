@@ -11,7 +11,6 @@ export default component$(() => {
     const loc = useLocation();
     const country = loc.params.country
     const country2 = useGetCountry();
-    console.log('country2', country2.value)
 
     const stats = {
         polls: 3,

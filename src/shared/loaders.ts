@@ -45,10 +45,8 @@ export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
 });
 
 export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
-    console.log('useGetDiscussions')
     const session = sharedMap.get('session');
     const token = session?.accessToken;
-    console.log('token', token)
     const response = await fetch('http://localhost:8000/debates/global', {
         headers: {
             Accept: 'application/json',
@@ -63,7 +61,6 @@ export const useGetCountry = routeLoader$(async requestEvent => {
     const country = requestEvent.params.country;
     const session = requestEvent.sharedMap.get('session');
     const token = session?.accessToken;
-    console.log('country2', country)
     const response = await fetch('http://localhost:8000/countries/' + country, {
         headers: {
             Accept: 'application/json',
@@ -71,7 +68,6 @@ export const useGetCountry = routeLoader$(async requestEvent => {
         },
     });
     const data = await response.json();
-    console.log('data', data)
     return data
 })
 
@@ -105,7 +101,6 @@ export const useGetGlobalDebates = routeLoader$(async () => {
 });
 
 const uploadImage = async (file: Blob) => {
-    console.log('uploadImage')
     const response_signature = await fetch('http://localhost:8000/cloudinary/generate_signature', {
         method: 'POST',
         headers: {
@@ -115,7 +110,6 @@ const uploadImage = async (file: Blob) => {
         },
     });
     const data_signature = await response_signature.json();
-    console.log('data_signature', data_signature)
     const formdata = new FormData();
     formdata.append("signature", data_signature.signature);
     formdata.append("timestamp", data_signature.timestamp);
@@ -123,7 +117,6 @@ const uploadImage = async (file: Blob) => {
     formdata.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
     formdata.append("file", file);
     const endpoint = "https://api.cloudinary.com/v1_1/" + import.meta.env.VITE_CLOUDINARY_CLOUD_NAME + "/auto/upload";
-    console.log('endpoint', endpoint)
     const res = await fetch(endpoint, {
         body: formdata,
         method: "post",
@@ -140,10 +133,6 @@ export const usePostDebate = routeAction$(
             const cloudinaryResponse = await uploadImage(debate.image);
             debate.image_url = cloudinaryResponse.secureUrl;
         }
-        console.log('============================================')
-        console.log('usePostDebate')
-        console.log('debate', debate)
-
         const response = await fetch('http://localhost:8000/debates', {
             method: 'POST',
             headers: {
@@ -179,10 +168,6 @@ export const usePostPoll = routeAction$(
     async (poll, { sharedMap }) => {
         const session = sharedMap.get('session');
         const token = session?.accessToken;
-        console.log('====================================== usePostPoll ====================================================')
-        console.log('usePostPoll')
-        console.log('poll', poll)
-        console.log('token', token)
 
         try{
             const response = await fetch('http://localhost:8000/polls', {
@@ -194,10 +179,8 @@ export const usePostPoll = routeAction$(
                 },
                 body: JSON.stringify(poll),
             });
-            console.log('response', response)
             return (await response.json());
         } catch (err) {
-            console.log('err', err)
             return err
         }
     },
@@ -221,14 +204,9 @@ export const usePostPoll = routeAction$(
 
 export const useVotePoll = routeAction$(
     async (data, { sharedMap }) => {
-        console.log('data', data)
         const session = sharedMap.get('session');
         const token = session?.accessToken;
-        console.log('useVotePoll')
-        console.log('ids', data.option_ids)
-        console.log('token', token)
         const { pollId } = data 
-        console.log('pollId', pollId)
         try {
             const response = await fetch(`http://localhost:8000/polls/${pollId}/vote`, {
                 method: 'POST',
@@ -239,10 +217,9 @@ export const useVotePoll = routeAction$(
                 },
                 body: JSON.stringify({ option_ids: data.optionIds }),
             });
-            console.log('response ################', response)
             return (await response.json());
         } catch (err) {
-            console.log('err', err)
+            console.error('err', err)
             return err
         }
     }
@@ -269,8 +246,6 @@ export const useReactToPoll = routeAction$(
 
 export const useVoteOpinion = routeAction$(
     async (data, { sharedMap }) => {
-        console.log('====================== useVoteOpinion ======================')
-        console.log('data', data)
         const session = sharedMap.get('session');
         const token = session?.accessToken;
         const { opinionId, value } = data;

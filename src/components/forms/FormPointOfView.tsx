@@ -38,19 +38,14 @@ type ResponseData = {
 
 export const useFormAction = formAction$<PointOfViewForm, ResponseData>(
     async (values, event) => {
-        console.log('=== useFormAction PointOfViewForm ===')
-        console.log('values', values)
         const API_BASE_URL = 'http://localhost:8000'
         const session = event.sharedMap.get('session')
         const token = session?.accessToken
-        console.log('token', token)
 
         const payload = {
             country: values.country,
             content: values.opinion,
         }
-        console.log('payload', payload)
-
         const response = await fetch(`${API_BASE_URL}/debates/${values.debateId}/opinion`, {
             method: 'POST',
             headers: {
@@ -76,17 +71,12 @@ interface FormPointOfViewProps {
 }
 
 export default component$<FormPointOfViewProps>(({debateId}) => {
-    console.log('debateId', debateId)
-    const [pollForm, { Form, Field }] = useForm<PointOfViewForm, ResponseData>({
         loader: useFormLoader(),
         action: useFormAction(),
         validate: valiForm$(PointOfViewSchema),
     });
 
     const handleSubmit = $<SubmitHandler<PointOfViewForm>>((values, event) => {
-        console.log('== handleSubmit ==')
-        console.log('event', event)
-        console.log('values', values)
         // Runs on client
     });
     

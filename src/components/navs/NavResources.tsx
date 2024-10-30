@@ -12,7 +12,6 @@ export default component$(() => {
     const segments = pathname.split('/').filter(Boolean);
     const basePath = pathname.split('/').filter(Boolean)[0];
     
-    console.log('basePath', basePath);
     const items = [
         { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/` },
         { name: _`Polls`, icon: <LuDatabase />, href: `/${basePath}/polls/` },

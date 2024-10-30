@@ -27,8 +27,6 @@ export const useFormLoader = routeLoader$<InitialValues<CountryForm>>(({ pathnam
 
 export const useFormAction = formAction$<CountryForm>(
     async (values, event) => {
-        console.log('=== useFormAction COUNTRY ===')
-        console.log('values', values)
         return {
             success: true,
             message: _`Point of view created successfully`,
@@ -47,10 +45,6 @@ export default component$(() => {
         validate: valiForm$(CountrySchema),
     });
     const handleSubmit = $<SubmitHandler<CountryForm>>((values, event) => {
-        console.log('== handleSubmit ==')
-        console.log('event', event)
-        console.log('values', values)
-        console.log(`/national/${values.country}`)
         return nav(`/national/${values.country}`)
         // Runs on client
     });

@@ -12,7 +12,7 @@ export type PollResponseData = {
 };
 export const useFormAction = formAction$<PollForm, PollResponseData>(
     async (values, event) => {
-        console.log('=== POLL useFormAction ===')
+        console.log('=============== POLL useFormAction ===============')
         console.log('values', values)
         const session = event.sharedMap.get('session')
         const token = session?.accessToken

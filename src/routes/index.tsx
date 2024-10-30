@@ -7,7 +7,6 @@ import { _ } from "compiled-i18n";
 
 export default component$(() => {
   const session = useSession();
-  console.log('session.value', session.value)
   const name = 'John'
   const emoji = '👋'
   const greeting = _`Hello ${name} ${emoji}!`

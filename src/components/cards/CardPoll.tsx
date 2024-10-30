@@ -53,7 +53,6 @@ export default component$<CardPollProps>(({
     user_reaction_type,
     poll
 }) => {
-    console.log('==========================CardPollProps=======================')
     const nav = useNavigate();
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
@@ -105,7 +104,7 @@ export default component$<CardPollProps>(({
             pollState.poll.options = result.value.options;
         } 
         else {
-            console.log('Error')
+            console.error('Error')
         }
     });
 

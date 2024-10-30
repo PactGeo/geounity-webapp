@@ -101,7 +101,6 @@ const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; 
     // const handleSubmitComment = (e) => {
     //     e.preventDefault()
     //     // Aquí iría la lógica para enviar el comentario al backend
-    //     console.log(`New comment for ${pov.name}:`, newComment)
     //     newComment.value = ''
     // }
 
@@ -147,13 +146,11 @@ const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; 
 
 export default component$(() => {
     const debate = useGetDebateBySlug()
-    console.log('debate', debate.value)
 
     const userCountry = "Argentina"
 
     const searchTerm = useSignal('')
     const pointsOfView = useSignal<PointOfView[]>(debate.value.points_of_view)
-    console.log('pointsOfView', pointsOfView.value)
 
     const filteredPointsOfView = pointsOfView.value.filter(pov =>
         pov.name.toLowerCase().includes(searchTerm.value.toLowerCase())
@@ -313,7 +310,6 @@ export default component$(() => {
                                                     <div class="h-[400px]">
                                                         <div class="space-y-4">
                                                             {pov.opinions.map((opinion) => {
-                                                                console.log('opinion', opinion)
                                                                 return (
                                                                     <CardOpinion
                                                                         id={opinion.id}
