@@ -1,20 +1,18 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { useGetDiscussions, useGetPolls, useGetTags } from "~/shared/loaders";
+import { useGetTags } from "~/shared/loaders";
+import ListTags from "~/components/list/ListTags";
 import NavResources from "~/components/navs/NavResources";
-import ListPolls from "~/components/list/ListPolls";
-import ListDebates from "~/components/list/ListDebates";
 
-export { useGetPolls, useGetDiscussions } from '~/shared/loaders';
+export { useGetTags } from '~/shared/loaders';
 
 export default component$(() => {
-    const polls = useGetPolls()
-    const debates = useGetDiscussions();
+    const tags = useGetTags();
     return (
         <div>
             <NavResources />
-            <ListPolls polls={polls.value} type="GLOBAL" />
-            <ListDebates debates={debates.value} type="GLOBAL" />
+            <ListTags tags={tags.value} />
+            <h1>Overview</h1>
         </div>
     )
 });

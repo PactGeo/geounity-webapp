@@ -28,15 +28,15 @@ export const TextInput = component$(
             }
         });
         return (
-            <div class={clsx('', props.class)}>
+            <div class={clsx('space-y-1', props.class)}>
                 <InputLabel name={name} label={label} required={required} />
                 <input
                     {...props}
                     class={clsx(
-                        'h-14 w-full rounded-2xl border-2 bg-white px-5 outline-none placeholder:text-slate-500 dark:bg-gray-900 md:h-16 md:text-lg lg:h-[70px] lg:px-6 lg:text-xl',
+                        'w-full h-12 rounded-md border border-gray-300 bg-white px-4 py-2 outline-none placeholder:text-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:bg-gray-900  dark:focus:border-blue-400',
                         error
-                            ? 'border-red-600/50 dark:border-red-400/50'
-                            : 'border-slate-200 hover:border-slate-300 focus:border-sky-600/50 dark:border-slate-800 dark:hover:border-slate-700 dark:focus:border-sky-400/50'
+                            ? 'border-red-600 dark:border-red-400'
+                            : 'hover:border-gray-400 dark:border-gray-800'
                     )}
                     id={name}
                     value={input.value}

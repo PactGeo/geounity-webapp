@@ -8,7 +8,11 @@ import { NavLink } from "~/components/nav-link/NavLink";
 export default component$(() => {
     const loc = useLocation();
     const pathname = loc.url.pathname;
+    const country = loc.params.country
+    const segments = pathname.split('/').filter(Boolean);
     const basePath = pathname.split('/').filter(Boolean)[0];
+    
+    console.log('basePath', basePath);
     const items = [
         { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/` },
         { name: _`Polls`, icon: <LuDatabase />, href: `/${basePath}/polls/` },

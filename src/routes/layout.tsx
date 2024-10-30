@@ -10,6 +10,8 @@ export { useServerTimeLoader } from '~/shared/loaders';
 
 import {guessLocale} from 'compiled-i18n'
 
+export { useGetCountry } from '~/shared/loaders';
+
 export const onRequest: RequestHandler = async ({query, headers, locale}) => {
 	// Allow overriding locale with query param `locale`
 	const maybeLocale = query.get('locale') || headers.get('accept-language')

@@ -7,16 +7,12 @@ export const buttonVariants = cva(
   {
     variants: {
       look: {
-        primary:
-          "border-base bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:shadow-base active:press",
-        secondary:
-          "border-base bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/90 active:shadow-base active:press",
-        alert:
-          "border-base bg-alert text-alert-foreground shadow-sm hover:bg-alert/90 active:shadow-base active:press",
-        outline:
-          "border bg-background text-foreground shadow-sm hover:bg-accent active:shadow-base active:press",
-        ghost: "text-accent-foreground hover:bg-accent",
-        link: "text-foreground hover:bg-transparent hover:text-foreground/80 hover:underline hover:underline-offset-2",
+        primary: "bg-primary text-primary-foreground shadow-lg hover:shadow-xl border-2 border-secondary hover:bg-primary/90",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/90",
+        alert: "bg-alert text-alert-foreground shadow-sm hover:bg-alert/90",
+        outline: "border bg-background-light text-foreground-light hover:bg-primary/10",
+        ghost: "text-primary hover:bg-primary/10",
+        link: "text-primary hover:text-primary/80 underline",
       },
       size: {
         sm: "h-8 px-2 py-1.5 text-sm",

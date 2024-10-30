@@ -17,5 +17,5 @@ export * from './progress/progress';
 export * from './separator/separator';
 // export * from './skeleton/skeleton';
 export * from './tabs/tabs';
-export * from './textarea/textarea';
+export * from './textarea/Textarea';
 export * from './select/select';

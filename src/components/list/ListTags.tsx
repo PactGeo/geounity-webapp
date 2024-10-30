@@ -3,14 +3,15 @@ import { LuChevronLeft, LuChevronRight } from "@qwikest/icons/lucide";
 import styles from "./list-tags.css?inline";
 
 interface ListTagsProps {
+    selectedTag?: { value: string };
     tags: { id: string, name: string }[];
 }
 
-export default component$<ListTagsProps>(({ tags }) => {
+export default component$<ListTagsProps>(({ tags, selectedTag }) => {
     console.log('tags', tags)
     useStyles$(styles);
 
-    const selectedTag = useSignal('all');
+    const selectedTagSignal = useSignal(selectedTag?.value || 'all');
     const canScrollLeft = useSignal(false);
     const canScrollRight = useSignal(false);
     const tagsRef = useSignal<HTMLDivElement>();
@@ -61,16 +62,16 @@ export default component$<ListTagsProps>(({ tags }) => {
                     ref={tagsRef}
                 >
                     <button
-                        class={`button-tag ${selectedTag.value === 'all' ? 'active' : ''}`}
-                        onClick$={() => selectedTag.value = 'all'}
+                        class={`button-tag ${selectedTagSignal.value === 'all' ? 'active' : ''}`}
+                        onClick$={() => selectedTagSignal.value = 'all'}
                     >
                         All
                     </button>
                     {tags.map((tag) => (
                         <button
-                            class={`button-tag ${selectedTag.value === tag.name ? 'active' : ''}`}
+                            class={`button-tag ${selectedTagSignal.value === tag.name ? 'active' : ''}`}
                             key={tag.id}
-                            onClick$={() => selectedTag.value = tag.name}
+                            onClick$={() => selectedTagSignal.value = tag.name}
                         >
                             {tag.name}
                         </button>

@@ -22,7 +22,7 @@ interface CardDebateProps {
 export default component$<CardDebateProps>(({ title, description, images, creator_username, created_at, comments_count, last_comment_at, tags, countries_involved, slug }) => {
     useStylesScoped$(styles);
     const nav = useNavigate();
-    const onClickUsername = $((username: string) => nav(`/profile/${username}`))
+    const onClickUsername = $((username: string) => nav(`/user/${username}`))
 
     const mainImage = images?.[0]
 

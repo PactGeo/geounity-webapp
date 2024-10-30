@@ -20,24 +20,6 @@
     cursor: not-allowed;
 }
 
-.input, .textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    resize: vertical;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input:focus, .textarea:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
-    outline: none;
-}
-
 .label {
     margin-bottom: 8px;
     font-weight: bold;

@@ -166,7 +166,7 @@ export default component$<CardPollProps>(({
     })
 
     return (
-        <div class="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow w-full">
+        <div class="border rounded-lg shadow-md p-4 bg-gray-50 hover:shadow-lg transition-shadow w-full">
             {/* Title and type badge */}
             <h2 class="text-xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}

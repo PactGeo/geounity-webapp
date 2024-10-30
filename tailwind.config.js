@@ -12,16 +12,24 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#7C4DFF",
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#29B6F6",
+          foreground: "#FFFFFF",
         },
         alert: {
-          DEFAULT: "hsl(var(--alert))",
-          foreground: "hsl(var(--alert-foreground))",
+          DEFAULT: "#FF5252",
+          foreground: "#FFFFFF",
+        },
+        background: {
+          light: '#FFFFFF',
+          dark: '#121212',
+        },
+        foreground: {
+          light: '#333333',
+          dark: '#E0E0E0',
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

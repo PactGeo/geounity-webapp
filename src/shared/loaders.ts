@@ -1,4 +1,7 @@
 import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
+import { InitialValues } from "@modular-forms/qwik";
+import { PollType } from "~/constants";
+import { PollForm } from "~/schemas";
 interface Poll {
     status: string;
     poll_type: string;
@@ -55,6 +58,22 @@ export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
     const data = await response.json();
     return data as Array<any>
 });
+
+export const useGetCountry = routeLoader$(async requestEvent => {
+    const country = requestEvent.params.country;
+    const session = requestEvent.sharedMap.get('session');
+    const token = session?.accessToken;
+    console.log('country2', country)
+    const response = await fetch('http://localhost:8000/countries/' + country, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    });
+    const data = await response.json();
+    console.log('data', data)
+    return data
+})
 
 export const useGetGlobalDebates = routeLoader$(async () => {
     const response = await fetch('http://localhost:8000/debates?debate_type=GLOBAL', {
@@ -247,3 +266,38 @@ export const useReactToPoll = routeAction$(
         return result;
     }
 );
+
+export const useVoteOpinion = routeAction$(
+    async (data, { sharedMap }) => {
+        console.log('====================== useVoteOpinion ======================')
+        console.log('data', data)
+        const session = sharedMap.get('session');
+        const token = session?.accessToken;
+        const { opinionId, value } = data;
+        const response = await fetch(`http://localhost:8000/opinions/${opinionId}/vote`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ value }),
+        });
+        const result = await response.json();
+        return result;
+    }
+);
+
+export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }) => {
+    return {
+        type: PollType.Binary,
+        title: '',
+        description: '',
+        options: ['', ''],
+        community: pathname.includes('/global/') ? 'Global' : 'private',
+        endDate: {
+            active: false,
+            value: '',
+        }
+    };
+});

@@ -5,6 +5,7 @@ import { LuDatabase, LuGlobe2, LuHome, LuLandmark, LuLogOut, LuMapPin, LuMessage
 import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
+import { useGetCountry } from '~/shared/loaders';
 
 interface MenuProps {
     isOpen?: boolean;
@@ -13,31 +14,13 @@ interface MenuProps {
 
 export default component$<MenuProps>((props) => {
     useStyles$(styles);
+    const country2 = useGetCountry();
     const { url } = useLocation();
 
     const geography = [
         { name: _`Global`, path: '/global/', icon: <>🌐</> },
         { name: _`International`, path: '/international/', icon: <><LuGlobe2 /></> },
-        { name: 'America', path: '/continents/america/', icon: <LuMapPin /> },
-        { name: 'Argentina', path: '/countries/argentina/', icon: <LuMapPin /> },
-        { name: 'Buenos Aires', path: '/countries/argentina/buenos-aires/', icon: <LuMapPin />, disabled: true },
-        { name: 'Miramar', path: '/countries/argentina/buenos-aires/miramar/', icon: <LuMapPin />, disabled: true },
-    ];
-
-    const actions = [
-        { name: 'Polls', path: '/polls', icon: <LuDatabase /> },
-        { name: 'Issues', path: '/issues/', icon: <LuMessageCircle /> },
-        { name: 'Debates', path: '/debates/', icon: <LuMessageSquare /> },
-        { name: 'Projects and Fundraising', path: '/projects-fundraising/', icon: <LuLandmark /> },
-    ];
-
-    const otherOptions = [
-        { name: 'Profile', path: '/profile/', icon: <LuUser /> },
-        { name: 'Settings', path: '/settings/', icon: <LuSettings /> },
-        { name: 'Logout', path: '/logout/', icon: <LuLogOut /> },
-        { name: 'Messages', path: '/messages/', icon: <LuMessageCircle /> },
-        { name: 'Notifications', path: '/notifications/', icon: <LuMessageSquare /> },
-        { name: 'Location: Argentina', path: '/location/argentina/', icon: <LuMapPin /> },
+        { name: 'National'+`${country2.value.flag || ''}`, path: '/national/', icon: <LuMapPin /> },
     ];
 
     return (
@@ -66,31 +49,6 @@ export default component$<MenuProps>((props) => {
                         class={cn(
                             'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
                             url.pathname.startsWith(item.path) ? 'bg-gray-300 font-extrabold text-primary-700' : '',
-                            item.disabled ? 'opacity-50 cursor-not-allowed' : ''
-                        )}
-                    >
-                        {!item.disabled ? (
-                            <Link href={item.path} class="flex gap-2 items-center text-slate-500 rounded-lg">
-                                <span>{item.icon}</span>
-                                <span>{item.name}</span>
-                            </Link>
-                        ) : (
-                            <div class="flex gap-2 items-center text-slate-500 rounded-lg opacity-50 cursor-not-allowed">
-                                <span>{item.icon}</span>
-                                <span>{item.name}</span>
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
-            {/* <Separator orientation="horizontal" class="separator-top my-2" />
-            <ul class='m-2 pl-0'>
-                {actions.map(item => (
-                    <li
-                        key={item.path}
-                        class={cn(
-                            'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
-                            url.pathname === item.path ? 'bg-gray-300 font-extrabold text-primary-700' : ''
                         )}
                     >
                         <Link href={item.path} class="flex gap-2 items-center text-slate-500 rounded-lg">
@@ -99,24 +57,20 @@ export default component$<MenuProps>((props) => {
                         </Link>
                     </li>
                 ))}
-            </ul>
-            <Separator orientation="horizontal" class="separator-top my-2" />
-            <ul class='m-2 pl-0'>
-                {otherOptions.map(item => (
+                {country2.value.id && (
                     <li
-                        key={item.path}
                         class={cn(
                             'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
-                            url.pathname === item.path ? 'bg-gray-300 font-extrabold text-primary-700' : ''
+                            url.pathname.startsWith('/national/') ? 'bg-gray-300 font-extrabold text-primary-700' : '',
                         )}
                     >
-                        <Link href={item.path} class="flex gap-2 items-center text-slate-500 rounded-lg">
-                            <span>{item.icon}</span>
-                            <span>{item.name}</span>
+                        <Link href={`/national/${country2.value.id}/`} class="flex gap-2 items-center text-slate-500 rounded-lg">
+                            <span>{country2.value.flag}</span>
+                            <span>{country2.value.name}</span>
                         </Link>
                     </li>
-                ))}
-            </ul> */}
+                )}
+            </ul>
         </nav>
     );
 });

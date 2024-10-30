@@ -1,40 +1,39 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
-import Modal from '~/components/modal/modal';
+import { useGetTags, useGetDiscussions } from "~/shared/loaders";
+import ListTags from "~/components/list/ListTags";
 import NavResources from "~/components/navs/NavResources";
-import { useSession } from "~/routes/plugin@auth";
 import { Button } from "~/components/ui";
-import FormPoll from "~/components/forms/FormPoll";
 import { LuPlusCircle } from "@qwikest/icons/lucide";
-import EmptyPolls from "~/components/empty-state/EmptyPolls";
-import ListPolls from "~/components/list/ListPolls";
-import { useGetPolls } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
+import EmptyDebates from "~/components/empty-state/EmptyDebates";
+import ListDebates from "~/components/list/ListDebates";
+import { useSession } from "~/routes/plugin@auth";
+import Modal from "~/components/modal/modal";
+import FormDebate from "~/components/forms/FormDebate";
 
-export { useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
-export { useFormAction } from "~/shared/actions";
+export { useFormLoader, useFormAction } from "~/components/forms/FormDebate";
+export { useGetTags, useGetDiscussions } from '~/shared/loaders';
 
 export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
+    const tags = useGetTags();
 
-    const polls = useGetPolls()
+    const debates = useGetDiscussions();
 
     const isOpenModal = useSignal(false);
-
-    const onClickExpand = $(() => nav('/polls/new'))
+    const onClickExpand = $(() => nav('/discussions/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
     return (
         <div>
             <NavResources />
+            <ListTags tags={tags.value} />
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-center drop-shadow-md">
-                        {_`Polls Global`}
-                    </h1>
-                    {polls.value.length > 0 && (
+                    {debates.value.length > 0 && (
                         <Button
                             class="mr-4"
                             look="primary"
@@ -46,16 +45,16 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
-            <ListPolls polls={polls.value} type="GLOBAL" />
+            {debates.value.length === 0 && <EmptyDebates onClickAction={onClickAction} />}
+            <ListDebates debates={debates.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
-                    description={_`Share an important question to gather the global community's opinion. Your poll can help identify common challenges and priorities.`}
+                    description={_`Share the most important challenge facing your community.`}
                     isOpen={isOpenModal}
                     onClickExpand={onClickExpand}
-                    title={_`Create a New Global Poll`}
+                    title={_`New Debate`}
                 >
-                    <FormPoll onSubmitCompleted={onSubmitCompleted} />
+                    <FormDebate onSubmitCompleted={onSubmitCompleted} tags={tags.value} />
                 </Modal>
             ) : (
                 <Modal
@@ -73,11 +72,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-    title: _`Global Polls`,
+    title: _`Global Discussions`,
     meta: [
         {
             name: "description",
-            content: _`Global Polls description`,
+            content: _`Global Discussions description`,
         },
     ],
 };

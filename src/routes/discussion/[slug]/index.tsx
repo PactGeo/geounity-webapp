@@ -12,15 +12,23 @@ import countries from "~/data/countries";
 import CardOpinion from "~/components/cards/CardOpinion";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormPointOfView";
+export { useVoteOpinion } from "~/shared/loaders";
 
 type PointOfView = {
     name: string;
     opinions: {
         id: number;
-        user: string;
+        user: {
+            id: number;
+            username: string;
+            image: string;
+        };
         content: string;
         likes: number;
         created_at: string;
+        upvotes: number;
+        downvotes: number;
+        score: number;
     }[];
     color: string;
 }
@@ -102,7 +110,7 @@ const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; 
             {pov.opinions.map((opinion) => (
                 <div key={opinion.id} class="mb-4 p-4 bg-muted rounded-lg">
                     <div class="flex justify-between items-start">
-                        <p class="font-medium">{opinion.user}</p>
+                        <p class="font-medium">{opinion.user.username}</p>
                         <div class="flex items-center space-x-2">
                             <Button look="ghost" size="icon">
                                 <span class="h-4 w-4"><LuThumbsUp /></span>
@@ -271,6 +279,7 @@ export default component$(() => {
             </div>
 
             <Button
+                class="mb-4"
                 look="primary"
                 onClick$={() => isOpenModalAddDebate.value = true}
             >
@@ -282,8 +291,8 @@ export default component$(() => {
                 : (
                     <Tabs.Root class="w-full">
                         <Tabs.List class="grid w-full grid-cols-2">
-                            <Tabs.Tab value="summary">Opinions by Country</Tabs.Tab>
-                            <Tabs.Tab value="details">Overview</Tabs.Tab>
+                            <Tabs.Tab value="summary">{_`Opinions by Country`}</Tabs.Tab>
+                            <Tabs.Tab value="details">{_`Overview`}</Tabs.Tab>
                         </Tabs.List>
                         <Tabs.Panel>
                             <div class="overflow-x-auto py-4 w-full whitespace-nowrap rounded-md border" onKeyDown$={handleKeyDown}>
@@ -293,24 +302,27 @@ export default component$(() => {
                                         return (
                                             <div
                                                 key={pov.name}
-                                                class={`w-[300px] flex-shrink-0 transition-all duration-300 ${focusedPOV.value === pov.name ? 'ring-2 ring-blue-500 shadow-lg' : ''}`}
+                                                class={`w-[300px] flex-shrink-0 transition-all duration-300 ${focusedPOV.value === pov.name ? 'ring-2 ring-blue-500 shadow-lg' : 'ring ring-slate-300'}`}
                                             // ref={el => countryRefs.current[country.code] = el}
                                             >
-                                                <div class="p-4">
+                                                <div class="p-1">
                                                     <h3 class="text-xl font-bold mb-4 flex items-center">
                                                         <span class="text-2xl mr-2">{flag ? flag : pov.name}</span>
                                                         {pov.name} ({pov.opinions.length})
                                                     </h3>
                                                     <div class="h-[400px]">
-                                                        <div class="pr-4 space-y-4">
+                                                        <div class="space-y-4">
                                                             {pov.opinions.map((opinion) => {
                                                                 console.log('opinion', opinion)
                                                                 return (
                                                                     <CardOpinion
                                                                         id={opinion.id}
-                                                                        username={opinion.user}
+                                                                        username={opinion.user.username}
                                                                         content={opinion.content}
                                                                         createdAt={opinion.created_at}
+                                                                        upvotes={opinion.upvotes}
+                                                                        downvotes={opinion.downvotes}
+                                                                        score={opinion.score}
                                                                     />
                                                                 )
                                                             })}

@@ -23,9 +23,9 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     const signOut = useSignOut();
 
     const actions = [
-        { key: 'location', icon: <LuMapPin />, label: _`Location`, href: '/profile/sebacc', disabled: false },
-        { key: 'language', icon: <LuGlobe />, label: _`Language`, href: '/profile/sebacc', disabled: false },
-        { key: 'theme', label: <ThemeSwitch />, href: '/profile/sebacc', disabled: false },
+        { key: 'location', icon: <LuMapPin />, label: _`Location`, href: '/user/sebacc', disabled: false },
+        { key: 'language', icon: <LuGlobe />, label: _`Language`, href: '/user/sebacc', disabled: false },
+        { key: 'theme', label: <ThemeSwitch />, href: '/user/sebacc', disabled: false },
     ]
 
     return (
@@ -50,7 +50,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
             <Dropdown.Popover class="mt-2 pt-2 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5">
                 <Dropdown.Group>
                     <Dropdown.Item class="dropdown-item">
-                        <Link href="/profile/sebacc">
+                        <Link href="/user/sebacc">
                             <div class="flex items-center">
                                 <LuUser /><span>{_`My profile`}</span>
                             </div>
