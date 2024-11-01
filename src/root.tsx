@@ -7,8 +7,6 @@ import {
 import { RouterHead } from "./components/router-head/router-head";
 import { isDev } from "@builder.io/qwik/build";
 
-export { useGetCountry } from "~/shared/loaders";
-
 import "./global.css";
 
 export default component$(() => {

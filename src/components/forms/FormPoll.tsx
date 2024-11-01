@@ -1,7 +1,7 @@
 import { $, component$, useStyles$ } from "@builder.io/qwik";
 import { Button, Textarea } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
-import { getValue, insert, remove, SubmitHandler, useForm, valiForm$, type InitialValues } from '@modular-forms/qwik';
+import { getErrors, getValue, insert, remove, SubmitHandler, useForm, valiForm$ } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
 import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
@@ -10,6 +10,9 @@ import { PollForm, PollSchema } from "~/schemas";
 import { PollResponseData, useFormAction } from "~/shared/actions";
 import { useFormLoader } from "~/shared/loaders";
 import styles from "./form.css?inline";
+
+export { useFormLoader } from '~/shared/loaders';
+export { useFormAction } from '~/shared/actions';
 
 interface FormPollProps {
     onSubmitCompleted?: () => void;
@@ -28,6 +31,9 @@ export default component$<FormPollProps>(({ tags }) => {
     const value = getValue(pollForm, 'title')
     console.log('value', value)
 
+    const errors = getErrors(pollForm);
+    console.log('errors', errors)
+
     const handleSubmit = $<SubmitHandler<PollForm>>((values, event) => {
         console.log('== handleSubmit ==')
         console.log('event', event)
@@ -42,6 +48,7 @@ export default component$<FormPollProps>(({ tags }) => {
             onSubmit$={handleSubmit}
             class="space-y-4 md:space-y-6 lg:space-y-8"
         >
+
             <Field name="title">
                 {(field, props) => (
                     <TextInput
@@ -55,6 +62,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     />
                 )}
             </Field>
+
             <Field name="description">
                 {(field, props) => (
                     <Textarea
@@ -84,7 +92,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     />
                 )}
             </Field>
-            {/* Campo de Opciones con FieldArray */}
+
             <FieldArray name="options">
                 {(fieldArray) => (
                     <div class="space-y-2">
@@ -130,6 +138,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     </div>
                 )}
             </FieldArray>
+
             <Field name="community">
                 {(field, props) => false && (
                     <TextInput
@@ -141,6 +150,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     />
                 )}
             </Field>
+
             <Field name="endDate.active" type="boolean">
                 {(field, props) => (
                     <Checkbox
@@ -151,9 +161,10 @@ export default component$<FormPollProps>(({ tags }) => {
                     />
                 )}
             </Field>
-            {hasEndDate && (
+
+            {(
                 <Field name="endDate.value">
-                    {(field, props) => (
+                    {(field, props) => hasEndDate && (
                         <TextInput
                             {...props}
                             type="date"
@@ -164,6 +175,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     )}
                 </Field>
             )}
+
             <Field name="tags" type="string[]">
                 {(field, props) => (
                     <Select
@@ -176,6 +188,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     />
                 )}
             </Field>
+            
             <FormFooter of={pollForm} />
         </Form>
     )

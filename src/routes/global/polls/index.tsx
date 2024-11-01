@@ -25,6 +25,7 @@ export default component$(() => {
 
     const onClickExpand = $(() => nav('/polls/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
+    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
     return (
         <div>
@@ -46,7 +47,7 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {polls.value.length === 0 && <EmptyPolls onClickAction={() => isOpenModal.value = !isOpenModal.value} />}
+            {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
             <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal

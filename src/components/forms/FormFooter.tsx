@@ -1,6 +1,7 @@
 import { type ActionStore, Form } from '@builder.io/qwik-city';
 import { type FormStore, reset } from '@modular-forms/qwik';
 import { ActionButton } from './ActionButton';
+import { _ } from 'compiled-i18n';
 
 type FormFooterProps = {
     of: FormStore<any, any>;
@@ -17,27 +18,19 @@ export function FormFooter({
     form,
 }: FormFooterProps) {
     return (
-        <footer class="flex justify-end space-x-4 mt-6">
+        <footer class="flex justify-center space-x-4 mt-6">
             <ActionButton
+                class="w-full px-8 py-2"
                 variant="primary"
-                label="Submit"
+                label={_`Submit`}
                 type="submit"
                 form={form}
             />
-            {resetAction ? (
-                <Form action={resetAction}>
-                    <ActionButton
-                        variant="secondary"
-                        label="Reset"
-                        type={resetAction ? 'submit' : 'button'}
-                        preventdefault:click
-                        onClick$={() => reset(formStore)}
-                    />
-                </Form>
-            ) : (
+            {resetAction && (
                 <ActionButton
+                    class="w-auto px-8 py-2"
                     variant="secondary"
-                    label="Reset"
+                    label={_`Reset`}
                     type={resetAction ? 'submit' : 'button'}
                     preventdefault:click
                     onClick$={() => reset(formStore)}

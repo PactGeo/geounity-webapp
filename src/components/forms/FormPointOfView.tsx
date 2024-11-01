@@ -71,6 +71,7 @@ interface FormPointOfViewProps {
 }
 
 export default component$<FormPointOfViewProps>(({debateId}) => {
+    const [pollForm, { Form, Field }] = useForm<PointOfViewForm, ResponseData>({
         loader: useFormLoader(),
         action: useFormAction(),
         validate: valiForm$(PointOfViewSchema),

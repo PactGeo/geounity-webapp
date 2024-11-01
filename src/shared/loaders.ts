@@ -2,15 +2,6 @@ import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
 import { InitialValues } from "@modular-forms/qwik";
 import { PollType } from "~/constants";
 import { PollForm } from "~/schemas";
-interface Poll {
-    status: string;
-    poll_type: string;
-    title: string;
-    description?: string;
-    options: string[];
-    community_id: number;
-    token?: string;
-}
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -59,6 +50,9 @@ export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
 
 export const useGetCountry = routeLoader$(async requestEvent => {
     const country = requestEvent.params.country;
+    if (!country) {
+        return null;
+    }
     const session = requestEvent.sharedMap.get('session');
     const token = session?.accessToken;
     const response = await fetch('http://localhost:8000/countries/' + country, {

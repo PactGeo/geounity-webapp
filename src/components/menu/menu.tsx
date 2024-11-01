@@ -20,7 +20,7 @@ export default component$<MenuProps>((props) => {
     const geography = [
         { name: _`Global`, path: '/global/', icon: <>🌐</> },
         { name: _`International`, path: '/international/', icon: <><LuGlobe2 /></> },
-        { name: 'National'+`${country2.value.flag || ''}`, path: '/national/', icon: <LuMapPin /> },
+        { name: 'National'+`${country2?.value?.flag || ''}`, path: '/national/', icon: <LuMapPin /> },
     ];
 
     return (
@@ -57,7 +57,7 @@ export default component$<MenuProps>((props) => {
                         </Link>
                     </li>
                 ))}
-                {country2.value.id && (
+                {country2?.value?.id && (
                     <li
                         class={cn(
                             'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
