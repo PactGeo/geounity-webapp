@@ -16,7 +16,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
         if (account?.provider === "github" || account?.provider === "google") {
           console.log(`Fetching ${account.provider} token`);
           try {
-            const response = await fetch(`http://localhost:8000/auth/${account.provider}`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/auth/${account.provider}`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${account.access_token}`,

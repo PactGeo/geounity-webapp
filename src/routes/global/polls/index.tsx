@@ -10,6 +10,7 @@ import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
+import ListTags from "~/components/list/ListTags";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
 export { useFormAction } from "~/shared/actions";
@@ -21,6 +22,8 @@ export default component$(() => {
     const tags = useGetTags()
     const polls = useGetPolls()
 
+    const selectedTag = useSignal<string>('all');
+
     const isOpenModal = useSignal(false);
 
     const onClickExpand = $(() => nav('/polls/new'))
@@ -30,6 +33,7 @@ export default component$(() => {
     return (
         <div>
             <NavResources />
+            <ListTags tags={tags.value} selectedTag={selectedTag} />
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
                     <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-center drop-shadow-md">

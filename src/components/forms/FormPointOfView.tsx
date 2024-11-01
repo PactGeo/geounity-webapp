@@ -38,7 +38,6 @@ type ResponseData = {
 
 export const useFormAction = formAction$<PointOfViewForm, ResponseData>(
     async (values, event) => {
-        const API_BASE_URL = 'http://localhost:8000'
         const session = event.sharedMap.get('session')
         const token = session?.accessToken
 
@@ -46,7 +45,7 @@ export const useFormAction = formAction$<PointOfViewForm, ResponseData>(
             country: values.country,
             content: values.opinion,
         }
-        const response = await fetch(`${API_BASE_URL}/debates/${values.debateId}/opinion`, {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/${values.debateId}/opinion`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

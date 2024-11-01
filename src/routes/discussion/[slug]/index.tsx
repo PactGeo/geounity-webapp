@@ -48,7 +48,7 @@ export const useGetDebateBySlug = routeLoader$(async (req) => {
     const sharedMap = req.sharedMap;
     const session = sharedMap.get('session');
     const token = session?.accessToken;
-    const response = await fetch(`http://localhost:8000/debates/${req.params.slug}`, {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/${req.params.slug}`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`

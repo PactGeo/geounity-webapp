@@ -74,7 +74,7 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
             tags: values.tags,
         }
         
-        const response = await fetch('http://localhost:8000/debates', {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

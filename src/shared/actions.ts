@@ -31,7 +31,7 @@ export const useFormAction = formAction$<PollForm, PollResponseData>(
         }
         console.log('payload', payload)
 
-        const response = await fetch(`http://localhost:8000/polls`, {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export const useServerTimeLoader = routeLoader$(() => {
 });
 
 export const useGetTags = routeLoader$(async () => {
-    const response = await fetch('http://localhost:8000/tags', {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/tags`, {
         headers: {
             Accept: 'application/json',
             Authorization: 'Basic c2ViYToxMjM0NTY='
@@ -25,7 +25,7 @@ export const useGetTags = routeLoader$(async () => {
 export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
     const session = sharedMap.get('session');
     const token = session?.accessToken;
-    const response = await fetch('http://localhost:8000/polls', {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
@@ -38,7 +38,7 @@ export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
 export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
     const session = sharedMap.get('session');
     const token = session?.accessToken;
-    const response = await fetch('http://localhost:8000/debates/global', {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/global`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
@@ -55,7 +55,7 @@ export const useGetCountry = routeLoader$(async requestEvent => {
     }
     const session = requestEvent.sharedMap.get('session');
     const token = session?.accessToken;
-    const response = await fetch('http://localhost:8000/countries/' + country, {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/countries/` + country, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
@@ -66,7 +66,7 @@ export const useGetCountry = routeLoader$(async requestEvent => {
 })
 
 export const useGetGlobalDebates = routeLoader$(async () => {
-    const response = await fetch('http://localhost:8000/debates?debate_type=GLOBAL', {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates?debate_type=GLOBAL`, {
         headers: {
             Accept: 'application/json',
             Authorization: 'Basic c2ViYToxMjM0NTY='
@@ -95,7 +95,7 @@ export const useGetGlobalDebates = routeLoader$(async () => {
 });
 
 const uploadImage = async (file: Blob) => {
-    const response_signature = await fetch('http://localhost:8000/cloudinary/generate_signature', {
+    const response_signature = await fetch(`${import.meta.env.PUBLIC_API_URL}/cloudinary/generate_signature`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
@@ -127,7 +127,7 @@ export const usePostDebate = routeAction$(
             const cloudinaryResponse = await uploadImage(debate.image);
             debate.image_url = cloudinaryResponse.secureUrl;
         }
-        const response = await fetch('http://localhost:8000/debates', {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -164,7 +164,7 @@ export const usePostPoll = routeAction$(
         const token = session?.accessToken;
 
         try{
-            const response = await fetch('http://localhost:8000/polls', {
+            const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -202,7 +202,7 @@ export const useVotePoll = routeAction$(
         const token = session?.accessToken;
         const { pollId } = data 
         try {
-            const response = await fetch(`http://localhost:8000/polls/${pollId}/vote`, {
+            const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls/${pollId}/vote`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -224,7 +224,7 @@ export const useReactToPoll = routeAction$(
         const session = sharedMap.get('session');
         const token = session?.accessToken;
         const { pollId } = data;
-        const response = await fetch(`http://localhost:8000/polls/${pollId}/react`, {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls/${pollId}/react`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -243,7 +243,7 @@ export const useVoteOpinion = routeAction$(
         const session = sharedMap.get('session');
         const token = session?.accessToken;
         const { opinionId, value } = data;
-        const response = await fetch(`http://localhost:8000/opinions/${opinionId}/vote`, {
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/opinions/${opinionId}/vote`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

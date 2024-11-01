@@ -34,7 +34,7 @@ export default component$(() => {
 
         if(selectedTag.value === 'all') {
             const token = session?.value?.accessToken;
-            // const response = await fetch(`http://localhost:8000/debates/global`, {
+            // const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/global`, {
             //     headers: {
             //         method: 'GET',
             //         Accept: 'application/json',
@@ -45,7 +45,7 @@ export default component$(() => {
             const data = await response.json();
             return data
         }
-        // const response = await fetch(`http://localhost:8000/debates?debate_type=GLOBAL&tag=${selectedTag.value}`);
+        // const response = await fetch(`${import.meta.env.PUBLIC_API_URL}?debate_type=GLOBAL&tag=${selectedTag.value}`);
         // const data = await response.json();
         return []
         // return data

@@ -4,7 +4,7 @@ import { Avatar, Button, Tabs } from "~/components/ui";
 import { useSession } from "~/routes/plugin@auth";
 
 export const useGetUser = routeLoader$(async (req) => {
-    const response = await fetch(`http://localhost:8000/users/${req.params.username}`, {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/${req.params.username}`, {
         headers: {
             Accept: 'application/json',
             Authorization: 'Basic c2ViYToxMjM0NTY='
