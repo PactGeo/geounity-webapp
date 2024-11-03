@@ -24,10 +24,11 @@ export const useFormAction = formAction$<PollForm, PollResponseData>(
             description: values.description,
             poll_type: values.type,
             is_anonymous: false,
-            ends_at: values.endDate,
+            ends_at: values.endDate.active ? values.endDate.value : null,
             community_id: values.community === 'Global' ? 1 : 2,
             options: values.options,
             status: 'ACTIVE',
+            tags: values.tags,
         }
         console.log('payload', payload)
 

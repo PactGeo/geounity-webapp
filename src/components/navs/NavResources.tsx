@@ -8,22 +8,23 @@ import { NavLink } from "~/components/nav-link/NavLink";
 export default component$(() => {
     const loc = useLocation();
     const pathname = loc.url.pathname;
-    const country = loc.params.country
     const segments = pathname.split('/').filter(Boolean);
+    const isGlobal = segments[0] === 'global';
     const basePath = pathname.split('/').filter(Boolean)[0];
     
     const items = [
         { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/` },
         { name: _`Polls`, icon: <LuDatabase />, href: `/${basePath}/polls/` },
         { name: _`Discussions`, icon: <LuMessageSquare />, href: `/${basePath}/discussions/` },
-        { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/issues/` },
-        { name: _`Projects`, icon: <LuLandmark />, href: `/${basePath}/projects/` },
-        { name: _`People`, icon: <LuUser />, href: `/${basePath}/people/` },
+        { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/issues/`, hidden: isGlobal },
+        { name: _`Projects`, icon: <LuLandmark />, href: `/${basePath}/projects/`, hidden: isGlobal },
+        { name: _`People`, icon: <LuUser />, href: `/${basePath}/people/`, hidden: isGlobal },
     ];
+
     return (
         <nav class="px-4 bg-slate-200 border-b border-slate-300">
             <ul class="flex items-center space-x-4">
-                {items.map((item) => (
+                {items.filter(item => !item.hidden).map((item) => (
                     <li key={item.name}>
                         <NavLink
                             class="flex items-center py-3 px-1"

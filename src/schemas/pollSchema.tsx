@@ -21,12 +21,13 @@ export const PollSchema = v.object({
         v.minLength(2, _`You must have at least 2 options.`),
         v.maxLength(10, _`You must have at most 10 options.`),
     ),
-    community: v.string(),
+    tags: v.array(v.string()),
     endDate: v.object({
         active: v.boolean(),
         value: v.string(),
     }),
-    tags: v.array(v.string()),
+    is_anonymous: v.boolean(),
+    community: v.string(),
 });
 
 export type PollForm = v.InferInput<typeof PollSchema>;

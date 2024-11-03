@@ -1,17 +1,16 @@
-import { $, component$, Resource, useResource$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import { useGetTags, useGetDiscussions } from "~/shared/loaders";
 import ListTags from "~/components/list/ListTags";
 import NavResources from "~/components/navs/NavResources";
 import { Button } from "~/components/ui";
-import { LuPlusCircle } from "@qwikest/icons/lucide";
+import { LuPlus } from "@qwikest/icons/lucide";
 import { _ } from "compiled-i18n";
 import EmptyDebates from "~/components/empty-state/EmptyDebates";
 import ListDebates from "~/components/list/ListDebates";
 import { useSession } from "~/routes/plugin@auth";
 import Modal from "~/components/modal/modal";
 import FormDebate from "~/components/forms/FormDebate";
-import { title } from "process";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormDebate";
 export { useGetTags, useGetDiscussions } from '~/shared/loaders';
@@ -19,37 +18,16 @@ export { useGetTags, useGetDiscussions } from '~/shared/loaders';
 export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
-    const tags = useGetTags();
 
+    const tags = useGetTags();
     const debates = useGetDiscussions();
 
-    const selectedTag = useSignal('all');
+    const selectedTag = useSignal<string>('all');
+
     const isOpenModal = useSignal(false);
     const onClickExpand = $(() => nav('/discussions/new'))
     const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
-
-    const getDebeteByTag = useResource$<string>(async ({ track }) => {
-        track(() => selectedTag.value)
-
-        if(selectedTag.value === 'all') {
-            const token = session?.value?.accessToken;
-            // const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/global`, {
-            //     headers: {
-            //         method: 'GET',
-            //         Accept: 'application/json',
-            //         Authorization: `Bearer ${token}`
-            //     }
-            // });
-            return ['a']
-            const data = await response.json();
-            return data
-        }
-        // const response = await fetch(`${import.meta.env.PUBLIC_API_URL}?debate_type=GLOBAL&tag=${selectedTag.value}`);
-        // const data = await response.json();
-        return []
-        // return data
-    })
 
     return (
         <div>
@@ -57,13 +35,16 @@ export default component$(() => {
             <ListTags tags={tags.value} selectedTag={selectedTag} />
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
+                    <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-center drop-shadow-md">
+                        {_`Discussions Global`}
+                    </h1>
                     {debates.value.length > 0 && (
                         <Button
                             class="mr-4"
                             look="primary"
                             onClick$={() => isOpenModal.value = true}
                         >
-                            <LuPlusCircle class="text-4xl mr-2" />
+                            <LuPlus class="text-2xl mr-2" />
                             {_`Create`}
                         </Button>
                     )}
@@ -71,21 +52,17 @@ export default component$(() => {
             </div>
             {debates.value.length === 0 && <EmptyDebates onClickAction={onClickAction} />}
             <ListDebates debates={debates.value} type="GLOBAL" />
-            <Resource
-                value={getDebeteByTag}
-                onPending={() => <div>{_`Loading...`}</div>}
-                onRejected={() => <div>Failed to load weather</div>}
-                // onResolved={debates => <ListDebates debates={debates} type="GLOBAL" />}
-                onResolved={debates => <p>{JSON.stringify(debates)}</p>}
-            />
             {session.value?.user ? (
                 <Modal
                     description={_`Share the most important challenge facing your community.`}
                     isOpen={isOpenModal}
                     onClickExpand={onClickExpand}
-                    title={_`New Debate`}
+                    title={_`Create a New Global Discussion`}
                 >
-                    <FormDebate onSubmitCompleted={onSubmitCompleted} tags={tags.value} />
+                    <FormDebate
+                        onSubmitCompleted={onSubmitCompleted}
+                        tags={tags.value}
+                    />
                 </Modal>
             ) : (
                 <Modal

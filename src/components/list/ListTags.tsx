@@ -1,5 +1,6 @@
 import { $, component$, useOnWindow, useSignal, useStyles$, useVisibleTask$ } from "@builder.io/qwik";
 import { LuChevronLeft, LuChevronRight } from "@qwikest/icons/lucide";
+import { useNavigate, useLocation } from '@builder.io/qwik-city';
 import styles from "./list-tags.css?inline";
 
 interface ListTagsProps {
@@ -8,22 +9,28 @@ interface ListTagsProps {
 }
 
 export default component$<ListTagsProps>(({ tags, selectedTag }) => {
-    console.log('tags', tags)
     useStyles$(styles);
 
+    // Hooks de navegación y ubicación
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Señales para manejar el estado
     const selectedTagSignal = useSignal(selectedTag?.value || 'all');
     const canScrollLeft = useSignal(false);
     const canScrollRight = useSignal(false);
     const tagsRef = useSignal<HTMLDivElement>();
 
+    // Función para verificar el estado del scroll
     const checkScroll = $(() => {
         if (tagsRef.value) {
-            const { scrollLeft, scrollWidth, clientWidth } = tagsRef.value
-            canScrollLeft.value = (scrollLeft > 0)
-            canScrollRight.value = (scrollLeft < scrollWidth - clientWidth - 1)
+            const { scrollLeft, scrollWidth, clientWidth } = tagsRef.value;
+            canScrollLeft.value = scrollLeft > 0;
+            canScrollRight.value = scrollLeft < scrollWidth - clientWidth - 1;
         }
-    })
+    });
 
+    // Función para desplazar los tags
     const scrollTags = $((direction: "left" | "right") => {
         if (tagsRef.value) {
             const scrollAmount = tagsRef.value.clientWidth / 2;
@@ -35,16 +42,44 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
         }
     });
 
-    useVisibleTask$(() => {
-        checkScroll()
+    // Función para manejar el clic en un tag
+    const handleTagClick = $((tagName: string) => {
+        if (tagName === selectedTagSignal.value) {
+            // If the clicked tag is already selected, deselect and go back to 'all'
+            selectedTagSignal.value = 'all';
+            const url = new URL(location.url.href);
+            url.searchParams.delete('tags');
+            navigate(url.pathname + url.search);
+        } else {
+            // If the clicked tag is not selected, select it
+            selectedTagSignal.value = tagName;
+            const url = new URL(location.url.href);
+            url.searchParams.set('tags', tagName);
+            navigate(url.pathname + url.search);
+        }
     });
 
+    // Tarea visible para sincronizar el estado con la URL al montar el componente
+    useVisibleTask$(() => {
+        checkScroll();
+
+        // Leer los parámetros de la URL al montar el componente
+        const currentTags = location.url.searchParams.getAll('tags');
+        if (currentTags.length > 0) {
+            // Asumimos que solo hay un tag seleccionado; si hay múltiples, se puede ajustar
+            selectedTagSignal.value = currentTags[0];
+        } else {
+            selectedTagSignal.value = 'all';
+        }
+    });
+
+    // Escuchar el evento de resize para verificar el estado del scroll
     useOnWindow(
         'resize',
         $(() => {
-            checkScroll()
+            checkScroll();
         })
-    )
+    );
 
     return (
         <div class="p-4 flex-shrink-0">
@@ -63,7 +98,7 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
                 >
                     <button
                         class={`button-tag ${selectedTagSignal.value === 'all' ? 'active' : ''}`}
-                        onClick$={() => selectedTagSignal.value = 'all'}
+                        onClick$={() => handleTagClick('all')}
                     >
                         All
                     </button>
@@ -71,7 +106,7 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
                         <button
                             class={`button-tag ${selectedTagSignal.value === tag.name ? 'active' : ''}`}
                             key={tag.id}
-                            onClick$={() => selectedTagSignal.value = tag.name}
+                            onClick$={() => handleTagClick(tag.name)}
                         >
                             {tag.name}
                         </button>

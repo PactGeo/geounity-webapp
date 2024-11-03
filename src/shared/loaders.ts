@@ -22,28 +22,48 @@ export const useGetTags = routeLoader$(async () => {
     }>;
 });
 
-export const useGetPolls = routeLoader$(async ({ sharedMap }) => {
+export const useGetPolls = routeLoader$(async (requestEvent) => {
+    const { sharedMap } = requestEvent
     const session = sharedMap.get('session');
     const token = session?.accessToken;
-    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
+    const tags = requestEvent.query.get('tags');
+    const url = new URL(`${import.meta.env.PUBLIC_API_URL}/polls`);
+    if (tags && tags !== 'all') {
+        url.searchParams.append('tags', tags);
+    }
+    url.searchParams.append('community_id', '1');
+    const response = await fetch(url.toString(), {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
         },
     });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch polls: ${response.statusText}`);
+    }
     const data = await response.json();
     return data as Array<any>
 });
 
-export const useGetDiscussions = routeLoader$(async ({ sharedMap }) => {
+export const useGetDiscussions = routeLoader$(async (requestEvent) => {
+    const { sharedMap } = requestEvent
     const session = sharedMap.get('session');
     const token = session?.accessToken;
+    const tags = requestEvent.query.get('tags');
+    const url = new URL(`${import.meta.env.PUBLIC_API_URL}/polls`);
+    if (tags && tags !== 'all') {
+        url.searchParams.append('tags', tags);
+    }
+    url.searchParams.append('community_id', '1');
     const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/global`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`
         },
     });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch debates: ${response.statusText}`);
+    }
     const data = await response.json();
     return data as Array<any>
 });
@@ -263,11 +283,12 @@ export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }
         title: '',
         description: '',
         options: ['', ''],
-        community: pathname.includes('/global/') ? 'Global' : 'private',
+        tags: [],
         endDate: {
             active: false,
             value: '',
         },
-        tags: [],
+        is_anonymous: false,
+        community: pathname.includes('/global/') ? 'Global' : 'private',
     };
 });

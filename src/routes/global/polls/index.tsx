@@ -5,7 +5,7 @@ import NavResources from "~/components/navs/NavResources";
 import { useSession } from "~/routes/plugin@auth";
 import { Button } from "~/components/ui";
 import FormPoll from "~/components/forms/FormPoll";
-import { LuPlusCircle } from "@qwikest/icons/lucide";
+import { LuPlus } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls, useGetTags } from '~/shared/loaders';
@@ -19,16 +19,15 @@ export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
 
-    const tags = useGetTags()
-    const polls = useGetPolls()
+    const tags = useGetTags();
+    const polls = useGetPolls();
 
     const selectedTag = useSignal<string>('all');
 
     const isOpenModal = useSignal(false);
-
-    const onClickExpand = $(() => nav('/polls/new'))
-    const onSubmitCompleted = $(() => isOpenModal.value = false)
-    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
+    const onClickExpand = $(() => nav('/polls/new'));
+    const onSubmitCompleted = $(() => isOpenModal.value = false);
+    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value);
 
     return (
         <div>
@@ -45,7 +44,7 @@ export default component$(() => {
                             look="primary"
                             onClick$={() => isOpenModal.value = true}
                         >
-                            <LuPlusCircle class="text-4xl mr-2" />
+                            <LuPlus class="text-2xl mr-2" />
                             {_`Create`}
                         </Button>
                     )}

@@ -11,8 +11,6 @@ export default component$<ListPolls>(({
     polls,
     type,
 }) => {
-    console.log('polls', polls)
-    
     const viewMode = useSignal('cards');
 
     return (

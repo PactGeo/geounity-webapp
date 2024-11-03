@@ -29,10 +29,8 @@ export default component$<FormPollProps>(({ tags }) => {
         validate: valiForm$(PollSchema),
     });
     const value = getValue(pollForm, 'title')
-    console.log('value', value)
 
     const errors = getErrors(pollForm);
-    console.log('errors', errors)
 
     const handleSubmit = $<SubmitHandler<PollForm>>((values, event) => {
         console.log('== handleSubmit ==')
@@ -151,6 +149,19 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </Field>
 
+            <Field name="tags" type="string[]">
+                {(field, props) => (
+                    <Select
+                        {...props}
+                        label={_`Tags`}
+                        options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
+                        value={field.value}
+                        error={field.error}
+                        multiple
+                    />
+                )}
+            </Field>
+
             <Field name="endDate.active" type="boolean">
                 {(field, props) => (
                     <Checkbox
@@ -176,15 +187,14 @@ export default component$<FormPollProps>(({ tags }) => {
                 </Field>
             )}
 
-            <Field name="tags" type="string[]">
+            <Field name="is_anonymous" type="boolean">
                 {(field, props) => (
-                    <Select
+                    <Checkbox
                         {...props}
-                        label={_`Tags`}
-                        options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
-                        value={field.value}
+                        checked={field.value}
                         error={field.error}
-                        multiple
+                        label={_`Anonymous`}
+                        helperText={_`Hide your identity as the creator of the poll.`}
                     />
                 )}
             </Field>

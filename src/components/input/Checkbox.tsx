@@ -14,6 +14,7 @@ type CheckboxProps = {
     class?: string;
     label: string;
     error?: string;
+    helperText?: string;
 };
 
 /**
@@ -39,6 +40,11 @@ export const Checkbox = component$(
                         <span class="ml-1 text-red-600 dark:text-red-400">*</span>
                     )}
                 </label>
+                {props.helperText && (
+                    <p class="mt-2 text-sm text-gray-500">
+                        {props.helperText}
+                    </p>
+                )}
                 <InputError name={name} error={error} />
             </div>
         );

@@ -1,10 +1,12 @@
 import { $, component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
-import { routeAction$, useNavigate } from "@builder.io/qwik-city";
-import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical } from '@qwikest/icons/lucide';
+import { routeAction$, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical, LuTag } from '@qwikest/icons/lucide';
 import { timeAgo } from "~/utils";
 import { Badge } from "~/components/ui";
 import { Progress } from "~/components/Progress";
 import { useReactToPoll, useVotePoll } from "~/shared/loaders";
+import { _ } from "compiled-i18n";
+import { useSession } from "~/routes/plugin@auth";
 
 interface CardPollProps {
     poll: any;
@@ -54,6 +56,9 @@ export default component$<CardPollProps>(({
     poll
 }) => {
     const nav = useNavigate();
+    const session = useSession();
+
+    const location = useLocation();
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
 
@@ -64,13 +69,13 @@ export default component$<CardPollProps>(({
     const userVotedOptions = useSignal<number[]>(user_voted_options);  // Options voted by the user
     const userReaction = useSignal<string | null>(user_reaction_type);  // Reaction of the user (like or dislike)
     const showComments = useSignal(false);
-    const comments = useSignal<CommentRead[]>([]);
+    const comments = useSignal<CommentRead[]>(poll.comments);
     const newCommentContent = useSignal('');
 
     const onClickUsername = $((username: string) => nav(`/profile/${username}`));
 
     const votesCount = useComputed$(() =>
-        pollState.poll.options.reduce((total, option) => total + option.votes, 0)
+        pollState.poll.options.reduce((total: number, option: { votes: number }) => total + option.votes, 0)
     )
 
     const handleVote = $(async (ev: Event) => {
@@ -145,8 +150,7 @@ export default component$<CardPollProps>(({
     const toggleComments = $(() => {
         showComments.value = !showComments.value;
         if (showComments.value) {
-            // TODO: Cargar comentarios cuando se muestra la sección
-            // loadComments();
+            // Cargar comentarios
         }
     });
 
@@ -155,31 +159,42 @@ export default component$<CardPollProps>(({
     });
 
     const listOptions = useComputed$(() => {
-        return pollState.poll.options.map((option) => {
-            return {
+        // Create a shallow copy to avoid mutating the original array
+        return [...pollState.poll.options]
+            // Sort the copied array by 'id' in ascending order
+            .sort((a, b) => a.id - b.id)
+            // Map the sorted array to the desired format
+            .map((option) => ({
                 id: option.id,
                 text: option.text,
                 votes: option.votes,
-            };
-        });
-    })
+            }));
+    });
 
     return (
         <div class="border rounded-lg shadow-md p-4 bg-gray-50 hover:shadow-lg transition-shadow w-full">
             {/* Title and type badge */}
             <h2 class="text-xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
-                <span class={`badge ${poll.poll_type === 'BINARY' ? 'bg-red-300' : poll.poll_type === 'SINGLE_CHOICE' ? 'bg-blue-300' : 'bg-green-300'}`}>
+                {/* <span class={`badge ${poll.poll_type === 'BINARY' ? 'bg-red-300' : poll.poll_type === 'SINGLE_CHOICE' ? 'bg-blue-300' : 'bg-green-300'}`}>
                     {type}
-                </span>
+                </span> */}
             </h2>
 
             {/* Description */}
             <p class="text-gray-600 text-sm mt-2">{description}</p>
 
+            {/* Tags */}
+            <div class="mt-4 flex flex-wrap gap-2">
+                {poll.tags?.map((tag: string) => (
+                    <span key={tag} class="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded">
+                        <LuTag class="inline-block mr-1" /> {tag}
+                    </span>
+                ))}
+            </div>
             {/* TODO: translate this */}
             {/* Cantidad de votos */}
-            <p class="text-gray-500 text-xs mt-1">{votesCount} votos</p>
+            <p class="text-gray-500 text-xs mt-4">{votesCount} votos</p>
 
             {/* Opciones con porcentajes */}
             <div class="space-y-2 mt-4">
@@ -265,7 +280,7 @@ export default component$<CardPollProps>(({
                             bind:value={newCommentContent}
                         ></textarea>
                         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">
-                            Enviar
+                            {_`Send`}
                         </button>
                     </form>
                 </div>
