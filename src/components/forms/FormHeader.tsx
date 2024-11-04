@@ -5,7 +5,7 @@ import { ActionButton } from './ActionButton';
 type FormHeaderProps = {
     of: FormStore<any, any>;
     heading?: string;
-    resetAction?: ActionStore<{}, Record<string, any>, true>;
+    resetAction?: ActionStore<object, Record<string, any>, true>;
     form?: string;
 };
 
@@ -29,7 +29,7 @@ export function FormHeader({
                         <ActionButton
                             variant="secondary"
                             label="Reset"
-                            type={resetAction ? 'submit' : 'button'}
+                            type="button"
                             preventdefault:click
                             onClick$={() => reset(formStore)}
                         />
@@ -38,7 +38,7 @@ export function FormHeader({
                     <ActionButton
                         variant="secondary"
                         label="Reset"
-                        type={resetAction ? 'submit' : 'button'}
+                        type="button"
                         preventdefault:click
                         onClick$={() => reset(formStore)}
                     />

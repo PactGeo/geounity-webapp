@@ -1,4 +1,4 @@
-import countries from '~/data/countries';
+import {dataArray as countries} from "~/data/countries";
 
 export function timeAgo(date: Date) {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
@@ -25,7 +25,7 @@ export function timeAgo(date: Date) {
 
 export function formatDateISO(dateISO: string) {
     const date = new Date(dateISO);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
 }
 

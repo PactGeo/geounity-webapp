@@ -20,7 +20,7 @@ export default component$(() => {
         ) 
         : (
           <div class="w-full">
-            <h2>Bienvenido {session.value?.user.name}</h2>
+            <h2>Bienvenido {session.value.user.name}</h2>
             <h3>{_`Hola Mundo`}</h3>
             <p>{greeting}</p>
             <h3>{_`Hola Mundo dos`}</h3>

@@ -65,7 +65,6 @@ export const FileInput = component$(
                         {...props}
                         class="absolute h-full w-full cursor-pointer opacity-0"
                         type="file"
-                        id={name}
                         aria-invalid={!!error}
                         aria-errormessage={`${name}-error`}
                     />

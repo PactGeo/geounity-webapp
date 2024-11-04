@@ -1,5 +1,4 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
 import CardPoll from "~/components/cards/CardPoll";
 
 interface ListPolls {
@@ -12,6 +11,8 @@ export default component$<ListPolls>(({
     type,
 }) => {
     const viewMode = useSignal('cards');
+
+    console.log('type', type);
 
     return (
         <div class="flex-1 overflow-y-auto p-4">

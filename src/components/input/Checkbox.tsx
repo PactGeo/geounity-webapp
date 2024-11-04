@@ -31,7 +31,6 @@ export const Checkbox = component$(
                         {...props}
                         class="mt-1 h-4 w-4 cursor-pointer lg:mt-1 lg:h-5 lg:w-5"
                         type="checkbox"
-                        id={name}
                         aria-invalid={!!error}
                         aria-errormessage={`${name}-error`}
                     />

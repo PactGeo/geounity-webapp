@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import { LuImage } from "@qwikest/icons/lucide";
 
 interface InputFileProps {

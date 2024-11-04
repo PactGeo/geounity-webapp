@@ -1,12 +1,10 @@
 import { $, component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
-import { routeAction$, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { useNavigate } from "@builder.io/qwik-city";
 import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical, LuTag } from '@qwikest/icons/lucide';
 import { timeAgo } from "~/utils";
-import { Badge } from "~/components/ui";
 import { Progress } from "~/components/Progress";
 import { useReactToPoll, useVotePoll } from "~/shared/loaders";
 import { _ } from "compiled-i18n";
-import { useSession } from "~/routes/plugin@auth";
 
 interface CardPollProps {
     poll: any;
@@ -39,12 +37,10 @@ interface CommentRead {
 
 export default component$<CardPollProps>(({
     id,
-    slug,
     title,
     description,
     type,
     is_anonymous,
-    status,
     likes_count,
     dislikes_count,
     created_at,
@@ -56,9 +52,7 @@ export default component$<CardPollProps>(({
     poll
 }) => {
     const nav = useNavigate();
-    const session = useSession();
 
-    const location = useLocation();
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
 
@@ -103,9 +97,9 @@ export default component$<CardPollProps>(({
             return;
         }
         // Update optionsStore.options with the updated options from the backend
-        if (result.value && result.value.detail === "Vote updated successfully") {
+        if (result.value.detail === "Vote updated successfully") {
             pollState.poll.options = result.value.options;
-        } else if (result.value && result.value.detail ===  "Vote canceled successfully") {
+        } else if (result.value.detail ===  "Vote canceled successfully") {
             pollState.poll.options = result.value.options;
         } 
         else {
@@ -155,6 +149,8 @@ export default component$<CardPollProps>(({
     });
 
     const addComment = $(async (event: Event) => {
+        console.log('++++++++++++ addComment ++++++++++++')
+        console.log('event:', event)
         // TODO: Enviar comentario
     });
 

@@ -1,5 +1,4 @@
 import { $, component$, type PropsOf } from '@builder.io/qwik';
-import clsx from 'clsx';
 
 type TextareaProps = PropsOf<'textarea'> & {
   error?: string;

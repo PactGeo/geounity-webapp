@@ -1,7 +1,6 @@
-import { component$, useSignal } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { routeLoader$, useLocation } from "@builder.io/qwik-city";
 import { Avatar, Button, Tabs } from "~/components/ui";
-import { useSession } from "~/routes/plugin@auth";
 
 export const useGetUser = routeLoader$(async (req) => {
     const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/${req.params.username}`, {
@@ -15,15 +14,7 @@ export const useGetUser = routeLoader$(async (req) => {
 
 export default component$(() => {
     const userData = useGetUser();
-    const session = useSession();
     const username = useLocation().params.username;
-    const isEditing = useSignal(false);
-    const showModal = useSignal(false);
-
-    const handleSave = () => {
-        isEditing.value = false;
-        showModal.value = true;
-    };
 
     return (
         <main class="w-full max-w-3xl mx-auto">
@@ -34,8 +25,8 @@ export default component$(() => {
                     class="w-full h-48 object-cover"
                 />
                 <Avatar.Root class="absolute bottom-0 left-4 transform translate-y-1/2 w-24 h-24 border-4 border-white">
-                    {userData.value?.image
-                        ? <Avatar.Image src={userData.value?.image} alt={`Imagen de ${username}`} />
+                    {userData.value.image
+                        ? <Avatar.Image src={userData.value.image} alt={`Imagen de ${username}`} />
                         : <Avatar.Image src="https://placehold.co/600x400" alt="Image is missing" />
                     }
                     <Avatar.Fallback>UN</Avatar.Fallback>

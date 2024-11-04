@@ -1,50 +1,28 @@
 import { $, component$ } from "@builder.io/qwik";
-import { routeLoader$, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
-import { useGetTags } from "~/shared/loaders";
-import ListTags from "~/components/list/ListTags";
-import NavResources from "~/components/navs/NavResources";
-import { Field, Form, formAction$, InitialValues, SubmitHandler, useForm, valiForm$ } from "@modular-forms/qwik";
-import { CommunityType } from "~/constants";
+import { useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { useForm, valiForm$, type SubmitHandler } from "@modular-forms/qwik";
 import { Select } from "~/components/input/Select";
 import { FormFooter } from "~/components/forms/FormFooter";
-import * as v from 'valibot'
 import { _ } from "compiled-i18n";
 import {dataArray as countries} from "~/data/countries";
+import { useFormCountryLoader } from "~/shared/loaders";
+import { useFormCountryAction } from "~/shared/actions";
+import { type CountryForm, CountrySchema } from "~/schemas";
 
 export { useGetTags } from '~/shared/loaders';
 
-const CountrySchema = v.object({
-    country: v.string(),
-});
-
-type CountryForm = v.InferInput<typeof CountrySchema>;
-
-export const useFormLoader = routeLoader$<InitialValues<CountryForm>>(({ pathname }) => {
-    return {
-        country: '',
-    };
-});
-
-export const useFormAction = formAction$<CountryForm>(
-    async (values, event) => {
-        return {
-            success: true,
-            message: _`Point of view created successfully`,
-        }
-        // Runs on server
-    },
-    valiForm$(CountrySchema)
-);
 
 export default component$(() => {
-    const tags = useGetTags();
     const nav = useNavigate();
     const [countryForm, { Form, Field }] = useForm<CountryForm>({
-        loader: useFormLoader(),
-        action: useFormAction(),
+        loader: useFormCountryLoader(),
+        action: useFormCountryAction(),
         validate: valiForm$(CountrySchema),
     });
     const handleSubmit = $<SubmitHandler<CountryForm>>((values, event) => {
+        console.log('handleSubmit')
+        console.log('values', values)
+        console.log('event', event)
         return nav(`/national/${values.country}`)
         // Runs on client
     });

@@ -1,5 +1,5 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
-import { DocumentHead, routeLoader$, useDocumentHead, useLocation } from "@builder.io/qwik-city";
+import { type DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
 import { LuEye, LuMessageSquare, LuSend, LuThumbsDown, LuThumbsUp } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
 import { _ } from "compiled-i18n";
@@ -31,17 +31,6 @@ type PointOfView = {
         score: number;
     }[];
     color: string;
-}
-
-const countryColors: { [key: string]: string } = {
-    "Spain": "#F1BF00",
-    "Germany": "#000000",
-    "USA": "#3C3B6E",
-    "Brazil": "#009C3B",
-    "Japan": "#BC002D",
-    "India": "#FF9933",
-    "Australia": "#00008B",
-    "South Africa": "#007A4D",
 }
 
 export const useGetDebateBySlug = routeLoader$(async (req) => {
@@ -77,26 +66,25 @@ export const useGetDebateBySlug = routeLoader$(async (req) => {
     };
 });
 
-const PointOfViewSummary = component$(({ pov }: { pov: PointOfView }) => (
-    <div class="mb-4">
-        <div style={{ backgroundColor: pov.color, color: 'white' }}>
-            <h4 class="font-semibold">{pov.name}</h4>
-        </div>
-        <div>
-            <p class="text-sm text-muted-foreground">
-                {pov.opinions.length} comment{pov.opinions.length !== 1 ? 's' : ''}
-            </p>
-            {pov.opinions.length > 0 && (
-                <p class="text-sm mt-2">
-                    Latest: "{pov.opinions[pov.opinions.length - 1].content.slice(0, 50)}..."
-                </p>
-            )}
-        </div>
-    </div>
-))
+// const PointOfViewSummary = component$(({ pov }: { pov: PointOfView }) => (
+//     <div class="mb-4">
+//         <div style={{ backgroundColor: pov.color, color: 'white' }}>
+//             <h4 class="font-semibold">{pov.name}</h4>
+//         </div>
+//         <div>
+//             <p class="text-sm text-muted-foreground">
+//                 {pov.opinions.length} comment{pov.opinions.length !== 1 ? 's' : ''}
+//             </p>
+//             {pov.opinions.length > 0 && (
+//                 <p class="text-sm mt-2">
+//                     Latest: "{pov.opinions[pov.opinions.length - 1].content.slice(0, 50)}..."
+//                 </p>
+//             )}
+//         </div>
+//     </div>
+// ))
 
 const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; userCountry: string }) => {
-    const newComment = useSignal('')
 
     // const handleSubmitComment = (e) => {
     //     e.preventDefault()
@@ -182,7 +170,7 @@ export default component$(() => {
                     <Image
                         alt="Climate Crisis Illustration"
                         class="w-full h-full object-cover"
-                        src={debate.value.images && debate.value.images.length ? debate.value.images[0] : 'https://i.pinimg.com/550x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'}
+                        src={debate.value.images.length > 0 ? debate.value.images[0] : 'https://i.pinimg.com/550x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'}
                         height="1087"
                         width="1932"
                     />
@@ -194,7 +182,7 @@ export default component$(() => {
                     <div class="flex justify-between items-center space-x-4">
                         <div class="flex items-center space-x-4">
                             <Avatar.Root>
-                                <Avatar.Image src={session.value?.user?.image ?? ''} alt={`@${debate.value.creator_username ?? ''}`} />
+                                <Avatar.Image src={session.value?.user?.image ?? ''} alt={`@${debate.value.creator_username}`} />
                                 <Avatar.Fallback>SC</Avatar.Fallback>
                             </Avatar.Root>
                             <div>

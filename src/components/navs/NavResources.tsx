@@ -13,6 +13,7 @@ export default component$(() => {
     const isGlobal = segments[0] === 'global';
     const isInternational = segments[0] === 'international';
     const isNational = segments[0] === 'national';
+    console.log('isNational', isNational)
     const basePath = pathname.split('/').filter(Boolean)[0];
 
     let items

@@ -1,13 +1,16 @@
 import { $, component$, useStyles$ } from "@builder.io/qwik";
 import { Button, Textarea } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
-import { getErrors, getValue, insert, remove, SubmitHandler, useForm, valiForm$ } from '@modular-forms/qwik';
+import { getErrors, getValue, insert, remove, useForm, valiForm$ } from '@modular-forms/qwik';
+import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
 import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
 import { PollType } from "~/constants";
-import { PollForm, PollSchema } from "~/schemas";
-import { PollResponseData, useFormAction } from "~/shared/actions";
+import type { PollForm } from "~/schemas";
+import { PollSchema } from "~/schemas";
+import type { PollResponseData } from "~/shared/actions";
+import { useFormAction } from "~/shared/actions";
 import { useFormLoader } from "~/shared/loaders";
 import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
@@ -31,8 +34,10 @@ export default component$<FormPollProps>(({ tags }) => {
     });
 
     const community_type = getValue(pollForm, 'community_type')
+    console.log('community_type', community_type)
 
     const errors = getErrors(pollForm);
+    console.log('errors', errors)
 
     const handleSubmit = $<SubmitHandler<PollForm>>((values, event) => {
         console.log('== handleSubmit ==')
@@ -176,14 +181,16 @@ export default component$<FormPollProps>(({ tags }) => {
             </Field>
 
             <Field name="community_type" type="string">
-                {(field, props) => false && (
-                    <TextInput
-                        {...props}
-                        type="text"
-                        label={field.name}
-                        value={field.value}
-                        error={field.error}
-                    />
+                {(field, props) => (
+                    <div>
+                        <TextInput
+                            {...props}
+                            type="text"
+                            label={field.name}
+                            value={field.value}
+                            error={field.error}
+                        />
+                    </div>
                 )}
             </Field>
 

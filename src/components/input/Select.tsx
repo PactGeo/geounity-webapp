@@ -55,7 +55,6 @@ export const Select = component$(
                             multiple ? 'py-5' : 'h-14 md:h-16 lg:h-[70px]',
                             placeholder && !values.value?.length && 'text-slate-500'
                         )}
-                        id={name}
                         aria-invalid={!!error}
                         aria-errormessage={`${name}-error`}
                     >

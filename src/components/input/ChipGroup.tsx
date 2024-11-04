@@ -1,4 +1,5 @@
-import { component$, QRL } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
+import type { QRL } from "@builder.io/qwik";
 import clsx from "clsx";
 import { InputError } from './InputError';
 import { InputLabel } from './InputLabel';

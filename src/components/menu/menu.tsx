@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { component$, useStyles$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import styles from './menu.css?inline';
-import { LuDatabase, LuGlobe2, LuHome, LuLandmark, LuLogOut, LuMapPin, LuMessageCircle, LuMessageSquare, LuSettings, LuUser } from '@qwikest/icons/lucide';
+import { LuGlobe2, LuHome, LuMapPin } from '@qwikest/icons/lucide';
 import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
@@ -13,7 +14,7 @@ interface MenuProps {
     onClose?: () => void;
 }
 
-export default component$<MenuProps>((props) => {
+export default component$<MenuProps>(() => {
     useStyles$(styles);
     const country = useGetCountry();
     const { url } = useLocation();

@@ -1,13 +1,11 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$, useLocation, type DocumentHead } from "@builder.io/qwik-city";
+import { type DocumentHead } from "@builder.io/qwik-city";
 import { LuBuilding, LuGlobe2, LuMap, LuMapPin, LuUsers } from "@qwikest/icons/lucide";
 import { _ } from "compiled-i18n";
 import NavResources from "~/components/navs/NavResources";
 import { useGetCountry } from "~/shared/loaders";
 
 export default component$(() => {
-    const loc = useLocation();
-    const countryParams = loc.params.country
     const country = useGetCountry();
 
     // TODO: Implement the following logic

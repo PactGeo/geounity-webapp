@@ -1,4 +1,5 @@
-import { component$, QRL, useComputed$ } from "@builder.io/qwik";
+import { component$, useComputed$ } from "@builder.io/qwik";
+import type { QRL } from "@builder.io/qwik";
 import { LuCheck } from '@qwikest/icons/lucide';
 
 interface ProgressProps {

@@ -1,6 +1,6 @@
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { Textarea } from '~/components/ui';
-import { formAction$, SubmitHandler, useForm, valiForm$, type InitialValues } from '@modular-forms/qwik';
+import { formAction$, useForm, valiForm$, type InitialValues, type SubmitHandler } from '@modular-forms/qwik';
 import * as v from 'valibot'
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
@@ -23,6 +23,7 @@ const PointOfViewSchema = v.object({
 type PointOfViewForm = v.InferInput<typeof PointOfViewSchema>;
 
 export const useFormLoader = routeLoader$<InitialValues<PointOfViewForm>>(({ pathname }) => {
+    console.log('pathname', pathname)
     return {
         debateId: '',
         country: '',
@@ -70,6 +71,7 @@ interface FormPointOfViewProps {
 }
 
 export default component$<FormPointOfViewProps>(({debateId}) => {
+    console.log('debateId', debateId)
     const [pollForm, { Form, Field }] = useForm<PointOfViewForm, ResponseData>({
         loader: useFormLoader(),
         action: useFormAction(),
@@ -77,6 +79,9 @@ export default component$<FormPointOfViewProps>(({debateId}) => {
     });
 
     const handleSubmit = $<SubmitHandler<PointOfViewForm>>((values, event) => {
+        console.log('handleSubmit')
+        console.log('values', values)
+        console.log('event', event)
         // Runs on client
     });
     
@@ -92,7 +97,6 @@ export default component$<FormPointOfViewProps>(({debateId}) => {
                     {(field, props) => (
                         <input
                             {...props}
-                            value={field.value}
                         />
                     )}
                 </Field>

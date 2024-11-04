@@ -8,16 +8,17 @@ import FormPoll from "~/components/forms/FormPoll";
 import { LuPlusCircle } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
-import { useGetPolls } from '~/shared/loaders';
+import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
-export { useGetPolls, usePostPoll, useVotePoll, useReactToPoll } from '~/shared/loaders';
+export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll } from '~/shared/loaders';
 
 export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
 
+    const tags = useGetTags();
     const polls = useGetPolls()
 
     const isOpenModal = useSignal(false);
@@ -55,7 +56,10 @@ export default component$(() => {
                     onClickExpand={onClickExpand}
                     title={_`New Poll`}
                 >
-                    <FormPoll onSubmitCompleted={onSubmitCompleted} />
+                    <FormPoll
+                        onSubmitCompleted={onSubmitCompleted}
+                        tags={tags.value}
+                    />
                 </Modal>
             ) : (
                 <Modal

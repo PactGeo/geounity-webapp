@@ -1,11 +1,11 @@
-import { type ActionStore, Form } from '@builder.io/qwik-city';
+import { type ActionStore } from '@builder.io/qwik-city';
 import { type FormStore, reset } from '@modular-forms/qwik';
 import { ActionButton } from './ActionButton';
 import { _ } from 'compiled-i18n';
 
 type FormFooterProps = {
     of: FormStore<any, any>;
-    resetAction?: ActionStore<{}, Record<string, any>, true>;
+    resetAction?: ActionStore<object, Record<string, any>, true>;
     form?: string;
 };
 
@@ -31,7 +31,7 @@ export function FormFooter({
                     class="w-auto px-8 py-2"
                     variant="secondary"
                     label={_`Reset`}
-                    type={resetAction ? 'submit' : 'button'}
+                    type="button"
                     preventdefault:click
                     onClick$={() => reset(formStore)}
                 />

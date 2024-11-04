@@ -1,9 +1,7 @@
 import { $, component$, useStylesScoped$ } from "@builder.io/qwik";
-import { LuCalendar, LuMessageSquare, LuUser, LuTag, LuThumbsUp, LuArrowUp01, LuArrowUp10, LuArrowUpAZ, LuArrowUpCircle, LuArrowUpDown, LuArrowUpFromDot, LuArrowUpFromLine, LuArrowUpWideNarrow, LuArrowUp, LuArrowDownCircle } from '@qwikest/icons/lucide';
+import { LuArrowUpCircle, LuArrowDownCircle } from '@qwikest/icons/lucide';
 import styles from "./card-debate.css?inline";
-import { Link, useNavigate } from "@builder.io/qwik-city";
-import { Image } from "@unpic/qwik";
-import { formatDateISO, getFlagByName, timeAgo } from "~/utils";
+import { formatDateISO } from "~/utils";
 import { Button } from "~/components/ui";
 import { useVoteOpinion } from "~/shared/loaders";
 
@@ -28,8 +26,6 @@ export default component$<CardOpinionProps>(({
     score
 }) => {
     useStylesScoped$(styles);
-    const nav = useNavigate();
-
     const actionVoteOpinion = useVoteOpinion();
 
     const handleUpVote = $(async () => {

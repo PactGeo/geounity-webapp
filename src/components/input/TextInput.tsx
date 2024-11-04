@@ -38,7 +38,6 @@ export const TextInput = component$(
                             ? 'border-red-600 dark:border-red-400'
                             : 'hover:border-gray-400 dark:border-gray-800'
                     )}
-                    id={name}
                     value={input.value}
                     aria-invalid={!!error}
                     aria-errormessage={`${name}-error`}

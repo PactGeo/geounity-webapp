@@ -3,7 +3,7 @@ import { LuCalendar, LuMessageSquare, LuUser, LuTag } from '@qwikest/icons/lucid
 import styles from "./card-debate.css?inline";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import { Image } from "@unpic/qwik";
-import { getFlagByName, timeAgo } from "~/utils";
+import { timeAgo } from "~/utils";
 
 
 interface CardDebateProps {
@@ -19,12 +19,12 @@ interface CardDebateProps {
     countries_involved?: string[];
 }
 
-export default component$<CardDebateProps>(({ title, description, images, creator_username, created_at, comments_count, last_comment_at, tags, countries_involved, slug }) => {
+export default component$<CardDebateProps>(({ title, description, images, creator_username, created_at, comments_count, last_comment_at, tags, slug }) => {
     useStylesScoped$(styles);
     const nav = useNavigate();
     const onClickUsername = $((username: string) => nav(`/user/${username}`))
 
-    const mainImage = images?.[0]
+    const mainImage = images && images.length> 0 ? images[0] : false
 
     return (
         <Link href={`/discussion/${slug}`}>
@@ -43,7 +43,7 @@ export default component$<CardDebateProps>(({ title, description, images, creato
                     <p class="px-4 text-gray-600 my-2 text-sm line-clamp-3">{description}</p>
                 </div>
                 <div class="px-4 my-2 flex flex-wrap gap-2">
-                    {tags?.map((tag) => (
+                    {tags.map((tag) => (
                         <span key={tag} class="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded">
                             <LuTag class="inline-block mr-1" /> {tag}
                         </span>
@@ -65,7 +65,7 @@ export default component$<CardDebateProps>(({ title, description, images, creato
                     <div class="text-right">
                         <span class="flex items-center">
                             <LuMessageSquare class="mr-1" />
-                            {comments_count ?? 0} comments
+                            {comments_count} comments
                         </span>
                         {last_comment_at && (
                             <span class="flex items-center mt-1">

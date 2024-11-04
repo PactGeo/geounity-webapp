@@ -1,15 +1,14 @@
-import { $, component$, useSignal, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
 import { useSession, useSignOut } from '~/routes/plugin@auth';
 import { Avatar } from "~/components/ui";
 import { Button } from "~/components/ui";
-import { Link, useLocation } from "@builder.io/qwik-city";
-import { LuChevronDown, LuGlobe, LuLogOut, LuMapPin, LuMenu, LuSun, LuUser, LuX } from "@qwikest/icons/lucide";
+import { Link } from "@builder.io/qwik-city";
+import { LuChevronDown, LuGlobe, LuLogOut, LuMapPin, LuMenu, LuUser } from "@qwikest/icons/lucide";
 import { Dropdown } from "@qwik-ui/headless";
 import Logo from '~/icons/logo.svg?jsx';
 import styles from "./header.css?inline";
 
 import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
-import Menu from "~/components/menu/menu";
 import { _ } from "compiled-i18n";
 
 interface LoggedInMenuProps {
@@ -103,8 +102,6 @@ export default component$(() => {
     const session = useSession();
     const showMenu = useSignal(true);
 
-    const onCloseMenu = $(() => showMenu.value = false)
-
     return (
         <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
             <div class="flex items-center">
@@ -124,9 +121,9 @@ export default component$(() => {
             <div class="relative">
                 {session.value?.user
                     ? <LoggedInMenu
-                        name={session.value?.user?.name ?? ''}
-                        email={session.value?.user?.email ?? ''}
-                        image={session.value?.user?.image ?? ''}
+                        name={session.value.user.name ?? ''}
+                        email={session.value.user.email ?? ''}
+                        image={session.value.user.image ?? ''}
                     />
                     : <LoggedOutMenu />
                 }

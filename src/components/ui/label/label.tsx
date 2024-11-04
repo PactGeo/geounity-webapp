@@ -1,4 +1,5 @@
-import { component$, Slot, PropsOf } from "@builder.io/qwik";
+import { component$, Slot } from "@builder.io/qwik";
+import type { PropsOf } from "@builder.io/qwik";
 import { Label as HeadlessLabel } from "@qwik-ui/headless";
 import { cn } from "@qwik-ui/utils";
 

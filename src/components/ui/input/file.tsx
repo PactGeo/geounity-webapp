@@ -1,4 +1,5 @@
-import { $, component$, useSignal, noSerialize, type PropFunction, NoSerialize } from '@builder.io/qwik';
+import { $, component$, useSignal, noSerialize, type PropFunction } from '@builder.io/qwik';
+import type { NoSerialize } from '@builder.io/qwik';
 import { LuPencil, LuTrash, LuCamera } from '@qwikest/icons/lucide';
 import { Label } from '~/components/ui';
 

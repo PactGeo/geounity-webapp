@@ -1,7 +1,7 @@
-import { $, component$, NoSerialize, useSignal, useStyles$ } from "@builder.io/qwik";
+import { $, component$, type NoSerialize, useStyles$ } from "@builder.io/qwik";
 import { Textarea } from '~/components/ui';
 import styles from "./form.css?inline";
-import { formAction$, InitialValues, SubmitHandler, useForm, valiForm$ } from "@modular-forms/qwik";
+import { formAction$, type InitialValues, type SubmitHandler, useForm, valiForm$ } from "@modular-forms/qwik";
 import * as v from 'valibot'
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { FormFooter } from "./FormFooter";
@@ -39,6 +39,7 @@ const DebateSchema = v.object({
 type DebateForm = v.InferInput<typeof DebateSchema>;
 
 export const useFormLoader = routeLoader$<InitialValues<DebateForm>>(({ pathname }) => {
+    console.log('pathname', pathname)
     return {
         title: '',
         description: '',
@@ -92,7 +93,7 @@ export const useFormAction = formAction$<DebateForm, ResponseData>(
     valiForm$(DebateSchema)
 );
 
-export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
+export default component$<FormDebateProps>(({ tags }) => {
     useStyles$(styles);
 
     const [debateForm, { Form, Field }] = useForm<DebateForm, ResponseData>({
@@ -101,9 +102,12 @@ export default component$<FormDebateProps>(({ onSubmitCompleted, tags }) => {
         validate: valiForm$(DebateSchema),
     });
     
-    const file_example = useSignal<string>('https://images.unsplash.com/photo-1724963475892-a3274091955e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    // const file_example = useSignal<string>('https://images.unsplash.com/photo-1724963475892-a3274091955e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
 
     const handleSubmit = $<SubmitHandler<DebateForm>>((values, event) => {
+        console.log('handleSubmit')
+        console.log('values', values)
+        console.log('event', event)
         // Runs on client
     });
 

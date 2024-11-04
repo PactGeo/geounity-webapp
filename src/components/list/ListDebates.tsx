@@ -11,6 +11,7 @@ export default component$<ListDebates>(({
     type
 }) => {
 
+    console.log('type', type);
     const viewMode = useSignal('cards');
 
     return (

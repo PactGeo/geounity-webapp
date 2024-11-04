@@ -1,6 +1,7 @@
 import { formAction$, valiForm$ } from "@modular-forms/qwik";
 import { _ } from "compiled-i18n";
-import { PollForm, PollSchema } from "~/schemas";
+import type { CountryForm, PollForm } from "~/schemas";
+import { CountrySchema, PollSchema } from "~/schemas";
 
 export type PollResponseData = {
     type: string;
@@ -47,4 +48,18 @@ export const useFormAction = formAction$<PollForm, PollResponseData>(
         // Runs on server
     },
     valiForm$(PollSchema)
+);
+
+export const useFormCountryAction = formAction$<CountryForm>(
+    async (values, event) => {
+        console.log('useFormCountryAction')
+        console.log('values', values)
+        console.log('event', event)
+        return {
+            success: true,
+            message: _`Point of view created successfully`,
+        }
+        // Runs on server
+    },
+    valiForm$(CountrySchema)
 );

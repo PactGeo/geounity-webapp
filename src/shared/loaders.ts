@@ -1,7 +1,7 @@
 import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
-import { InitialValues } from "@modular-forms/qwik";
+import type { InitialValues } from "@modular-forms/qwik";
 import { PollType } from "~/constants";
-import { PollForm } from "~/schemas";
+import type { CountryForm, PollForm } from "~/schemas";
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -298,5 +298,12 @@ export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }
         is_anonymous: false,
         community_ids: communityType.toUpperCase() === "GLOBAL" ? ['1'] : [],
         community_type: communityType.toUpperCase(),
+    };
+});
+
+export const useFormCountryLoader = routeLoader$<InitialValues<CountryForm>>(({ pathname }) => {
+    console.log('pathname', pathname)
+    return {
+        country: '',
     };
 });

@@ -1,4 +1,5 @@
-import { PropsOf, component$ } from "@builder.io/qwik";
+import type { PropsOf } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { Separator as HeadlessSeparator } from "@qwik-ui/headless";
 import { cn } from "@qwik-ui/utils";
 

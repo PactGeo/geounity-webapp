@@ -1,7 +1,7 @@
 import { component$, Slot, useSignal, useStyles$ } from "@builder.io/qwik";
 import styles from "./modal.css?inline";
 import { Modal, Separator } from '~/components/ui';
-import { LuExpand, LuEye, LuMaximize2, LuX } from "@qwikest/icons/lucide";
+import { LuExpand, LuEye, LuX } from "@qwikest/icons/lucide";
 
 interface ModalProps {
     trigger?: string;
