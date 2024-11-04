@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import { useGetTags, useGetDiscussions } from "~/shared/loaders";
 import ListTags from "~/components/list/ListTags";
@@ -8,19 +8,21 @@ import { LuPlusCircle } from "@qwikest/icons/lucide";
 import { _ } from "compiled-i18n";
 import EmptyDebates from "~/components/empty-state/EmptyDebates";
 import ListDebates from "~/components/list/ListDebates";
-import { useSession } from "~/routes/plugin@auth";
 import Modal from "~/components/modal/modal";
 import FormDebate from "~/components/forms/FormDebate";
+import { UserContext } from "~/contexts/UserContext";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormDebate";
 export { useGetTags, useGetDiscussions } from '~/shared/loaders';
 
 export default component$(() => {
     const nav = useNavigate();
-    const session = useSession();
+    const user = useContext(UserContext);
     const tags = useGetTags();
 
     const debates = useGetDiscussions();
+
+    const selectedTag = useStore({ id: 0, name: 'all' });
 
     const isOpenModal = useSignal(false);
     const onClickExpand = $(() => nav('/discussions/new'))
@@ -30,7 +32,7 @@ export default component$(() => {
     return (
         <div>
             <NavResources />
-            <ListTags tags={tags.value} />
+            <ListTags tags={tags.value} selectedTag={selectedTag} />
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
                     {debates.value.length > 0 && (
@@ -47,7 +49,7 @@ export default component$(() => {
             </div>
             {debates.value.length === 0 && <EmptyDebates onClickAction={onClickAction} />}
             <ListDebates debates={debates.value} type="GLOBAL" />
-            {session.value?.user ? (
+            {user.isAuthenticated ? (
                 <Modal
                     description={_`Share the most important challenge facing your community.`}
                     isOpen={isOpenModal}

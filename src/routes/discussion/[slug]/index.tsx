@@ -1,15 +1,15 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal } from "@builder.io/qwik";
 import { type DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
 import { LuEye, LuMessageSquare, LuSend, LuThumbsDown, LuThumbsUp } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
 import { _ } from "compiled-i18n";
 import { Avatar, Badge, Button, Input, Tabs } from "~/components/ui";
-import { useSession } from "~/routes/plugin@auth";
 import { formatDateISO } from "~/utils";
 import Modal from "~/components/modal/modal";
 import FormPointOfView from "~/components/forms/FormPointOfView";
 import countries from "~/data/countries";
 import CardOpinion from "~/components/cards/CardOpinion";
+import { UserContext } from "~/contexts/UserContext";
 
 export { useFormLoader, useFormAction } from "~/components/forms/FormPointOfView";
 export { useVoteOpinion } from "~/shared/loaders";
@@ -133,6 +133,8 @@ const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; 
 })
 
 export default component$(() => {
+    const user = useContext(UserContext);
+
     const debate = useGetDebateBySlug()
 
     const userCountry = "Argentina"
@@ -143,8 +145,6 @@ export default component$(() => {
     const filteredPointsOfView = pointsOfView.value.filter(pov =>
         pov.name.toLowerCase().includes(searchTerm.value.toLowerCase())
     )
-
-    const session = useSession();
 
     const isOpenModalAddDebate = useSignal(false)
 
@@ -182,7 +182,7 @@ export default component$(() => {
                     <div class="flex justify-between items-center space-x-4">
                         <div class="flex items-center space-x-4">
                             <Avatar.Root>
-                                <Avatar.Image src={session.value?.user?.image ?? ''} alt={`@${debate.value.creator_username}`} />
+                                <Avatar.Image src={user.image} alt={`@${debate.value.creator_username}`} />
                                 <Avatar.Fallback>SC</Avatar.Fallback>
                             </Avatar.Root>
                             <div>

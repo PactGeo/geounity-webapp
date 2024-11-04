@@ -1,8 +1,7 @@
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import Modal from '~/components/modal/modal';
 import NavResources from "~/components/navs/NavResources";
-import { useSession } from "~/routes/plugin@auth";
 import { Button } from "~/components/ui";
 import FormPoll from "~/components/forms/FormPoll";
 import { LuPlus } from "@qwikest/icons/lucide";
@@ -11,13 +10,14 @@ import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 import ListTags from "~/components/list/ListTags";
+import { UserContext } from "~/contexts/UserContext";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();
-    const session = useSession();
+    const user = useContext(UserContext);
 
     const tags = useGetTags();
     const polls = useGetPolls();
@@ -53,7 +53,7 @@ export default component$(() => {
             </div>
             {polls.value.length === 0 && (selectedTag.name !== 'all' ? <div>VACIO</div> : <EmptyPolls onClickAction={onClickAction} />)}
             <ListPolls polls={polls.value} type="GLOBAL" />
-            {session.value?.user ? (
+            {user.isAuthenticated ? (
                 <Modal
                     description={_`Share an important question to gather the global community's opinion. Your poll can help identify common challenges and priorities.`}
                     isOpen={isOpenModal}

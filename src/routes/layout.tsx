@@ -1,4 +1,4 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, Slot, useContextProvider, useStore } from "@builder.io/qwik";
 import { type RequestHandler } from "@builder.io/qwik-city";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
@@ -8,7 +8,8 @@ import { useServerTimeLoader } from "~/shared/loaders";
 import { useSession } from "./plugin@auth";
 export { useServerTimeLoader } from '~/shared/loaders';
 
-import {guessLocale} from 'compiled-i18n'
+import { guessLocale } from 'compiled-i18n'
+import { UserContext, UserType } from "~/contexts/UserContext";
 
 export { useGetCountry } from '~/shared/loaders';
 
@@ -33,11 +34,21 @@ export default component$(() => {
   const session = useSession();
   const serverTime = useServerTimeLoader();
   const currentYear = new Date(serverTime.value.date).getFullYear();
+
+  const user = useStore<UserType>({
+    name: session.value?.user?.name || '',
+    email: session.value?.user?.email || '',
+    image: session.value?.user?.image || '',
+    isAuthenticated: !!session.value?.user?.email,
+  });
+
+  useContextProvider(UserContext, user);
+
   return (
     <div class="flex flex-col h-screen">
       <Header />
       <div class="flex flex-1">
-        {session.value?.user && <Menu />}
+        {user.isAuthenticated && <Menu />}
         <main class="flex-1 overflow-hidden flex flex-col">
           <Slot />
         </main>        

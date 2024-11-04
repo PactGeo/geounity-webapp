@@ -1,15 +1,15 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useContext } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import Hero from "~/components/hero/Hero";
-import { useSession } from "./plugin@auth";
 import { LocaleSelector } from "~/components/locale-selector";
 import { _ } from "compiled-i18n";
+import { UserContext } from "~/contexts/UserContext";
 
 export default component$(() => {
-  const session = useSession();
+  const user = useContext(UserContext);
   return (
     <div>
-      {!session.value?.user
+      {!user.isAuthenticated
         ? (
           <div class="w-full">
             <Hero />
@@ -17,7 +17,7 @@ export default component$(() => {
         ) 
         : (
           <div class="w-full">
-            <h2>{_`Welcome ${session.value.user.name}`} 👋</h2>
+            <h2>{_`Welcome ${user.name}`} 👋</h2>
             <LocaleSelector />
           </div>
         )

@@ -1,5 +1,5 @@
-import { component$, useSignal, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
-import { useSession, useSignOut } from '~/routes/plugin@auth';
+import { component$, useContext, useSignal, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
+import { useSignOut } from '~/routes/plugin@auth';
 import { Avatar } from "~/components/ui";
 import { Button } from "~/components/ui";
 import { Link } from "@builder.io/qwik-city";
@@ -10,6 +10,7 @@ import styles from "./header.css?inline";
 
 import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
 import { _ } from "compiled-i18n";
+import { UserContext } from "~/contexts/UserContext";
 
 interface LoggedInMenuProps {
     name?: string,
@@ -99,7 +100,7 @@ export const LoggedOutMenu = component$(() => {
 
 export default component$(() => {
     useStylesScoped$(styles);
-    const session = useSession();
+    const user = useContext(UserContext);
     const showMenu = useSignal(true);
 
     return (
@@ -119,11 +120,11 @@ export default component$(() => {
                 </Link>
             </div>
             <div class="relative">
-                {session.value?.user
+                {user.isAuthenticated
                     ? <LoggedInMenu
-                        name={session.value.user.name ?? ''}
-                        email={session.value.user.email ?? ''}
-                        image={session.value.user.image ?? ''}
+                        name={user.name}
+                        email={user.email}
+                        image={user.image}
                     />
                     : <LoggedOutMenu />
                 }
