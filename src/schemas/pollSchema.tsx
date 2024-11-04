@@ -27,7 +27,8 @@ export const PollSchema = v.object({
         value: v.string(),
     }),
     is_anonymous: v.boolean(),
-    community: v.string(),
+    community_ids: v.array(v.string()),
+    community_type: v.string()
 });
 
 export type PollForm = v.InferInput<typeof PollSchema>;

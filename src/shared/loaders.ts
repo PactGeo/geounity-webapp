@@ -23,7 +23,10 @@ export const useGetTags = routeLoader$(async () => {
 });
 
 export const useGetPolls = routeLoader$(async (requestEvent) => {
-    const { sharedMap } = requestEvent
+    const { sharedMap } = requestEvent;
+    const pathname = requestEvent.pathname;
+    const segments = pathname.split('/').filter(Boolean);
+    const communityType = segments[0];
     const session = sharedMap.get('session');
     const token = session?.accessToken;
     const tags = requestEvent.query.get('tags');
@@ -31,7 +34,9 @@ export const useGetPolls = routeLoader$(async (requestEvent) => {
     if (tags && tags !== 'all') {
         url.searchParams.append('tags', tags);
     }
-    url.searchParams.append('community_id', '1');
+    if (communityType) {
+        url.searchParams.append('community_type', communityType);
+    }
     const response = await fetch(url.toString(), {
         headers: {
             Accept: 'application/json',
@@ -42,7 +47,7 @@ export const useGetPolls = routeLoader$(async (requestEvent) => {
         throw new Error(`Failed to fetch polls: ${response.statusText}`);
     }
     const data = await response.json();
-    return data as Array<any>
+    return data as Array<any>;
 });
 
 export const useGetDiscussions = routeLoader$(async (requestEvent) => {
@@ -183,7 +188,7 @@ export const usePostPoll = routeAction$(
         const session = sharedMap.get('session');
         const token = session?.accessToken;
 
-        try{
+        try {
             const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
                 method: 'POST',
                 headers: {
@@ -220,7 +225,7 @@ export const useVotePoll = routeAction$(
     async (data, { sharedMap }) => {
         const session = sharedMap.get('session');
         const token = session?.accessToken;
-        const { pollId } = data 
+        const { pollId } = data
         try {
             const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls/${pollId}/vote`, {
                 method: 'POST',
@@ -278,6 +283,8 @@ export const useVoteOpinion = routeAction$(
 );
 
 export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }) => {
+    const segments = pathname.split('/').filter(Boolean);
+    const communityType = segments[0];
     return {
         type: PollType.Binary,
         title: '',
@@ -289,6 +296,7 @@ export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }
             value: '',
         },
         is_anonymous: false,
-        community: pathname.includes('/global/') ? 'Global' : 'private',
+        community_ids: communityType.toUpperCase() === "GLOBAL" ? ['1'] : [],
+        community_type: communityType.toUpperCase(),
     };
 });

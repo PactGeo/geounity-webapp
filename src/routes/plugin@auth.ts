@@ -14,7 +14,6 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
       jwt: async ({ token, trigger, session, account }) => {
         // if (trigger === "update") token.name = session.user.name
         if (account?.provider === "github" || account?.provider === "google") {
-          console.log(`Fetching ${account.provider} token`);
           try {
             const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/auth/${account.provider}`, {
               method: 'POST',
@@ -23,15 +22,12 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
                 'Content-Type': 'application/json'
               }
             });
-            console.log(`Account provider Response ${account.provider}`, response)
             
             if (!response.ok) {
-              console.error(`Error to get the token from the provider ${account.provider}`);
               return token;
             }
             
             const data = await response.json();
-            console.log(`Account provider data ${account.provider}`, response)
             
             if (data.access_token) {
               return { ...token, accessToken: data.access_token };

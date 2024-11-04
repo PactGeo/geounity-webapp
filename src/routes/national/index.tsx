@@ -51,10 +51,9 @@ export default component$(() => {
     const countriesOptions = countries.map(c => ({ value: c.name, label: `${c.flag} ${c.name}` }))
     return (
         <div>
-            <h1>Overview</h1>
             <Form
                 onSubmit$={handleSubmit}
-                class="space-y-4 md:space-y-6 lg:space-y-8"
+                class="space-y-4 md:space-y-6 lg:space-y-8 w-[300px] m-auto mt-20"
             >
                 <Field name="country">
                     {(field, props) => (

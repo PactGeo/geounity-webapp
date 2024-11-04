@@ -6,6 +6,7 @@ import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
 import { useGetCountry } from '~/shared/loaders';
+import {dataArray as countries} from "~/data/countries";
 
 interface MenuProps {
     isOpen?: boolean;
@@ -14,14 +15,16 @@ interface MenuProps {
 
 export default component$<MenuProps>((props) => {
     useStyles$(styles);
-    const country2 = useGetCountry();
+    const country = useGetCountry();
     const { url } = useLocation();
 
     const geography = [
         { name: _`Global`, path: '/global/', icon: <>🌐</> },
         { name: _`International`, path: '/international/', icon: <><LuGlobe2 /></> },
-        { name: 'National'+`${country2?.value?.flag || ''}`, path: '/national/', icon: <LuMapPin /> },
+        { name: _`National`, path: '/national/', icon: <LuMapPin /> },
     ];
+
+    const adminDivisionName = countries.find(c => c?.cca2 === country.value?.cca2)?.adminDivisionName;
 
     return (
         <nav class="w-64 bg-white overflow-y-auto flex-shrink-0 shadow-lg">
@@ -57,18 +60,32 @@ export default component$<MenuProps>((props) => {
                         </Link>
                     </li>
                 ))}
-                {country2?.value?.id && (
-                    <li
-                        class={cn(
-                            'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
-                            url.pathname.startsWith('/national/') ? 'bg-gray-300 font-extrabold text-primary-700' : '',
-                        )}
-                    >
-                        <Link href={`/national/${country2.value.id}/`} class="flex gap-2 items-center text-slate-500 rounded-lg">
-                            <span>{country2.value.flag}</span>
-                            <span>{country2.value.name}</span>
-                        </Link>
-                    </li>
+                {country?.value?.id && (
+                    <>
+                        <li
+                            class={cn(
+                                'ml-4 p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
+                                url.pathname.startsWith('/national/') ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                            )}
+                        >
+                            <Link href={`/national/${country.value.name}/`} class="flex gap-2 items-center text-slate-500 rounded-lg">
+                                <span>{country.value.flag}</span>
+                                <span>{country.value.name}</span>
+                            </Link>
+                        </li>
+                        <li
+                            class={cn(
+                                'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
+                                url.pathname.startsWith('') ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                            )}
+                        >
+                            <Link href={`/national/${country.value.name}/${adminDivisionName}`} class="flex gap-2 items-center text-slate-500 rounded-lg">
+                                <span><LuMapPin /></span>
+                                <span>{adminDivisionName}</span>
+                            </Link>
+                        </li>
+                        
+                    </>
                 )}
             </ul>
         </nav>

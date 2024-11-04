@@ -5,34 +5,38 @@ import NavResources from "~/components/navs/NavResources";
 import { useSession } from "~/routes/plugin@auth";
 import { Button } from "~/components/ui";
 import FormPoll from "~/components/forms/FormPoll";
-import { LuPlusCircle } from "@qwikest/icons/lucide";
+import { LuPlus } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
 import ListPolls from "~/components/list/ListPolls";
-import { useGetPolls } from '~/shared/loaders';
+import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
+import ListTags from "~/components/list/ListTags";
 
-export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
-export { useGetPolls, usePostPoll, useVotePoll, useReactToPoll } from '~/shared/loaders';
+export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
+export { useFormAction } from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();
     const session = useSession();
 
-    const polls = useGetPolls()
+    const tags = useGetTags();
+    const polls = useGetPolls();
+
+    const selectedTag = useSignal<string>('all');
 
     const isOpenModal = useSignal(false);
-
-    const onClickExpand = $(() => nav('/polls/new'))
-    const onSubmitCompleted = $(() => isOpenModal.value = false)
-    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
+    const onClickExpand = $(() => nav('/polls/new'));
+    const onSubmitCompleted = $(() => isOpenModal.value = false);
+    const onClickAction = $(() => isOpenModal.value = !isOpenModal.value);
 
     return (
         <div>
             <NavResources />
+            <ListTags tags={tags.value} selectedTag={selectedTag} />
             <div class="flex-1 overflow-y-auto p-4">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-5xl font-extrabold text-gray-900 text-center drop-shadow-md">
-                        {_`Polls`}
+                    <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-center drop-shadow-md">
+                        {_`Polls International`}
                     </h1>
                     {polls.value.length > 0 && (
                         <Button
@@ -40,7 +44,7 @@ export default component$(() => {
                             look="primary"
                             onClick$={() => isOpenModal.value = true}
                         >
-                            <LuPlusCircle class="text-4xl mr-2" />
+                            <LuPlus class="text-2xl mr-2" />
                             {_`Create`}
                         </Button>
                     )}
@@ -50,12 +54,15 @@ export default component$(() => {
             <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
-                    description={_`Share the most important challenge facing your community.`}
+                    description={_`Share an important question to gather the international community's opinion. Your poll can help identify common challenges and priorities.`}
                     isOpen={isOpenModal}
                     onClickExpand={onClickExpand}
-                    title={_`New Poll`}
+                    title={_`Create a New International Poll`}
                 >
-                    <FormPoll onSubmitCompleted={onSubmitCompleted} />
+                    <FormPoll
+                        onSubmitCompleted={onSubmitCompleted}
+                        tags={tags.value}
+                    />
                 </Modal>
             ) : (
                 <Modal

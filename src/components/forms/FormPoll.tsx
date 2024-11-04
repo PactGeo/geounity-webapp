@@ -9,6 +9,7 @@ import { PollType } from "~/constants";
 import { PollForm, PollSchema } from "~/schemas";
 import { PollResponseData, useFormAction } from "~/shared/actions";
 import { useFormLoader } from "~/shared/loaders";
+import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
 
 export { useFormLoader } from '~/shared/loaders';
@@ -28,7 +29,8 @@ export default component$<FormPollProps>(({ tags }) => {
         fieldArrays: ['options'],
         validate: valiForm$(PollSchema),
     });
-    const value = getValue(pollForm, 'title')
+
+    const community_type = getValue(pollForm, 'community_type')
 
     const errors = getErrors(pollForm);
 
@@ -41,12 +43,13 @@ export default component$<FormPollProps>(({ tags }) => {
 
     const hasEndDate = getValue(pollForm, 'endDate.active');
 
+    const countriesOptions = countries.map(c => ({ value: c.name, label: `${c.flag} ${c.name}` }))
+
     return (
         <Form
             onSubmit$={handleSubmit}
             class="space-y-4 md:space-y-6 lg:space-y-8"
         >
-
             <Field name="title">
                 {(field, props) => (
                     <TextInput
@@ -137,7 +140,42 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </FieldArray>
 
-            <Field name="community">
+            {/* <FieldArray name="community_ids">
+                {(fieldArray) => (
+                    <div class="space-y-2">
+                        {fieldArray.items.map((communityId, index) => (
+                            <div key={communityId}>
+                                <Field name={`community_ids.${index}`}>
+                                    {(field, props) => false && (
+                                        <TextInput
+                                            {...props}
+                                            type="text"
+                                            value={field.value}
+                                            error={field.error}
+                                            placeholder="Community ID"
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </FieldArray> */}
+
+            <Field name="community_ids" type="string[]">
+                {(field, props) => (
+                    <Select
+                        {...props}
+                        label={_`Countries`}
+                        options={countriesOptions}
+                        value={field.value}
+                        error={field.error}
+                        multiple
+                    />
+                )}
+            </Field>
+
+            <Field name="community_type" type="string">
                 {(field, props) => false && (
                     <TextInput
                         {...props}
