@@ -1,0 +1,26 @@
+import { _ } from 'compiled-i18n';
+
+export const tagTranslations: { [key: string]: string } = {
+    'Politics': _`Politics`,
+    'Economy': _`Economy`,
+    'Health': _`Health`,
+    'Technology': _`Technology`,
+    'Environment': _`Environment`,
+    'Culture': _`Culture`,
+    'Rights and Justice': _`Rights and Justice`,
+    'Education': _`Education`,
+    'Work': _`Work`,
+    'Security': _`Security`,
+    'Society': _`Society`,
+    'Innovation': _`Innovation`,
+    'Law and Legislation': _`Law and Legislation`,
+    'Geopolitics': _`Geopolitics`,
+    'Conflict': _`Conflict`,
+    'Migration': _`Migration`,
+    'Crisis': _`Crisis`,
+    'Natural Resources': _`Natural Resources`,
+    'Cybersecurity': _`Cybersecurity`,
+    'Poverty': _`Poverty`,
+    'Trade': _`Trade`,
+    'Energy': _`Energy`,
+};

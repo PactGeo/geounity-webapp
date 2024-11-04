@@ -6,17 +6,17 @@ import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
 import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
-import { PollType } from "~/constants";
+import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
 import { PollSchema } from "~/schemas";
 import type { PollResponseData } from "~/shared/actions";
-import { useFormAction } from "~/shared/actions";
-import { useFormLoader } from "~/shared/loaders";
+import { useFormPollAction } from "~/shared/actions";
+import { useFormPollLoader } from "~/shared/loaders";
 import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
 
-export { useFormLoader } from '~/shared/loaders';
-export { useFormAction } from '~/shared/actions';
+export { useFormPollLoader } from '~/shared/loaders';
+export { useFormPollAction } from '~/shared/actions';
 
 interface FormPollProps {
     onSubmitCompleted?: () => void;
@@ -27,8 +27,8 @@ export default component$<FormPollProps>(({ tags }) => {
     useStyles$(styles);
 
     const [pollForm, { Form, Field, FieldArray }] = useForm<PollForm, PollResponseData>({
-        loader: useFormLoader(),
-        action: useFormAction(),
+        loader: useFormPollLoader(),
+        action: useFormPollAction(),
         fieldArrays: ['options'],
         validate: valiForm$(PollSchema),
     });
@@ -40,7 +40,7 @@ export default component$<FormPollProps>(({ tags }) => {
     console.log('errors', errors)
 
     const handleSubmit = $<SubmitHandler<PollForm>>((values, event) => {
-        console.log('== handleSubmit ==')
+        console.log('== PollForm handleSubmit ==')
         console.log('event', event)
         console.log('values', values)
         // Runs on client
@@ -168,7 +168,7 @@ export default component$<FormPollProps>(({ tags }) => {
             </FieldArray> */}
 
             <Field name="community_ids" type="string[]">
-                {(field, props) => (
+                {(field, props) => community_type != CommunityType.GLOBAL && (
                     <Select
                         {...props}
                         label={_`Countries`}
@@ -182,7 +182,7 @@ export default component$<FormPollProps>(({ tags }) => {
 
             <Field name="community_type" type="string">
                 {(field, props) => (
-                    <div>
+                    <div class="hidden">
                         <TextInput
                             {...props}
                             type="text"

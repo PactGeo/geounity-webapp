@@ -48,5 +48,6 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
         return session
       },
     },
+    trustHost: true
   }),
 );

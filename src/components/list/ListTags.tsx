@@ -2,13 +2,17 @@ import { $, component$, useOnWindow, useSignal, useStyles$, useVisibleTask$ } fr
 import { LuChevronLeft, LuChevronRight } from "@qwikest/icons/lucide";
 import { useNavigate, useLocation } from '@builder.io/qwik-city';
 import styles from "./list-tags.css?inline";
+import { _ } from "compiled-i18n";
+import { tagTranslations } from "~/constants";
 
 interface ListTagsProps {
-    selectedTag?: { value: string };
+    selectedTag: { id: number, name: string };
     tags: { id: string, name: string }[];
 }
 
 export default component$<ListTagsProps>(({ tags, selectedTag }) => {
+    console.log('selectedTag2', selectedTag)
+    console.log('tags', tags)
     useStyles$(styles);
 
     // Hooks de navegación y ubicación
@@ -16,7 +20,6 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
     const location = useLocation();
 
     // Señales para manejar el estado
-    const selectedTagSignal = useSignal(selectedTag?.value || 'all');
     const canScrollLeft = useSignal(false);
     const canScrollRight = useSignal(false);
     const tagsRef = useSignal<HTMLDivElement>();
@@ -44,15 +47,15 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
 
     // Función para manejar el clic en un tag
     const handleTagClick = $((tagName: string) => {
-        if (tagName === selectedTagSignal.value) {
+        if (tagName === selectedTag.name) {
             // If the clicked tag is already selected, deselect and go back to 'all'
-            selectedTagSignal.value = 'all';
+            selectedTag.name = 'all';
             const url = new URL(location.url.href);
             url.searchParams.delete('tags');
             navigate(url.pathname + url.search);
         } else {
             // If the clicked tag is not selected, select it
-            selectedTagSignal.value = tagName;
+            selectedTag.name = tagName;
             const url = new URL(location.url.href);
             url.searchParams.set('tags', tagName);
             navigate(url.pathname + url.search);
@@ -67,9 +70,9 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
         const currentTags = location.url.searchParams.getAll('tags');
         if (currentTags.length > 0) {
             // Asumimos que solo hay un tag seleccionado; si hay múltiples, se puede ajustar
-            selectedTagSignal.value = currentTags[0];
+            selectedTag.name = currentTags[0];
         } else {
-            selectedTagSignal.value = 'all';
+            selectedTag.name = 'all';
         }
     });
 
@@ -97,18 +100,18 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
                     ref={tagsRef}
                 >
                     <button
-                        class={`button-tag ${selectedTagSignal.value === 'all' ? 'active' : ''}`}
+                        class={`button-tag ${selectedTag.name === 'all' ? 'active' : ''}`}
                         onClick$={() => handleTagClick('all')}
                     >
-                        All
+                        {_`All`}
                     </button>
                     {tags.map((tag) => (
                         <button
-                            class={`button-tag ${selectedTagSignal.value === tag.name ? 'active' : ''}`}
+                            class={`button-tag ${selectedTag.name === tag.name ? 'active' : ''}`}
                             key={tag.id}
                             onClick$={() => handleTagClick(tag.name)}
                         >
-                            {tag.name}
+                            {tagTranslations[tag.name] || tag.name}
                         </button>
                     ))}
                 </div>

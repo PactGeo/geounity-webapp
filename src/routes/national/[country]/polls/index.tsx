@@ -11,8 +11,8 @@ import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 
-export { useFormLoader, useFormAction } from "~/components/forms/FormPoll";
-export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll } from '~/shared/loaders';
+export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
+export { useFormPollAction } from '~/shared/actions';
 
 export default component$(() => {
     const nav = useNavigate();

@@ -7,9 +7,6 @@ import { _ } from "compiled-i18n";
 
 export default component$(() => {
   const session = useSession();
-  const name = 'John'
-  const emoji = '👋'
-  const greeting = _`Hello ${name} ${emoji}!`
   return (
     <div>
       {!session.value?.user
@@ -20,10 +17,7 @@ export default component$(() => {
         ) 
         : (
           <div class="w-full">
-            <h2>Bienvenido {session.value.user.name}</h2>
-            <h3>{_`Hola Mundo`}</h3>
-            <p>{greeting}</p>
-            <h3>{_`Hola Mundo dos`}</h3>
+            <h2>{_`Welcome ${session.value.user.name}`} 👋</h2>
             <LocaleSelector />
           </div>
         )
@@ -33,11 +27,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Geounity",
+  title: _`Welcome to Geounity`,
   meta: [
     {
       name: "description",
-      content: "Geounity",
+      content: _`Geounity is a platform for building communities.`,
     },
   ],
 };

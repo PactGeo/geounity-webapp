@@ -282,7 +282,7 @@ export const useVoteOpinion = routeAction$(
     }
 );
 
-export const useFormLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }) => {
+export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathname }) => {
     const segments = pathname.split('/').filter(Boolean);
     const communityType = segments[0];
     return {

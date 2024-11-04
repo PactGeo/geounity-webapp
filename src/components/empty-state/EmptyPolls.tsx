@@ -16,7 +16,7 @@ export default component$<EmptyPollsProps>(({ onClickAction }) => {
                 </div>
                 <h3 class="text-lg font-semibold">{_`There are no polls in the list`}</h3>
                 <p class="text-sm text-muted-foreground">
-                    {_`No one seems to have created any discussions for this community, why don't you start by adding one?`}
+                    {_`No one seems to have created any polls for this community, why don't you start by adding one?`}
                 </p>
                 <Button
                     look="primary"

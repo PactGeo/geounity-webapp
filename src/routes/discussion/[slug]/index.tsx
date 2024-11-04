@@ -335,7 +335,6 @@ export default component$(() => {
                 )
             }
             <Modal
-                description={_`...`}
                 isOpen={isOpenModalAddDebate}
                 title={_`New Point of View`}
             >

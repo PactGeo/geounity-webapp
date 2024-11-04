@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import Modal from '~/components/modal/modal';
 import NavResources from "~/components/navs/NavResources";
@@ -12,8 +12,8 @@ import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 import ListTags from "~/components/list/ListTags";
 
-export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormLoader } from '~/shared/loaders';
-export { useFormAction } from "~/shared/actions";
+export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
+export { useFormPollAction } from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();
@@ -22,7 +22,8 @@ export default component$(() => {
     const tags = useGetTags();
     const polls = useGetPolls();
 
-    const selectedTag = useSignal<string>('all');
+    const selectedTag = useStore({ id: 0, name: 'all' });
+    console.log('selectedTag', selectedTag)
 
     const isOpenModal = useSignal(false);
     const onClickExpand = $(() => nav('/polls/new'));
@@ -50,7 +51,7 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
+            {polls.value.length === 0 && (selectedTag.name !== 'all' ? <div>VACIO</div> : <EmptyPolls onClickAction={onClickAction} />)}
             <ListPolls polls={polls.value} type="GLOBAL" />
             {session.value?.user ? (
                 <Modal
