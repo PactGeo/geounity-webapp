@@ -102,7 +102,7 @@ export default component$(() => {
             </div>
             {polls.value.length === 0 && (
                 selectedTag.name !== 'all'
-                    ? <div>{_`No results for "${selectedTag.name}"`}</div>
+                    ? <div>{_`No results for ${selectedTag.name}`}</div>
                     : <EmptyPolls onClickAction={onClickAction} />
             )}
             {polls.value.length > 0 && (

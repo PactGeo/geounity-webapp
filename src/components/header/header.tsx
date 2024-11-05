@@ -78,8 +78,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
 
 export const LoggedOutMenu = component$(() => {
     const navItems = [
-        { label: _`Login`, href: '/login' },
-        { label: _`Sign Up`, href: '/register' },
+        { label: _`Help`, href: '/Help' },
     ];
     return (
         <nav class="flex flex-row flex-nowrap">
