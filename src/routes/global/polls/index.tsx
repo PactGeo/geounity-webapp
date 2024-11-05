@@ -86,7 +86,7 @@ export default component$(() => {
             </h1>
             <ListTags tags={tags.value} selectedTag={selectedTag} />
             <div class="flex-1 px-4 mb-4">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center text-xl">
                     {_`Total polls: ${polls.value.length}`}
                     {polls.value.length > 0 && (
                         <Button

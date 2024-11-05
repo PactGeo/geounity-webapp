@@ -106,12 +106,12 @@ export default component$(() => {
 
     return (
         <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
-            <div class="flex items-center">
+            <div class="flex items-center py-1">
                 <button
                     class="p-4 mr-2 cursor-pointer"
                     onClick$={() => showMenu.value = !showMenu.value}
                 >
-                    <span style={{ fontSize: '24px' }}><LuMenu /></span>
+                    {user.isAuthenticated && <span style={{ fontSize: '24px' }}><LuMenu /></span>}
                 </button>
                 <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
                     <Logo

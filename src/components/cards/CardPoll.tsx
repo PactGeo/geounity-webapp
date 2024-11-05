@@ -1,10 +1,11 @@
 import { $, component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
-import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuShare, LuMoreVertical, LuTag } from '@qwikest/icons/lucide';
+import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuTag, LuUser, LuTimer, LuShare2, LuTrash2, LuFlag } from '@qwikest/icons/lucide';
 import { timeAgo } from "~/utils";
 import { Progress } from "~/components/Progress";
 import { useReactToPoll, useVotePoll } from "~/shared/loaders";
 import { _ } from "compiled-i18n";
+import { Button } from "~/components/ui";
 
 interface CardPollProps {
     poll: any;
@@ -167,10 +168,24 @@ export default component$<CardPollProps>(({
             }));
     });
 
+    const esPropietario = true
+
+    const handleBorrar = $(async () => {
+        console.log('++++++++++++ handleBorrar ++++++++++++')
+    })
+
+    const handleReportar = $(async () => {
+        console.log('++++++++++++ handleReportar ++++++++++++')
+    })
+
+    const totalVotos = useComputed$(() => {
+        return votesCount.value + userVotedOptions.value.length;
+    })
+
     return (
         <div class="border rounded-lg shadow-md p-4 bg-gray-50 hover:shadow-lg transition-shadow w-full">
             {/* Title and type badge */}
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center justify-between">
+            <h2 class="text-3xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
                 <span class="badge">
                     {poll.community_type === "GLOBAL" && <span>🌎</span>}
@@ -178,10 +193,10 @@ export default component$<CardPollProps>(({
             </h2>
 
             {/* Description */}
-            <p class="text-gray-600 text-sm mt-2">{description}</p>
+            <p class="text-gray-600 text-sm mt-1">{description}</p>
 
             {/* Tags */}
-            <div class="mt-4 flex flex-wrap gap-2">
+            <div class="mt-1 flex flex-wrap gap-2">
                 {poll.tags?.map((tag: string) => (
                     <span key={tag} class="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded">
                         <LuTag class="inline-block mr-1" /> {tag}
@@ -208,8 +223,9 @@ export default component$<CardPollProps>(({
             </div>
 
             {/* Información del usuario y fecha */}
-            <div class="flex justify-between items-center mt-4 text-gray-500 text-xs">
+            <div class="flex justify-between items-center mt-4 text-gray-500 text-sm">
                 <div class="flex items-center">
+                    <LuUser class="h-5 w-5" />
                     {is_anonymous
                         ? <span>{_`Anonymous User`}</span>
                         : (
@@ -218,42 +234,54 @@ export default component$<CardPollProps>(({
                             </span>
                         )
                     }
-                    <span class="ml-2">{timeAgo(new Date(created_at))}</span>
+                    <div class="flex items-center"><LuTimer class="h-5 w-5 ml-4 mr-1" /><span>{timeAgo(new Date(created_at))}</span></div>
                 </div>
-                {ends_at && <span class="ml-2">{_`Finaliza: ${new Date(ends_at).toLocaleDateString()}`}</span>}
+                {ends_at && <span class="ml-2 text-green-500">{_`Finaliza: ${new Date(ends_at).toLocaleDateString()}`}</span>}
             </div>
 
             {/* Botones de interacción */}
-            <div class="flex items-center justify-between mt-4">
-                <div class="flex space-x-4">
-                    <button
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex space-x-8">
+                    <Button
                         class={`hover:text-blue-500 flex items-center ${userReaction.value === 'LIKE' ? 'text-blue-500' : 'text-gray-600'}`}
+                        look="ghost"
                         onClick$={() => handleReaction('LIKE')}
                     >
                         <LuThumbsUp class="h-5 w-5" />
                         <span class="ml-1">{likesCount.value}</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         class={`hover:text-red-500 flex items-center ${userReaction.value === 'DISLIKE' ? 'text-red-500' : 'text-gray-600'}`}
+                        look="ghost"
                         onClick$={() => handleReaction('DISLIKE')}
                     >
                         <LuThumbsDown class="h-5 w-5" />
                         <span class="ml-1">{dislikesCount.value}</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         class="hover:text-purple-500 flex items-center text-gray-600"
+                        look="ghost"
                         onClick$={toggleComments}
                     >
                         <LuMessageSquare class="h-5 w-5" />
                         <span class="ml-1">{comments_count}</span>
-                    </button>
-                    <button class="text-gray-600 hover:text-green-500">
-                        <LuShare class="h-5 w-5" />
-                    </button>
+                    </Button>
+                    <Button class="text-gray-600 hover:text-green-500" look="ghost">
+                        <LuShare2 class="h-5 w-5" />
+                    </Button>
+                    {esPropietario ? (
+                        <Button look="ghost" onClick$={handleBorrar}>
+                            <LuTrash2 class="h-5 w-5 text-red-500" />
+                        </Button>
+                        ) : (
+                        <Button look="ghost" onClick$={handleReportar}>
+                            <LuFlag class="h-5 w-5 text-yellow-500" />
+                        </Button>
+                    )}
                 </div>
                 <div class="relative">
                     <button class="text-gray-600 hover:text-gray-800">
-                        <LuMoreVertical class="h-5 w-5" />
+                        {_`${totalVotos.value} total votes`}
                     </button>
                 </div>
             </div>

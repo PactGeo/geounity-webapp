@@ -16,8 +16,6 @@
     "that make a real impact on your environment.": "that make a real impact on your environment.",
     "Help develop AI solutions": "Help develop AI solutions",
     "that learn from community feedback.": "that learn from community feedback.",
-    "Enter your email": "Enter your email",
-    "Join Now": "Join Now",
     "Welcome to Geounity": "Welcome to Geounity",
     "Login": "Login",
     "Sign Up": "Sign Up",
@@ -111,8 +109,6 @@
     "Please enter a name for the option.": "Please enter a name for the option.",
     "You must have at least 2 options.": "You must have at least 2 options.",
     "You must have at most 10 options.": "You must have at most 10 options.",
-    "Start projects ": "Start projects ",
-    "Help develop AI solutions ": "Help develop AI solutions ",
     "Welcome $1": "Welcome $1",
     "Geounity is a platform for building communities.": "Geounity is a platform for building communities.",
     "All": "All",
@@ -137,6 +133,17 @@
     "Cybersecurity": "Cybersecurity",
     "Poverty": "Poverty",
     "Trade": "Trade",
-    "Energy": "Energy"
+    "Energy": "Energy",
+    "Total polls: $1": "",
+    "No results for \"$1\"": "",
+    "Pending": "",
+    "Answered": "",
+    "Finished": "",
+    "My polls": "",
+    "No one seems to have created any polls for this community, why don't you start by adding one?": "",
+    "$1 votes": "",
+    "Anonymous User": "",
+    "Finaliza: $1": "",
+    "$1 total votes": ""
   }
 }
