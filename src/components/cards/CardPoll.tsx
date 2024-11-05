@@ -172,9 +172,9 @@ export default component$<CardPollProps>(({
             {/* Title and type badge */}
             <h2 class="text-xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
-                {/* <span class={`badge ${poll.poll_type === 'BINARY' ? 'bg-red-300' : poll.poll_type === 'SINGLE_CHOICE' ? 'bg-blue-300' : 'bg-green-300'}`}>
-                    {type}
-                </span> */}
+                <span class="badge">
+                    {poll.community_type === "GLOBAL" && <span>🌎</span>}
+                </span>
             </h2>
 
             {/* Description */}
@@ -190,7 +190,7 @@ export default component$<CardPollProps>(({
             </div>
             {/* TODO: translate this */}
             {/* Cantidad de votos */}
-            <p class="text-gray-500 text-xs mt-4">{votesCount} votos</p>
+            <p class="text-gray-500 text-xs mt-4">{_`${votesCount.value} votes`}</p>
 
             {/* Opciones con porcentajes */}
             <div class="space-y-2 mt-4">
@@ -209,17 +209,18 @@ export default component$<CardPollProps>(({
 
             {/* Información del usuario y fecha */}
             <div class="flex justify-between items-center mt-4 text-gray-500 text-xs">
-                {!is_anonymous && (
-                    <div class="flex items-center">
-                        <span onClick$={() => onClickUsername(creator_username)} class="cursor-pointer">
-                            {creator_username}
-                        </span>
-                        <span class="ml-2">{timeAgo(new Date(created_at))}</span>
-                    </div>
-                )}
-                {/* TODO: translate this */}
-                {/* Mostrar fecha de finalización si existe */}
-                {ends_at && <span class="ml-2">Finaliza: {new Date(ends_at).toLocaleDateString()}</span>}
+                <div class="flex items-center">
+                    {is_anonymous
+                        ? <span>{_`Anonymous User`}</span>
+                        : (
+                            <span onClick$={() => onClickUsername(creator_username)} class="cursor-pointer">
+                                {creator_username}
+                            </span>
+                        )
+                    }
+                    <span class="ml-2">{timeAgo(new Date(created_at))}</span>
+                </div>
+                {ends_at && <span class="ml-2">{_`Finaliza: ${new Date(ends_at).toLocaleDateString()}`}</span>}
             </div>
 
             {/* Botones de interacción */}

@@ -23,14 +23,6 @@ export default {
           DEFAULT: "#FF5252",
           foreground: "#FFFFFF",
         },
-        background: {
-          light: '#FFFFFF',
-          dark: '#121212',
-        },
-        foreground: {
-          light: '#333333',
-          dark: '#E0E0E0',
-        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -98,7 +90,6 @@ export default {
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
     plugin(function ({ addUtilities }) {
       addUtilities({
         ".press": {

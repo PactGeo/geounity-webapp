@@ -1,12 +1,29 @@
 import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
 import { PollType } from "~/constants";
+import type { UserType } from "~/contexts/UserContext";
 import type { CountryForm, PollForm } from "~/schemas";
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
         date: new Date().toISOString(),
     };
+});
+
+export const useUser = routeLoader$(async ({ sharedMap }) => {
+    const session = sharedMap.get('session');
+    const token = session?.accessToken;
+    if (!token) {
+        return null;
+    }
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/me`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    });
+    const data = await response.json();
+    return data as UserType;
 });
 
 export const useGetTags = routeLoader$(async () => {

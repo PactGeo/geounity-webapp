@@ -15,9 +15,9 @@ export default component$<ListPolls>(({
     console.log('type', type);
 
     return (
-        <div class="flex-1 overflow-y-auto p-4">
+        <div class="flex-1 overflow-y-auto px-4">
             {viewMode.value === 'cards' && (
-                <ul class="grid grid-cols-1 gap-6 p-4">
+                <ul class="grid grid-cols-1 gap-6 px-4">
                     {polls.map((poll) => (
                         <li key={`poll-${poll.id}`} class="flex">
                             <CardPoll

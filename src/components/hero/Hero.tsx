@@ -31,10 +31,10 @@ export default component$(() => {
                 </div>
                 <div class="md:col-span-2 flex justify-center items-center">
                     <div class="bg-white text-gray-900 rounded-lg shadow-lg p-8 space-y-4 w-full max-w-md">
-                        <form class="space-y-4">
+                        {/* <form class="space-y-4">
                             <input type="text" placeholder={_`Enter your email`} class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             <button class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">{_`Join Now`}</button>
-                        </form>
+                        </form> */}
                         <SocialLoginButtons />
                     </div>
                 </div>

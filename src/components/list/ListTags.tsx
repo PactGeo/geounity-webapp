@@ -2,7 +2,6 @@ import { $, component$, useOnWindow, useSignal, useStyles$, useVisibleTask$ } fr
 import { LuChevronLeft, LuChevronRight } from "@qwikest/icons/lucide";
 import { useNavigate, useLocation } from '@builder.io/qwik-city';
 import styles from "./list-tags.css?inline";
-import { _ } from "compiled-i18n";
 import { tagTranslations } from "~/constants";
 
 interface ListTagsProps {
@@ -11,8 +10,6 @@ interface ListTagsProps {
 }
 
 export default component$<ListTagsProps>(({ tags, selectedTag }) => {
-    console.log('selectedTag2', selectedTag)
-    console.log('tags', tags)
     useStyles$(styles);
 
     // Hooks de navegación y ubicación
@@ -99,12 +96,6 @@ export default component$<ListTagsProps>(({ tags, selectedTag }) => {
                     class="flex overflow-x-auto py-2 space-x-2 no-scrollbar hide-scroll-bar"
                     ref={tagsRef}
                 >
-                    <button
-                        class={`button-tag ${selectedTag.name === 'all' ? 'active' : ''}`}
-                        onClick$={() => handleTagClick('all')}
-                    >
-                        {_`All`}
-                    </button>
                     {tags.map((tag) => (
                         <button
                             class={`button-tag ${selectedTag.name === tag.name ? 'active' : ''}`}

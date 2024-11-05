@@ -20,6 +20,7 @@ interface LoggedInMenuProps {
 
 export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     useStyles$(styles);
+    const user = useContext(UserContext);
     const signOut = useSignOut();
 
     const actions = [
@@ -50,7 +51,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
             <Dropdown.Popover class="mt-2 pt-2 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5">
                 <Dropdown.Group>
                     <Dropdown.Item class="dropdown-item">
-                        <Link href="/user/sebacc">
+                        <Link href={`/user/${user.username}`}>
                             <div class="flex items-center">
                                 <LuUser /><span>{_`My profile`}</span>
                             </div>
