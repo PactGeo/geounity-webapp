@@ -4,14 +4,14 @@ import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
 import Menu from "~/components/menu/menu";
 
-import { useServerTimeLoader, useUser } from "~/shared/loaders";
+import { useServerTimeLoader } from "~/shared/loaders";
 import { useSession } from "./plugin@auth";
 export { useServerTimeLoader } from '~/shared/loaders';
 
 import { guessLocale } from 'compiled-i18n'
 import { UserContext, type UserType } from "~/contexts/UserContext";
 
-export { useGetCountry, useUser } from '~/shared/loaders';
+export { useGetCountry } from '~/shared/loaders';
 
 export const onRequest: RequestHandler = async ({ query, headers, locale }) => {
   // Allow overriding locale with query param `locale`
@@ -33,16 +33,18 @@ export const onGet: RequestHandler = async (requestEvent) => {
 
 export default component$(() => {
   const session = useSession();
-  const user = useUser();
+  // const user = useUser();
   const serverTime = useServerTimeLoader();
   const currentYear = new Date(serverTime.value.date).getFullYear();
 
   const userStore = useStore<UserType>({
-    id: user.value?.id || 0,
+    // id: user.value?.id || 0,
+    id: 0,
     name: session.value?.user?.name || '',
     email: session.value?.user?.email || '',
     image: session.value?.user?.image || '',
-    username: user.value?.username || '',
+    // username: user.value?.username || '',
+    username: '',
     isAuthenticated: !!session.value?.user?.email,
   });
 
@@ -53,7 +55,7 @@ export default component$(() => {
     <div class="flex flex-col h-screen">
       <Header />
       <div class="flex flex-1">
-        {userStore.isAuthenticated && <Menu />}
+        <Menu />
         <main class="flex-1 overflow-hidden flex flex-col">
           <Slot />
         </main>

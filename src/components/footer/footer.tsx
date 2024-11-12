@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { LuFacebook, LuTwitter, LuInstagram, LuYoutube } from "@qwikest/icons/lucide";
+import { LuFacebook, LuTwitter, LuYoutube, LuExternalLink } from "@qwikest/icons/lucide";
 import { QwikLogo } from '~/icons/qwik';
 import { Button } from "~/components/ui";
 import { _ } from 'compiled-i18n';
@@ -11,9 +11,9 @@ interface FooterProps {
 
 const socialMedia = [
     {
-        label: 'Facebook',
-        link: '/facebook',
-        icon: () => <LuFacebook />,
+        label: 'Youtube',
+        link: '/youtube',
+        icon: () => <LuYoutube />,
     },
     {
         label: 'Twitter',
@@ -21,15 +21,10 @@ const socialMedia = [
         icon: () => <LuTwitter />,
     },
     {
-        label: 'Instagram',
-        link: '/instagram',
-        icon: () => <LuInstagram />,
-    },
-    {
-        label: 'Youtube',
-        link: '/youtube',
-        icon: () => <LuYoutube />,
-    },
+        label: 'Facebook',
+        link: 'https://www.facebook.com/geounityapp/',
+        icon: () => <LuFacebook />,
+    }
 ];
 
 export default component$<FooterProps>(({ currentYear }) => {
@@ -50,7 +45,7 @@ export default component$<FooterProps>(({ currentYear }) => {
                 <div class="bg-neutral-900 justify-end px-4 py-10 md:flex md:py-6 w-full">
                     <div class="flex justify-center py-2 gap-x-4 md:self-start">
                         {socialMedia.map(({ icon: Icon, label, link }) => (
-                            <Link href={link}>
+                            <a href={link} target='_blank'>
                                 <Button
                                     aria-label={`Go to ${label} page`}
                                     key={label}
@@ -61,7 +56,7 @@ export default component$<FooterProps>(({ currentYear }) => {
                                         <Icon />
                                     </div>
                                 </Button>
-                            </Link>
+                            </a>
                         ))}
                     </div>
                     <div class="flex items-center justify-center gap-6 py-2 my-4 md:ml-auto md:my-0">
@@ -79,7 +74,8 @@ export default component$<FooterProps>(({ currentYear }) => {
                 <p class="flex items-center justify-center py-2 leading-5 text-center typography-text-sm text-white/50 font-body md:ml-6">
                     <span class="ml-2">©{currentYear} Geounity.&nbsp;</span>
                     <span class="flex items-center">
-                        {_`Developed with`} &nbsp; <a href="https://qwik.dev/"><QwikLogo height={20} width={55} /></a> &nbsp; {_`by`} &nbsp; <a href="https://sebastiancardoso.com/" target="_blank">SC</a>
+                        {_`Developed with`} &nbsp; <a href="https://qwik.dev/"><QwikLogo height={20} width={55} /></a> &nbsp; {_`by`} &nbsp;
+                        <a href="https://sebastiancardoso.com/" target="_blank" class="flex no-wrap items-center gap-1 text-xs" ><span>sebastiancardoso</span><LuExternalLink /></a>
                     </span>
                 </p>
             </div>

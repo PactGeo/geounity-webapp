@@ -20,6 +20,7 @@ interface LoggedInMenuProps {
 
 export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     useStyles$(styles);
+    
     const user = useContext(UserContext);
     const signOut = useSignOut();
 
@@ -78,7 +79,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
 
 export const LoggedOutMenu = component$(() => {
     const navItems = [
-        { label: _`Help`, href: '/Help' },
+        { label: _`Help`, href: '/help' },
     ];
     return (
         <nav class="flex flex-row flex-nowrap">
@@ -106,12 +107,12 @@ export default component$(() => {
     return (
         <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
             <div class="flex items-center py-1">
-                <button
+                {user.isAuthenticated && <button
                     class="p-4 mr-2 cursor-pointer"
                     onClick$={() => showMenu.value = !showMenu.value}
                 >
-                    {user.isAuthenticated && <span style={{ fontSize: '24px' }}><LuMenu /></span>}
-                </button>
+                    <span style={{ fontSize: '24px' }}><LuMenu /></span>
+                </button>}
                 <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
                     <Logo
                         style={{ width: '48px', height: '48px' }}

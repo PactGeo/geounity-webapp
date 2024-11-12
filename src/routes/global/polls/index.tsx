@@ -18,13 +18,13 @@ export { useFormPollAction } from "~/shared/actions";
 export default component$(() => {
     const nav = useNavigate();
     const loc = useLocation();
-    console.log('loc', loc)
+
     const user = useContext(UserContext);
+    const polls = useGetPolls();
 
     const selectedIndexSig = useSignal(0);
     
     const tags = useGetTags();
-    const polls = useGetPolls();
     const filteredPolls = useSignal(polls.value);
     
     const selectedTag = useStore({ id: 0, name: 'all' });
@@ -66,7 +66,6 @@ export default component$(() => {
         // });
         // const json = await res.json();
         // console.log('json', json[0])
-        console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHH')
         filteredPolls.value = []
 
         // Assigning to a signal will trigger a re-render.
@@ -88,7 +87,7 @@ export default component$(() => {
             <div class="flex-1 px-4 mb-4">
                 <div class="flex justify-between items-center text-xl">
                     {_`Total polls: ${polls.value.length}`}
-                    {polls.value.length > 0 && (
+                    {(polls.value.length > 0 || selectedTag.name !== "all") && (
                         <Button
                             class="mr-4"
                             look="primary"
@@ -102,7 +101,9 @@ export default component$(() => {
             </div>
             {polls.value.length === 0 && (
                 selectedTag.name !== 'all'
-                    ? <div>{_`No results for ${selectedTag.name}`}</div>
+                    ? <div class="flex justify-center">
+                        <span>{_`No results for ${selectedTag.name}`}</span>
+                    </div>
                     : <EmptyPolls onClickAction={onClickAction} />
             )}
             {polls.value.length > 0 && (

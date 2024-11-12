@@ -9,7 +9,7 @@ import { useFormCountryLoader } from "~/shared/loaders";
 import { useFormCountryAction } from "~/shared/actions";
 import { type CountryForm, CountrySchema } from "~/schemas";
 
-export { useGetTags } from '~/shared/loaders';
+export { useGetTags, useFormCountryLoader } from '~/shared/loaders';
 
 
 export default component$(() => {
