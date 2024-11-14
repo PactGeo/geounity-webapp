@@ -183,32 +183,32 @@ export default component$<CardPollProps>(({
     })
 
     return (
-        <div class="border rounded-lg shadow-md p-4 bg-gray-50 hover:shadow-lg transition-shadow w-full">
+        <div class="p-4 mb-4 border rounded-lg shadow-md bg-gray-50 hover:shadow-lg transition-shadow w-full">
             {/* Title and type badge */}
             <h2 class="text-3xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
-                <span class="badge">
+                <span class="badge text-xl">
                     {poll.community_type === "GLOBAL" && <span>🌎</span>}
                 </span>
             </h2>
 
             {/* Description */}
-            <p class="text-gray-600 text-sm mt-1">{description}</p>
+            <p class="mb-2 text-gray-600 text-sm">{description}</p>
 
             {/* Tags */}
-            <div class="mt-1 flex flex-wrap gap-2">
+            <div class="mb-3 flex flex-wrap gap-2">
                 {poll.tags?.map((tag: string) => (
                     <span key={tag} class="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded">
                         <LuTag class="inline-block mr-1" /> {tag}
                     </span>
                 ))}
             </div>
-            {/* TODO: translate this */}
+            
             {/* Cantidad de votos */}
-            <p class="text-gray-500 text-xs mt-4">{_`${votesCount.value} votes`}</p>
+            <p class="mb-2 text-gray-500 text-xs">{_`${votesCount.value} votes`}</p>
 
             {/* Opciones con porcentajes */}
-            <div class="space-y-2 mt-4">
+            <div class="space-y-2 mb-4">
                 {listOptions.value.map((option) => {
                     return (
                         <Progress

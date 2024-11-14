@@ -71,11 +71,12 @@ export default component$<FooterProps>(({ currentYear }) => {
                         ))}
                     </div>
                 </div>
-                <p class="flex items-center justify-center py-2 leading-5 text-center typography-text-sm text-white/50 font-body md:ml-6">
+                <p class="flex justify-center items-center py-2 leading-5 text-center typography-text-sm text-white/50 font-body md:ml-6">
                     <span class="ml-2">©{currentYear} Geounity.&nbsp;</span>
-                    <span class="flex items-center">
-                        {_`Developed with`} &nbsp; <a href="https://qwik.dev/"><QwikLogo height={20} width={55} /></a> &nbsp; {_`by`} &nbsp;
-                        <a href="https://sebastiancardoso.com/" target="_blank" class="flex no-wrap items-center gap-1 text-xs" ><span>sebastiancardoso</span><LuExternalLink /></a>
+                    <span class="flex flex-nowrap items-center">
+                        <span>{_`Developed with`}</span> &nbsp; <a href="https://qwik.dev/" class="flex flex-nowrap gap-1" target="_blank"><QwikLogo height={20} width={55} /><LuExternalLink class="h-3 w-3" /></a>
+                        {/* &nbsp; {_`by`} &nbsp;
+                        <a href="https://sebastiancardoso.com/" target="_blank" class="flex no-wrap items-center gap-1 text-xs" ><span>sebastiancardoso</span><LuExternalLink /></a> */}
                     </span>
                 </p>
             </div>

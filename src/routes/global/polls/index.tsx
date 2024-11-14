@@ -1,5 +1,5 @@
 import { $, component$, useContext, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { Link, useLocation, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { useLocation, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import Modal from '~/components/modal/modal';
 import NavResources from "~/components/navs/NavResources";
 import { Button, Tabs } from "~/components/ui";
@@ -11,6 +11,7 @@ import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 import ListTags from "~/components/list/ListTags";
 import { UserContext } from "~/contexts/UserContext";
+import SocialLoginButtons from "~/components/SocialLoginButtons";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from "~/shared/actions";
@@ -150,13 +151,11 @@ export default component$(() => {
                 </Modal>
             ) : (
                 <Modal
-                    description={_`You must log in to create a new debate`}
+                    description={_`You must log in to create a new global poll.`}
                     isOpen={isOpenModal}
                     title={_`You must log in`}
                 >
-                    <Button look="primary">
-                        <Link href="/login/">{_`Login`}</Link>
-                    </Button>
+                    <SocialLoginButtons />
                 </Modal>
             )}
         </div>

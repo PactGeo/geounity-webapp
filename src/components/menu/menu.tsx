@@ -2,7 +2,7 @@
 import { $, component$, useSignal, useStyles$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import styles from './menu.css?inline';
-import { LuGlobe, LuGlobe2, LuHome, LuMapPin, LuPanelLeftClose, LuPanelLeftOpen } from '@qwikest/icons/lucide';
+import { LuFlag, LuGlobe, LuGlobe2, LuMapPin, LuPanelLeftClose, LuPanelLeftOpen } from '@qwikest/icons/lucide';
 import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
@@ -20,9 +20,8 @@ export default component$<MenuProps>(() => {
     const { url } = useLocation();
 
     const geography = [
-        { name: _`Global`, path: '/global/', icon: <LuGlobe class="w-6 h-6" /> },
-        { name: _`International`, path: '/international/', icon: <><LuGlobe2 class="w-6 h-6" /></>, disabled: true },
-        { name: _`National`, path: '/national/', icon: <LuMapPin class="w-6 h-6" />, disabled: true },
+        { name: _`International`, path: '/international/', icon: <><LuGlobe class="w-6 h-6" /></> },
+        { name: _`Nationals`, path: '/national/', icon: <LuFlag class="w-6 h-6" /> },
     ];
 
     const isOpenMenu = useSignal(true)
@@ -48,14 +47,15 @@ export default component$<MenuProps>(() => {
                         <LuPanelLeftOpen class="w-6 h-6" />
                     </button>
                 </li>}
+                {!isOpenMenu.value && <Separator orientation="horizontal" class="separator-top my-2" />}
                 <li class="text-lg text-gray-500 rounded-lg flex justify-between gap-2 items-center">
-                    <Link href="/" class={cn(
+                    <Link href="/global" class={cn(
                         "p-2 flex items-center gap-2 text-slate-500 hover:bg-gray-100 rounded-lg w-full",
-                        url.pathname === '/' ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                        url.pathname === '/global/' ? 'bg-gray-300 font-extrabold text-primary-700' : '',
                         isOpenMenu.value ? 'justify-start' : 'justify-center',
                     )}>
-                        <span><LuHome class="w-6 h-6"/></span>
-                        <span class={`transition-opacity duration-200 ${isOpenMenu.value ? 'opacity-100' : 'opacity-0 hidden'}`}>{_`Home`}</span>
+                        <span><LuGlobe2 class="w-6 h-6" /></span>
+                        <span class={`transition-opacity duration-200 ${isOpenMenu.value ? 'opacity-100' : 'opacity-0 hidden'}`}>{_`Global`}</span>
                     </Link>
                     {isOpenMenu.value && <button class="pl-4 hover:text-slate-700" onClick$={toggleMenu} >
                         <LuPanelLeftClose class="w-6 h-6" />
@@ -67,7 +67,7 @@ export default component$<MenuProps>(() => {
                 {_`Communities`}
             </h3>}
             <ul class='m-2 pl-0'>
-                {geography.map(item => !item.disabled && (
+                {geography.map(item => (
                     <li
                         key={item.path}
                         class={cn(

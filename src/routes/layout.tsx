@@ -1,5 +1,5 @@
 import { component$, Slot, useContextProvider, useStore } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { useLocation, type RequestHandler } from "@builder.io/qwik-city";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
 import Menu from "~/components/menu/menu";
@@ -32,6 +32,7 @@ export const onGet: RequestHandler = async (requestEvent) => {
 };
 
 export default component$(() => {
+  const { url } = useLocation();
   const session = useSession();
   // const user = useUser();
   const serverTime = useServerTimeLoader();
@@ -55,7 +56,7 @@ export default component$(() => {
     <div class="flex flex-col h-screen">
       <Header />
       <div class="flex flex-1">
-        <Menu />
+        {url.pathname !== '/' && <Menu />}
         <main class="flex-1 overflow-hidden flex flex-col">
           <Slot />
         </main>

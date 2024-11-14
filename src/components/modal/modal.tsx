@@ -1,7 +1,8 @@
 import { component$, Slot, useSignal, useStyles$ } from "@builder.io/qwik";
-import styles from "./modal.css?inline";
-import { Modal, Separator } from '~/components/ui';
 import { LuExpand, LuEye, LuX } from "@qwikest/icons/lucide";
+import { Button, Modal, Separator } from '~/components/ui';
+import styles from "./modal.css?inline";
+// import { Modal } from '@qwik-ui/headless';
 
 interface ModalProps {
     trigger?: string;
@@ -19,6 +20,7 @@ interface ModalProps {
 export default component$<ModalProps>((props) => {
     useStyles$(styles);
     const isOpen = props.isOpen || useSignal(false);
+    const show = useSignal(false)
     const isPreview = useSignal(false);
     return (
         <Modal.Root bind:show={isOpen}>
@@ -29,7 +31,7 @@ export default component$<ModalProps>((props) => {
                         {!!props.onClickPreview && <LuEye 
                             class="text-xl cursor-pointer" 
                             onClick$={() => isPreview.value = !isPreview.value} 
-                        />}
+                            />}
                         {props.onClickExpand && <Modal.Close onClick$={props.onClickExpand}><LuExpand class="text-lg" /></Modal.Close>}
                     </div>
                     <div class="flex items-center gap-2">
@@ -47,5 +49,24 @@ export default component$<ModalProps>((props) => {
             </Modal.Panel>
         </Modal.Root>
     );
+    return (
+        <Modal.Root bind:show={show}>
+            <Modal.Trigger>Open modal</Modal.Trigger>
+            <Modal.Panel>
+                <Modal.Title>Title</Modal.Title>
+                <Modal.Description>Description</Modal.Description>
+                <div>...</div>
+                <footer>
+                <Button look="primary" onClick$={() => (show.value = false)}>
+                    Save
+                </Button>
+                </footer>
+                <Modal.Close>
+                <LuX class="h-5 w-5" />
+                </Modal.Close>
+            </Modal.Panel>
+        </Modal.Root>
+    
+    )
 });
 
