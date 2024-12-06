@@ -28,12 +28,12 @@ export const TextInput = component$(
             }
         });
         return (
-            <div class={clsx('space-y-1', props.class)}>
+            <div class={clsx('', props.class)}>
                 <InputLabel name={name} label={label} required={required} />
                 <input
                     {...props}
                     class={clsx(
-                        'w-full h-12 rounded-md border border-gray-300 bg-white px-4 py-2 outline-none placeholder:text-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:bg-gray-900  dark:focus:border-blue-400',
+                        'w-full h-12 rounded-sm border border-gray-300 bg-white px-4 outline-none placeholder:text-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:bg-gray-900  dark:focus:border-blue-400',
                         error
                             ? 'border-red-600 dark:border-red-400'
                             : 'hover:border-gray-400 dark:border-gray-800'

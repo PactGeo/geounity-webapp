@@ -309,7 +309,7 @@ export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathna
         options: ['', ''],
         tags: [],
         endDate: {
-            active: false,
+            active: true,
             value: '',
         },
         is_anonymous: false,

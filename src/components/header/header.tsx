@@ -1,16 +1,15 @@
-import { component$, useContext, useSignal, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
+import { component$, useContext, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
 import { useSignOut } from '~/routes/plugin@auth';
-import { Avatar } from "~/components/ui";
 import { Button } from "~/components/ui";
 import { Link } from "@builder.io/qwik-city";
-import { LuChevronDown, LuGlobe, LuLogOut, LuMapPin, LuMenu, LuUser } from "@qwikest/icons/lucide";
-import { Dropdown } from "@qwik-ui/headless";
+import { LuBell, LuGlobe, LuLogOut, LuMapPin, LuUser } from "@qwikest/icons/lucide";
 import Logo from '~/icons/logo.svg?jsx';
 import styles from "./header.css?inline";
 
 import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
 import { _ } from "compiled-i18n";
 import { UserContext } from "~/contexts/UserContext";
+import { Avatar, Dropdown } from "flowbite-qwik";
 
 interface LoggedInMenuProps {
     name?: string,
@@ -18,62 +17,75 @@ interface LoggedInMenuProps {
     image?: string;
 }
 
+const LuUserIcon = component$(() => <LuUser />);
+const LuLogOutIcon = component$(() => <LuLogOut />);
+const LuGlobeIcon = component$(() => <LuGlobe />);
+const LuMapPinIcon = component$(() => <LuMapPin />);
+const ThemeSwitchIcon = component$(() => <ThemeSwitch />);
+
+interface AvatarFallbackProps {
+    img?: string;
+    alt?: string;
+}
+
+const AvatarFallback = component$((props: AvatarFallbackProps) => (
+    <div class="mt-1">
+        <Avatar
+            img={props.img}
+            alt={props.alt}
+            size="sm"
+            rounded
+        />
+    </div>
+));
+
+const LuBellIcon = component$(() => <div class="mt-1 p-3 hover:bg-purple-500 rounded-full"><LuBell class="w-5 h-5" /></div>);
+
 export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     useStyles$(styles);
     
     const user = useContext(UserContext);
     const signOut = useSignOut();
 
-    const actions = [
-        { key: 'location', icon: <LuMapPin />, label: _`Location`, href: '/user/sebacc', disabled: false },
-        { key: 'language', icon: <LuGlobe />, label: _`Language`, href: '/user/sebacc', disabled: false },
-        { key: 'theme', label: <ThemeSwitch />, href: '/user/sebacc', disabled: false },
-    ]
-
     return (
-        <Dropdown.Root>
-            <Dropdown.Trigger class="bg-light-purple rounded-full px-2 py-1 focus:outline-none focus:ring focus:ring-white">
-                {props.image ? (
-                    <div class="flex items-center space-x-2">
-                        <Avatar.Root class="transition-transform duration-300 ease-in-out">
-                            <Avatar.Image
-                                src={props.image}
-                                alt={props.name}
-                                class="transition-all duration-300 ease-in-out group-hover:brightness-125 group-hover:scale-105"
-                            />
-                            <Avatar.Fallback>{props.name}</Avatar.Fallback>
-                        </Avatar.Root>
-                        <div style={{ fontSize: '16px' }}>
-                            <LuChevronDown />
-                        </div>
-                    </div>
-                ) : null}
-            </Dropdown.Trigger>
-            <Dropdown.Popover class="mt-2 pt-2 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5">
-                <Dropdown.Group>
-                    <Dropdown.Item class="dropdown-item">
-                        <Link href={`/user/${user.username}`}>
-                            <div class="flex items-center">
-                                <LuUser /><span>{_`My profile`}</span>
-                            </div>
-                        </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item class="dropdown-item" onClick$={() => signOut.submit({ redirectTo: "/" })}>
+        <div class="flex items-center gap-4">
+            <Dropdown as={<LuBellIcon />}>
+                <Dropdown.Item>
+                    <span>{_`No notificacions here.`}</span>
+                </Dropdown.Item>
+            </Dropdown>
+            <Dropdown as={<AvatarFallback img={props.image} alt={props.name} />}>
+                <Dropdown.Item>
+                    <Link href={`/user/${user.username}`}>
                         <div class="flex items-center">
-                            <LuLogOut /> <span>{_`Log Out`}</span>
+                            <LuUserIcon /><span>{_`My profile`}</span>
                         </div>
-                    </Dropdown.Item>
-                    <Dropdown.Separator class="dropdown-separator" />
-                    {actions.map((action) => (
-                        <Dropdown.Item key={action.label} class="dropdown-item" disabled={action.disabled}>
-                            <div class="flex items-center">
-                                {action.icon} {action.label}
-                            </div>
-                        </Dropdown.Item>
-                    ))}
-                </Dropdown.Group>
-            </Dropdown.Popover>
-        </Dropdown.Root>
+                    </Link>
+                </Dropdown.Item>
+                <Dropdown.Item divider />
+                <Dropdown.Item>
+                    <div class="flex items-center gap-1">
+                        <LuGlobeIcon /> <span>{_`Language`}</span>
+                    </div>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                    <div class="flex items-center gap-1">
+                        <LuMapPinIcon /> <span>{_`Location`}</span>
+                    </div>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                    <div class="flex items-center gap-1">
+                        <ThemeSwitchIcon /> <span>{_`Theme`}</span>
+                    </div>
+                </Dropdown.Item>
+                <Dropdown.Item divider />
+                <Dropdown.Item onClick$={() => console.log('LOGOUT')}>
+                    <div class="flex items-center gap-1" onClick$={() => signOut.submit({ redirectTo: "/" })}>
+                        <LuLogOutIcon /> <span>{_`Log Out`}</span>
+                    </div>
+                </Dropdown.Item>
+            </Dropdown>
+        </div>
     );
 });
 
@@ -102,17 +114,10 @@ export const LoggedOutMenu = component$(() => {
 export default component$(() => {
     useStylesScoped$(styles);
     const user = useContext(UserContext);
-    const showMenu = useSignal(true);
 
     return (
         <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
             <div class="flex items-center py-1">
-                {user.isAuthenticated && <button
-                    class="p-4 mr-2 cursor-pointer"
-                    onClick$={() => showMenu.value = !showMenu.value}
-                >
-                    <span style={{ fontSize: '24px' }}><LuMenu /></span>
-                </button>}
                 <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
                     <Logo
                         style={{ width: '48px', height: '48px' }}

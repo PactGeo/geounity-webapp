@@ -20,35 +20,6 @@ header {
   align-items: center;
 }
 
-.dropdown-item {
-  /* display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem; */
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: #333;
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-}
-
-.dropdown-item svg {
-  margin-right: 0.5rem;
-  font-size: 1.1rem;
-  color: #666;
-}
-
-.dropdown-item span {
-  flex-grow: 1;
-}
-
-.dropdown-separator {
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 0.5rem 0;
-}
-
 @keyframes spin-fast {
   from {
     transform: rotate(0deg);

@@ -19,7 +19,7 @@ export const InputLabel = component$(
                 <label
                     class={clsx(
                         "inline-block font-medium md:text-lg lg:text-xl",
-                        !margin && "mb-4 lg:mb-5",
+                        !margin && "mb-2 lg:mb-3",
                     )}
                     for={name}
                 >

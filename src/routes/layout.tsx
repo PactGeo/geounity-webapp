@@ -4,14 +4,14 @@ import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
 import Menu from "~/components/menu/menu";
 
-import { useServerTimeLoader } from "~/shared/loaders";
+import { useServerTimeLoader, useUser } from "~/shared/loaders";
 import { useSession } from "./plugin@auth";
 export { useServerTimeLoader } from '~/shared/loaders';
 
 import { guessLocale } from 'compiled-i18n'
 import { UserContext, type UserType } from "~/contexts/UserContext";
 
-export { useGetCountry } from '~/shared/loaders';
+export { useGetCountry, useUser } from '~/shared/loaders';
 
 export const onRequest: RequestHandler = async ({ query, headers, locale }) => {
   // Allow overriding locale with query param `locale`
@@ -37,6 +37,9 @@ export default component$(() => {
   // const user = useUser();
   const serverTime = useServerTimeLoader();
   const currentYear = new Date(serverTime.value.date).getFullYear();
+
+  const user = useUser()
+  console.log('user.value', user.value)
 
   const userStore = useStore<UserType>({
     // id: user.value?.id || 0,
