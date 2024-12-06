@@ -1,4 +1,4 @@
-import { component$, Slot, useContextProvider, useStore } from "@builder.io/qwik";
+import { component$, Slot, useContextProvider, useSignal, useStore } from "@builder.io/qwik";
 import { useLocation, type RequestHandler } from "@builder.io/qwik-city";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
@@ -10,6 +10,7 @@ export { useServerTimeLoader } from '~/shared/loaders';
 
 import { guessLocale } from 'compiled-i18n'
 import { UserContext, type UserType } from "~/contexts/UserContext";
+import { MenuContext } from "~/contexts/MenuContext";
 
 export { useGetCountry, useUser } from '~/shared/loaders';
 
@@ -51,9 +52,10 @@ export default component$(() => {
     username: '',
     isAuthenticated: !!session.value?.user?.email,
   });
+  const isOpenMenu = useSignal(true);
 
   useContextProvider(UserContext, userStore);
-  console.log('userStore', userStore)
+  useContextProvider(MenuContext, isOpenMenu);
 
   return (
     <div class="flex flex-col h-screen">

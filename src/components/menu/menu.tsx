@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { $, component$, useSignal, useStyles$ } from '@builder.io/qwik';
+import { $, component$, useContext, useStyles$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import styles from './menu.css?inline';
 import { LuFlag, LuGlobe, LuGlobe2, LuMapPin, LuPanelLeftClose, LuPanelLeftOpen } from '@qwikest/icons/lucide';
@@ -8,6 +8,7 @@ import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
 import { useGetCountry } from '~/shared/loaders';
 import {dataArray as countries} from "~/data/countries";
+import { MenuContext } from '~/contexts/MenuContext';
 
 interface MenuProps {
     isOpen?: boolean;
@@ -24,7 +25,7 @@ export default component$<MenuProps>(() => {
         { name: _`Nationals`, path: '/national/', icon: <LuFlag class="w-6 h-6" /> },
     ];
 
-    const isOpenMenu = useSignal(true)
+    const isOpenMenu = useContext(MenuContext)
     const toggleMenu = $(() => {
         isOpenMenu.value = !isOpenMenu.value;
     })
@@ -32,10 +33,10 @@ export default component$<MenuProps>(() => {
     const adminDivisionName = countries.find(c => c?.cca2 === country.value?.cca2)?.adminDivisionName;
 
     return (
-        <nav class={`bg-white overflow-y-auto flex-shrink-0 shadow-lg transition-all duration-300 ease-in-out ${isOpenMenu.value ? 'w-64' : 'w-24'}`}>
+        <nav class={`bg-white overflow-y-auto flex-shrink-0 shadow-lg transition-all duration-300 ease-in-out ${isOpenMenu.value ? 'w-64' : 'w-0 md:w-24'}`}>
             <ul class='m-2 pl-0'>
                 {!isOpenMenu.value && <li
-                    class="text-lg text-gray-500 rounded-lg flex justify-between gap-2 items-center"
+                    class="hidden text-lg text-gray-500 rounded-lg md:flex justify-between gap-2 items-center"
                 >
                     <button
                         class={cn(

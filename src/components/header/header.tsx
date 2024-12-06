@@ -1,14 +1,15 @@
-import { component$, useContext, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
+import { $, component$, useContext, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
 import { useSignOut } from '~/routes/plugin@auth';
 import { Button } from "~/components/ui";
 import { Link } from "@builder.io/qwik-city";
-import { LuBell, LuGlobe, LuLogOut, LuMapPin, LuUser } from "@qwikest/icons/lucide";
+import { LuBell, LuGlobe, LuLogOut, LuMapPin, LuPanelLeftOpen, LuUser } from "@qwikest/icons/lucide";
 import Logo from '~/icons/logo.svg?jsx';
 import styles from "./header.css?inline";
 
 import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
 import { _ } from "compiled-i18n";
 import { UserContext } from "~/contexts/UserContext";
+import { MenuContext } from "~/contexts/MenuContext";
 import { Avatar, Dropdown } from "flowbite-qwik";
 
 interface LoggedInMenuProps {
@@ -114,10 +115,21 @@ export const LoggedOutMenu = component$(() => {
 export default component$(() => {
     useStylesScoped$(styles);
     const user = useContext(UserContext);
+    const isOpenMenu = useContext(MenuContext)
+
+    const toggleMenu = $(() => {
+        isOpenMenu.value = !isOpenMenu.value;
+    })
 
     return (
         <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
             <div class="flex items-center py-1">
+                {!isOpenMenu.value && <button
+                    class="block md:hidden"
+                    onClick$={toggleMenu}
+                >
+                    <LuPanelLeftOpen class="w-6 h-6" />
+                </button>}
                 <Link href="/" aria-label="SF Homepage" class="inline-block text-white mr-auto">
                     <Logo
                         style={{ width: '48px', height: '48px' }}
