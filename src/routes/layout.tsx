@@ -60,9 +60,9 @@ export default component$(() => {
   return (
     <div class="flex flex-col h-screen">
       <Header />
-      <div class="flex flex-1">
+      <div class="flex flex-1 overflow-hidden">
         {url.pathname !== '/' && <Menu />}
-        <main class="flex-1 overflow-hidden flex flex-col">
+        <main class="flex-1 overflow-y-auto">
           <Slot />
         </main>
       </div>

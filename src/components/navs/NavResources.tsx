@@ -17,9 +17,9 @@ export default component$(() => {
     const basePath = pathname.split('/').filter(Boolean)[0];
 
     let items
-    if(country){
+    if (country) {
         items = [
-            { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/${country}`,},
+            { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/${country}`, },
             { name: _`Polls`, icon: <LuDatabase />, href: `/${basePath}/${country}/polls/` },
             { name: _`Discussions`, icon: <LuMessageSquare />, href: `/${basePath}/${country}/discussions/` },
             { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/${country}/issues/`, hidden: isGlobal || isInternational },
@@ -28,7 +28,7 @@ export default component$(() => {
         ];
     } else {
         items = [
-            { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/`},
+            { name: _`Overview`, icon: <LuHome />, href: `/${basePath}/` },
             { name: _`Polls`, icon: <LuDatabase />, href: `/${basePath}/polls/` },
             { name: _`Discussions`, icon: <LuMessageSquare />, href: `/${basePath}/discussions/` },
             { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/issues/`, hidden: isGlobal || isInternational },
@@ -36,23 +36,27 @@ export default component$(() => {
             { name: _`People`, icon: <LuUser />, href: `/${basePath}/people/`, hidden: isGlobal || isInternational },
         ];
     }
-    
+
 
     return (
-        <nav class="px-4 bg-slate-200 border-b border-slate-300">
-            <ul class="flex items-center space-x-4">
-                {items.filter(item => !item.hidden).map((item) => (
-                    <li key={item.name}>
-                        <NavLink
-                            class="flex items-center py-3 px-1"
-                            activeClass="font-bold border-b-2 border-black"
-                            href={item.href}
-                        >
-                            {item.icon}&nbsp;{item.name}
-                        </NavLink>
-                    </li>
-                ))}
-            </ul>
-        </nav>
-    )
+        <div class="sticky top-0 z-10"> {/* Ajusta según el tamaño de tu header */}
+            <nav class="px-4 bg-slate-200 border-b border-slate-300">
+                <ul class="flex items-center space-x-4">
+                    {items.filter(item => !item.hidden).map((item) => (
+                        <li key={item.name}>
+                            <NavLink
+                                class="flex items-center py-3 px-1"
+                                activeClass="font-bold border-b-2 border-black"
+                                href={item.href}
+                            >
+                                {item.icon}&nbsp;{item.name}
+                            </NavLink>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </div>
+    );
+
+
 });

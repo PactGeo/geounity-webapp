@@ -122,7 +122,7 @@ export default component$(() => {
     })
 
     return (
-        <header class="flex justify-center items-center z-50 bg-primary-700 text-white p-4 h-14 md:h-16">
+        <header class="flex justify-center items-center z-40 bg-primary-700 text-white p-4 h-14 md:h-16">
             <div class="flex items-center py-1 gap-1">
                 {!isOpenMenu.value && <button
                     class="block md:hidden"

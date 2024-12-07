@@ -79,7 +79,7 @@ export default component$(() => {
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value);
 
     return (
-        <div>
+        <div class="">
             <NavResources />
             <h1 class="mt-4 ml-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 drop-shadow-md">
                 {_`Polls Global`}
