@@ -7,7 +7,7 @@ import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
 import { useGetCountry } from '~/shared/loaders';
-import {dataArray as countries} from "~/data/countries";
+import { dataArray as countries } from "~/data/countries";
 import { MenuContext } from '~/contexts/MenuContext';
 
 interface MenuProps {
@@ -25,10 +25,10 @@ export default component$<MenuProps>(() => {
         { name: _`Nationals`, path: '/national/', icon: <LuFlag class="w-6 h-6" /> },
     ];
 
-    const isOpenMenu = useContext(MenuContext)
+    const isOpenMenu = useContext(MenuContext);
     const toggleMenu = $(() => {
         isOpenMenu.value = !isOpenMenu.value;
-    })
+    });
 
     const adminDivisionName = countries.find(c => c?.cca2 === country.value?.cca2)?.adminDivisionName;
 
@@ -52,13 +52,13 @@ export default component$<MenuProps>(() => {
                 <li class="text-lg text-gray-500 rounded-lg flex justify-between gap-2 items-center">
                     <Link href="/global" class={cn(
                         "p-2 flex items-center gap-2 text-slate-500 hover:bg-gray-100 rounded-lg w-full",
-                        url.pathname === '/global/' ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                        url.pathname.startsWith('/global') ? 'bg-gray-300 font-extrabold text-primary-700' : '', // Modificado para incluir subrutas
                         isOpenMenu.value ? 'justify-start' : 'justify-center',
                     )}>
                         <span><LuGlobe2 class="w-6 h-6" /></span>
                         <span class={`transition-opacity duration-200 ${isOpenMenu.value ? 'opacity-100' : 'opacity-0 hidden'}`}>{_`Global`}</span>
                     </Link>
-                    {isOpenMenu.value && <button class="pl-4 hover:text-slate-700" onClick$={toggleMenu} >
+                    {isOpenMenu.value && <button class="pl-4 hover:text-slate-700" onClick$={toggleMenu}>
                         <LuPanelLeftClose class="w-6 h-6" />
                     </button>}
                 </li>
@@ -73,7 +73,7 @@ export default component$<MenuProps>(() => {
                         key={item.path}
                         class={cn(
                             'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center text-center',
-                            url.pathname.startsWith(item.path) ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                            url.pathname.startsWith(item.path) ? 'bg-gray-300 font-extrabold text-primary-700' : '', // Modificado para incluir subrutas
                         )}
                     >
                         <Link
@@ -104,7 +104,7 @@ export default component$<MenuProps>(() => {
                         <li
                             class={cn(
                                 'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center',
-                                url.pathname.startsWith('') ? 'bg-gray-300 font-extrabold text-primary-700' : '',
+                                url.pathname.startsWith(`/national/${country.value.name}/${adminDivisionName}`) ? 'bg-gray-300 font-extrabold text-primary-700' : '',
                             )}
                         >
                             <Link href={`/national/${country.value.name}/${adminDivisionName}`} class="flex gap-2 items-center text-slate-500 rounded-lg">
@@ -112,7 +112,6 @@ export default component$<MenuProps>(() => {
                                 <span>{adminDivisionName}</span>
                             </Link>
                         </li>
-                        
                     </>
                 )}
             </ul>

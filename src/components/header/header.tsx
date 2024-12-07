@@ -76,7 +76,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
                 </Dropdown.Item>
                 <Dropdown.Item>
                     <div class="flex items-center gap-1">
-                        <ThemeSwitchIcon /> <span>{_`Theme`}</span>
+                        <ThemeSwitchIcon />
                     </div>
                 </Dropdown.Item>
                 <Dropdown.Item divider />

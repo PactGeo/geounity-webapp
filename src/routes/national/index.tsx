@@ -26,7 +26,7 @@ export default component$(() => {
         return nav(`/national/${values.country}`)
         // Runs on client
     });
-    const countriesOptions = countries.map(c => ({ value: c.name, label: `${c.flag} ${c.name}` }))
+    const countriesOptions = countries.map(c => ({ value: c.name, name: `${c.flag} ${c.name}` }))
     return (
         <div>
             <Form

@@ -58,7 +58,7 @@ export default component$(() => {
   useContextProvider(MenuContext, isOpenMenu);
 
   return (
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col">
       <Header />
       <div class="flex flex-1 overflow-hidden">
         {url.pathname !== '/' && <Menu />}

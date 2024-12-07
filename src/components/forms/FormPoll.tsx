@@ -5,7 +5,7 @@ import { getErrors, getValue, insert, remove, useForm, valiForm$ } from '@modula
 import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
-import { Checkbox, Select, TextInput, ChipGroup, InputList } from "~/components/input";
+import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
 import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
 import { PollSchema } from "~/schemas";
@@ -15,6 +15,7 @@ import { useFormPollLoader } from "~/shared/loaders";
 import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
 import { InputLabel } from "../input/InputLabel";
+import { TagInput } from "../input/TagInput";
 
 export { useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from '~/shared/actions';
@@ -33,9 +34,8 @@ export default component$<FormPollProps>(({ tags }) => {
         fieldArrays: ['options'],
         validate: valiForm$(PollSchema),
     });
-
+    
     const community_type = getValue(pollForm, 'community_type')
-    console.log('community_type', community_type)
 
     const errors = getErrors(pollForm);
     console.log('errors', errors)
@@ -64,9 +64,7 @@ export default component$<FormPollProps>(({ tags }) => {
                         <input
                             {...props}
                             class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                            id={field.name}
                             placeholder="Enter a title"
-                            value={field.value}
                             type="text"
                             required
                         />
@@ -122,9 +120,7 @@ export default component$<FormPollProps>(({ tags }) => {
                                         <div>
                                             <input
                                                 {...props}
-                                                id={field.name}
                                                 placeholder={`${_`Opción`} ${index + 1}`}
-                                                value={field.value}
                                                 type="text"
                                                 required
                                             />
@@ -160,28 +156,6 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </FieldArray>
 
-            {/* <FieldArray name="community_ids">
-                {(fieldArray) => (
-                    <div class="space-y-2">
-                        {fieldArray.items.map((communityId, index) => (
-                            <div key={communityId}>
-                                <Field name={`community_ids.${index}`}>
-                                    {(field, props) => false && (
-                                        <TextInput
-                                            {...props}
-                                            type="text"
-                                            value={field.value}
-                                            error={field.error}
-                                            placeholder="Community ID"
-                                        />
-                                    )}
-                                </Field>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </FieldArray> */}
-
             <Field name="community_ids" type="string[]">
                 {(field, props) => community_type != CommunityType.GLOBAL && (
                     <Select
@@ -209,29 +183,15 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </Field>
 
-            {/* <Field name="tags" type="string[]">
-                {(field, props) => (
-                    <Select
-                        {...props}
-                        label={_`Tags`}
-                        options={tags.map(tag => ({ name: tag.name, value: tag.name }))}
-                        value={field.value}
-                        error={field.error}
-                        multiple
-                    />
-                )}
-            </Field> */}
             <Field name="tags" type="string[]">
                 {(field, props) => (
-                    <>
-                        <InputLabel name={field.name} label={field.name} required />
-                        <InputList
-                            {...props}
-                            value={field.value}
-                            error={field.error}
-                            tags={tags}
-                        />
-                    </>
+                    <TagInput
+                        {...props}
+                        error={field.error}
+                        form={pollForm}
+                        label={_`Tags`}
+                        predefinedTags={tags}
+                    />
                 )}
             </Field>
 

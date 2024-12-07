@@ -37,7 +37,6 @@ export default component$(() => {
         ];
     }
 
-
     return (
         <div class="sticky top-0 z-10"> {/* Ajusta según el tamaño de tu header */}
             <nav class="px-4 bg-slate-200 border-b border-slate-300">

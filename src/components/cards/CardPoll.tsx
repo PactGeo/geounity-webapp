@@ -168,7 +168,7 @@ export default component$<CardPollProps>(({
             }));
     });
 
-    const esPropietario = true
+    const isOwener = true
 
     const handleBorrar = $(async () => {
         console.log('++++++++++++ handleBorrar ++++++++++++')
@@ -269,7 +269,7 @@ export default component$<CardPollProps>(({
                     <Button class="text-gray-600 hover:text-green-500" look="ghost">
                         <LuShare2 class="h-5 w-5" />
                     </Button>
-                    {esPropietario ? (
+                    {isOwener ? (
                         <Button look="ghost" onClick$={handleBorrar}>
                             <LuTrash2 class="h-5 w-5 text-red-500" />
                         </Button>

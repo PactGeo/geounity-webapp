@@ -1,15 +1,11 @@
-import { $, component$, useSignal, useTask$, type QRL } from '@builder.io/qwik';
-import clsx from 'clsx';
-import { InputError } from './InputError';
-import { Badge } from 'flowbite-qwik';
+import { $, component$, useSignal, type QRL } from '@builder.io/qwik';
+import { _ } from 'compiled-i18n';
 import { capitalizeFirst } from '~/utils';
-import { Field } from '@modular-forms/qwik';
 
 type InputListProps = {
     name: string;
     label?: string;
     placeholder?: string;
-    value: string[] | undefined;
     error: string;
     required?: boolean;
     class?: string;
@@ -21,38 +17,27 @@ type InputListProps = {
 };
 
 export const InputList = component$(
-    ({ label, value = [], error, tags, ...props }: InputListProps) => {
-        const { name } = props;
-        const selectedTags = useSignal<string[]>(value);
+    ({ label, error, tags, ...props }: InputListProps) => {
+        const selectedTags = useSignal<string[]>([]);
         const inputValue = useSignal<string>('');
 
-        useTask$(({ track }) => {
-            track(() => value);
-            if (value) selectedTags.value = value;
-        });
-
-        const addTag = $((newTag: string) => {
-            if (newTag && !selectedTags.value.includes(newTag)) {
-                selectedTags.value = [...selectedTags.value, newTag];
-            }
-        });
-
-        const removeTag = $((tag: string) => {
-            selectedTags.value = selectedTags.value.filter(t => t !== tag);
-        });
-
-        const handleInput = $((inputText: string) => {
-            const trimmedText = inputText.trim();
-            if (trimmedText && !selectedTags.value.includes(trimmedText)) {
-                addTag(trimmedText);
+        const addTag = $(() => {
+            const newTag = inputValue.value.trim();
+            if (newTag !== '' && !selectedTags.value.includes(newTag)) {
+                const newTags = [...selectedTags.value, newTag];
+                selectedTags.value = newTags;
                 inputValue.value = '';
             }
+        });
+
+        const removeTag = $((tagToRemove: string) => {
+            selectedTags.value = selectedTags.value.filter(t => t !== tagToRemove);
         });
 
         return (
             <div>
                 {label && (
-                    <label class="block text-sm font-medium text-gray-700" for={name}>
+                    <label class="block text-sm font-medium text-gray-700" for={props.name}>
                         {capitalizeFirst(label)}
                     </label>
                 )}
@@ -80,20 +65,21 @@ export const InputList = component$(
                 <div class="relative">
                     <input
                         {...props}
-                        list={`${name}-list`}
                         type="text"
+                        // @ts-ignore
+                        list={`${props.name}-list`}
                         value={inputValue.value}
                         onInput$={(e) => (inputValue.value = (e.target as HTMLInputElement).value)}
                         onKeyDown$={(e) => {
                             if (e.key === 'Enter' && inputValue.value.trim()) {
                                 e.preventDefault();
-                                handleInput(inputValue.value);
+                                addTag();
                             }
                         }}
-                        placeholder="Add a tag and press Enter"
+                        placeholder={_`Add a tag and press Enter`}
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <datalist id={`${name}-list`}>
+                    <datalist id={`${props.name}-list`}>
                         {tags.map((tag) => (
                             <option key={tag.id} value={tag.name} />
                         ))}

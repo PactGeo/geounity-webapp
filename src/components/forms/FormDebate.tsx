@@ -148,7 +148,7 @@ export default component$<FormDebateProps>(({ tags }) => {
                         <Select
                             {...props}
                             label={_`Tags`}
-                            options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
+                            options={tags.map(tag => ({ name: tag.name, value: tag.name }))}
                             value={field.value}
                             error={field.error}
                             multiple
@@ -174,7 +174,7 @@ export default component$<FormDebateProps>(({ tags }) => {
                             {...props}
                             label={_`Type`}
                             options={[
-                                { label: 'Global', value: CommunityType.GLOBAL }
+                                { name: 'Global', value: CommunityType.GLOBAL }
                             ]}
                             value={field.value}
                             error={field.error}
