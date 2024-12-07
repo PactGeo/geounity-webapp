@@ -1,11 +1,11 @@
 import { $, component$, useStyles$ } from "@builder.io/qwik";
-import { Button, Textarea } from '~/components/ui';
+import { Button } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
 import { getErrors, getValue, insert, remove, useForm, valiForm$ } from '@modular-forms/qwik';
 import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
-import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
+import { Checkbox, Select, TextInput, ChipGroup, InputList } from "~/components/input";
 import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
 import { PollSchema } from "~/schemas";
@@ -14,6 +14,7 @@ import { useFormPollAction } from "~/shared/actions";
 import { useFormPollLoader } from "~/shared/loaders";
 import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
+import { InputLabel } from "../input/InputLabel";
 
 export { useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from '~/shared/actions';
@@ -48,38 +49,49 @@ export default component$<FormPollProps>(({ tags }) => {
 
     const hasEndDate = getValue(pollForm, 'endDate.active');
 
-    const countriesOptions = countries.map(c => ({ value: c.name, label: `${c.flag} ${c.name}` }))
+    const countriesOptions = countries.map(c => ({ value: c.name, name: `${c.flag} ${c.name}` }))
 
     return (
         <Form
             onSubmit$={handleSubmit}
-            class="space-y-4 md:space-y-6 lg:space-y-8"
+            class="space-y-2 md:space-y-3 lg:space-y-4"
         >
+            {/* TITLE */}
             <Field name="title">
                 {(field, props) => (
-                    <TextInput
-                        {...props}
-                        type="text"
-                        label={field.name}
-                        value={field.value}
-                        error={field.error}
-                        placeholder={_`Enter a title`}
-                        required
-                    />
+                    <div class="space-y-1">
+                        <InputLabel name={field.name} label={field.name} required />
+                        <input
+                            {...props}
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
+                            id={field.name}
+                            placeholder="Enter a title"
+                            value={field.value}
+                            type="text"
+                            required
+                        />
+                        {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
+                    </div>
                 )}
             </Field>
 
+            {/* DESCRIPTION */}
             <Field name="description">
                 {(field, props) => (
-                    <Textarea
-                        {...props}
-                        value={field.value}
-                        error={field.error}
-                        placeholder={_`Enter a description`}
-                    />
+                    <div class="space-y-1">
+                        <InputLabel name={field.name} label={field.name} />
+                        <textarea
+                            {...props}
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
+                            placeholder="Enter a description"
+                            rows={4}
+                        />
+                        {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
+                    </div>
                 )}
             </Field>
 
+            {/* TYPE */}
             <Field name="type">
                 {(field, props) => (
                     <ChipGroup
@@ -99,6 +111,7 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </Field>
 
+            {/* OPTIONS */}
             <FieldArray name="options">
                 {(fieldArray) => (
                     <div class="space-y-2">
@@ -106,21 +119,23 @@ export default component$<FormPollProps>(({ tags }) => {
                             <div key={option} class="flex items-center space-x-2">
                                 <Field name={`options.${index}`}>
                                     {(field, props) => (
-                                        <TextInput
-                                            {...props}
-                                            type="text"
-                                            value={field.value}
-                                            error={field.error}
-                                            placeholder={`${_`Opción`} ${index + 1}`}
-                                            required
-                                        />
+                                        <div>
+                                            <input
+                                                {...props}
+                                                id={field.name}
+                                                placeholder={`${_`Opción`} ${index + 1}`}
+                                                value={field.value}
+                                                type="text"
+                                                required
+                                            />
+                                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
+                                        </div>
                                     )}
                                 </Field>
                                 {fieldArray.items.length > 2 && (
                                     <Button
                                         type="button"
                                         onClick$={() => remove(pollForm, 'options', { at:index})}
-                                        // look="danger"
                                         aria-label={`${_`Eliminar Opción`} ${index + 1}`}
                                     >
                                         <LuMinus />
@@ -194,16 +209,29 @@ export default component$<FormPollProps>(({ tags }) => {
                 )}
             </Field>
 
-            <Field name="tags" type="string[]">
+            {/* <Field name="tags" type="string[]">
                 {(field, props) => (
                     <Select
                         {...props}
                         label={_`Tags`}
-                        options={tags.map(tag => ({ label: tag.name, value: tag.name }))}
+                        options={tags.map(tag => ({ name: tag.name, value: tag.name }))}
                         value={field.value}
                         error={field.error}
                         multiple
                     />
+                )}
+            </Field> */}
+            <Field name="tags" type="string[]">
+                {(field, props) => (
+                    <>
+                        <InputLabel name={field.name} label={field.name} required />
+                        <InputList
+                            {...props}
+                            value={field.value}
+                            error={field.error}
+                            tags={tags}
+                        />
+                    </>
                 )}
             </Field>
 
@@ -213,24 +241,22 @@ export default component$<FormPollProps>(({ tags }) => {
                         {...props}
                         checked={field.value}
                         error={field.error}
-                        label={_`Set an end date`}
+                        label={field.value ? _`Set an end date` : _`Set an end date (Always open)`}
                     />
                 )}
             </Field>
 
-            {(
-                <Field name="endDate.value">
-                    {(field, props) => hasEndDate && (
-                        <TextInput
-                            {...props}
-                            type="date"
-                            label={_`End Date`}
-                            value={field.value}
-                            error={field.error}
-                        />
-                    )}
-                </Field>
-            )}
+            <Field name="endDate.value">
+                {(field, props) => hasEndDate && (
+                    <TextInput
+                        {...props}
+                        type="date"
+                        label={_`End Date`}
+                        value={field.value}
+                        error={field.error}
+                    />
+                )}
+            </Field>
 
             <Field name="is_anonymous" type="boolean">
                 {(field, props) => (

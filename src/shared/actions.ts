@@ -19,19 +19,21 @@ export const useFormPollAction = formAction$<PollForm, PollResponseData>(
         console.log('values', values)
         const session = event.sharedMap.get('session')
         const token = session?.accessToken
+        console.log('token', token)
 
         const payload = {
             title: values.title,
             description: values.description,
             poll_type: values.type,
             is_anonymous: values.is_anonymous,
-            ends_at: values.endDate.active ? values.endDate.value : null,
+            ends_at: values.endDate.active && values.endDate.value !== '' ? values.endDate.value : null,
             community_ids: values.community_ids,
             community_type: values.community_type,
             options: values.options,
             status: 'ACTIVE',
             tags: values.tags,
         }
+        console.log('payload', payload)
 
         const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
             method: 'POST',

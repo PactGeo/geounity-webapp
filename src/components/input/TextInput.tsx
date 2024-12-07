@@ -1,7 +1,8 @@
 import { component$, useSignal, useTask$, type QRL } from '@builder.io/qwik';
 import clsx from 'clsx';
-import { InputLabel } from './InputLabel';
 import { InputError } from './InputError';
+import { Input } from 'flowbite-qwik';
+import { capitalizeFirst } from '~/utils';
 
 type TextInputProps = {
     name: string;
@@ -20,7 +21,7 @@ type TextInputProps = {
 
 export const TextInput = component$(
     ({ label, value, error, ...props }: TextInputProps) => {
-        const { name, required } = props;
+        const { name } = props;
         const input = useSignal(value);
         useTask$(({ track }) => {
             if (!Number.isNaN(track(() => value))) {
@@ -29,16 +30,10 @@ export const TextInput = component$(
         });
         return (
             <div class={clsx('', props.class)}>
-                <InputLabel name={name} label={label} required={required} />
-                <input
+                <Input
                     {...props}
-                    class={clsx(
-                        'w-full h-12 rounded-sm border border-gray-300 bg-white px-4 outline-none placeholder:text-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:bg-gray-900  dark:focus:border-blue-400',
-                        error
-                            ? 'border-red-600 dark:border-red-400'
-                            : 'hover:border-gray-400 dark:border-gray-800'
-                    )}
-                    value={input.value}
+                    label={capitalizeFirst(label ?? '')}
+                    // validationStatus={error ? 'error' : undefined}
                     aria-invalid={!!error}
                     aria-errormessage={`${name}-error`}
                 />
