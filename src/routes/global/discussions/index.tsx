@@ -12,8 +12,8 @@ import Modal from "~/components/modal/modal";
 import FormDebate from "~/components/forms/FormDebate";
 import { UserContext } from "~/contexts/UserContext";
 
-export { useFormLoader, useFormAction } from "~/components/forms/FormDebate";
-export { useGetTags, useGetDiscussions } from '~/shared/loaders';
+export { useGetTags, useGetDiscussions, useFormDebateLoader } from '~/shared/loaders';
+export { useFormDebateAction } from '~/shared/actions';
 
 export default component$(() => {
     const nav = useNavigate();
@@ -32,13 +32,14 @@ export default component$(() => {
     return (
         <div>
             <NavResources />
+            <h1 class="mt-4 ml-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 drop-shadow-md">
+                {_`Discussions Global`}
+            </h1>
             <ListTags tags={tags.value} selectedTag={selectedTag} />
-            <div class="flex-1 overflow-y-auto p-4">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-center drop-shadow-md">
-                        {_`Discussions Global`}
-                    </h1>
-                    {debates.value.length > 0 && (
+            <div class="flex-1 px-4 mb-4">
+                <div class="flex justify-between items-center text-xl">
+                    {_`Total polls: ${debates.value.length}`}
+                    {(debates.value.length > 0 || selectedTag.name !== "all") && (
                         <Button
                             class="mr-4"
                             look="primary"
@@ -50,7 +51,13 @@ export default component$(() => {
                     )}
                 </div>
             </div>
-            {debates.value.length === 0 && <EmptyDebates onClickAction={onClickAction} />}
+            {debates.value.length === 0 && (
+                selectedTag.name !== 'all'
+                    ? <div class="flex justify-center">
+                        <span>{_`No results for ${selectedTag.name}`}</span>
+                    </div>
+                    : <EmptyDebates onClickAction={onClickAction} />
+            )}
             <ListDebates debates={debates.value} type="GLOBAL" />
             {user.isAuthenticated ? (
                 <Modal

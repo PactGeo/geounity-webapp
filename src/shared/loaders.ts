@@ -1,8 +1,9 @@
 import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
-import { PollType } from "~/constants";
+import { CommunityType, DebateStatus, PollType } from "~/constants";
 import type { UserType } from "~/contexts/UserContext";
 import type { CountryForm, PollForm } from "~/schemas";
+import { DebateForm } from "~/schemas/debateSchema";
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -316,6 +317,21 @@ export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathna
         community_ids: communityType.toUpperCase() === "GLOBAL" ? ['1'] : [],
         community_type: communityType.toUpperCase(),
     };
+});
+
+export const useFormDebateLoader = routeLoader$<InitialValues<DebateForm>>(({ pathname }) => {
+    console.log('pathname', pathname)
+    return {
+        title: '',
+        description: '',
+        tags: [],
+        file: {
+            images: [],
+        },
+        type: CommunityType.GLOBAL,
+        public: true,
+        status: DebateStatus.OPEN,
+    }
 });
 
 export const useFormCountryLoader = routeLoader$<InitialValues<CountryForm>>(({ pathname }) => {

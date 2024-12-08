@@ -1,7 +1,9 @@
 import { formAction$, valiForm$ } from "@modular-forms/qwik";
 import { _ } from "compiled-i18n";
+import { DebateStatus } from "~/constants";
 import type { CountryForm, PollForm } from "~/schemas";
 import { CountrySchema, PollSchema } from "~/schemas";
+import { type DebateForm, DebateSchema } from "~/schemas/debateSchema";
 
 export type PollResponseData = {
     type: string;
@@ -13,6 +15,7 @@ export type PollResponseData = {
     status: string;
     community_ids: number[];
 };
+
 export const useFormPollAction = formAction$<PollForm, PollResponseData>(
     async (values, event) => {
         console.log('############ useFormPollAction ############')
@@ -66,4 +69,45 @@ export const useFormCountryAction = formAction$<CountryForm>(
         // Runs on server
     },
     valiForm$(CountrySchema)
+);
+
+export type DebateResponseData = {
+    title: string;
+    description: string;
+    status: string;
+    type: string;
+}
+
+export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
+    async (values, event) => {
+        console.log('############ useFormDebateAction ############')
+        console.log('values', values)
+        const session = event.sharedMap.get('session');
+        const token = session?.accessToken;
+        
+        const payload = {
+            title: values.title,
+            description: values.description,
+            status: DebateStatus.OPEN,
+            type: values.type,
+            tags: values.tags,
+        }
+        console.log('payload', payload)
+        
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return {
+            success: true,
+            message: _`Debate created successfully`,
+            data,
+        }
+    },
+    valiForm$(DebateSchema)
 );

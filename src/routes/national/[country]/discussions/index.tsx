@@ -9,10 +9,8 @@ import { _ } from "compiled-i18n";
 import EmptyDebates from "~/components/empty-state/EmptyDebates";
 import ListDebates from "~/components/list/ListDebates";
 import Modal from "~/components/modal/modal";
-import FormDebate from "~/components/forms/FormDebate";
 import { UserContext } from "~/contexts/UserContext";
 
-export { useFormLoader, useFormAction } from "~/components/forms/FormDebate";
 export { useGetTags, useGetDiscussions } from '~/shared/loaders';
 
 export default component$(() => {
@@ -55,7 +53,7 @@ export default component$(() => {
                     onClickExpand={onClickExpand}
                     title={_`New Debate`}
                 >
-                    <FormDebate onSubmitCompleted={onSubmitCompleted} tags={tags.value} />
+                    <h2>form debate</h2>
                 </Modal>
             ) : (
                 <Modal

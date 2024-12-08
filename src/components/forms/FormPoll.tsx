@@ -81,7 +81,7 @@ export default component$<FormPollProps>(({ tags }) => {
                         <textarea
                             {...props}
                             class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                            placeholder="Enter a description"
+                            placeholder={_`Enter a description`}
                             rows={4}
                         />
                         {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
@@ -182,7 +182,8 @@ export default component$<FormPollProps>(({ tags }) => {
                     </div>
                 )}
             </Field>
-
+            
+            {/* TAGS */}
             <Field name="tags" type="string[]">
                 {(field, props) => (
                     <TagInput

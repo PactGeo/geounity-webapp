@@ -14,19 +14,21 @@ interface TagInputProps {
 export const TagInput = component$<TagInputProps>((props) => {
     const inputValue = useSignal('');
 
-    const value = getValue(props.form, props.name) || [];
+    const value = getValue(props.form, props.name) as string[];
     console.log('value getValue', value)
 
     const addTag = $((tag: string) => {
         const currentValue = getValue(props.form, props.name) || [];
-        if (tag && !currentValue.includes(tag)) {
-            setValue(props.form, props.name, [...currentValue, tag]);
+        if (tag && Array.isArray(currentValue) && currentValue.every((t) => typeof t === 'string') && !currentValue.includes(tag)) {
+            setValue(props.form, props.name, Array.isArray(currentValue) ? [...currentValue, tag] : [tag]);
             inputValue.value = '';
         }
     });
 
     const removeTag = $((tag: string) => {
-        setValue(props.form, props.name, value.filter((t: string) => t !== tag));
+        if (Array.isArray(value)) {
+            setValue(props.form, props.name, (value as string[]).filter((t: string) => t !== tag));
+        }
     });
 
     const handleKeyDown = $((event: KeyboardEvent) => {
@@ -42,7 +44,7 @@ export const TagInput = component$<TagInputProps>((props) => {
             
             {/* Tags seleccionadas */}
             <div class="flex items-center gap-2 flex-wrap mb-2">
-                {value.map((tag: string) => (
+                {Array.isArray(value) && value.map((tag) => (
                     <span
                         key={tag}
                         class="flex items-center bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm font-medium"
@@ -63,6 +65,7 @@ export const TagInput = component$<TagInputProps>((props) => {
             <div class="relative">
                 <input
                     type="text"
+                    // @ts-ignore
                     list={`${props.name}-list`}
                     value={inputValue.value}
                     onInput$={(e) => (inputValue.value = (e.target as HTMLInputElement).value)}
