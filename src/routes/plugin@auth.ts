@@ -12,8 +12,11 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [GitHub, Google],
     callbacks: {
       jwt: async ({ token, trigger, session, account }) => {
+        console.log('== jwt ==')
         console.log('session', session)
         console.log('trigger', trigger)
+        console.log('token', token)
+        console.log('account', account)
         // if (trigger === "update") token.name = session.user.name
         if (account?.provider === "github" || account?.provider === "google") {
           try {
@@ -25,11 +28,13 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
               }
             });
             
+            console.log('response', response)
             if (!response.ok) {
               return token;
             }
             
             const data = await response.json();
+            console.log('data', data)
             
             if (data.access_token) {
               return { ...token, accessToken: data.access_token };
@@ -41,7 +46,10 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
         }
         return token
       },
-      session: async ({ session, token }) => {
+      session: async (objSession) => {
+        console.log('== session ==')
+        console.log('objSession', objSession)
+        const { session, token } = objSession
         if (token.accessToken && typeof token.accessToken === 'string') {
           (session as CustomSession).accessToken = token.accessToken
         }

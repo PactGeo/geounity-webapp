@@ -2,7 +2,7 @@
 import { $, component$, useContext, useStyles$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import styles from './menu.css?inline';
-import { LuFlag, LuGlobe, LuGlobe2, LuMapPin, LuPanelLeftClose, LuPanelLeftOpen } from '@qwikest/icons/lucide';
+import { LuFlag, LuGlobe, LuHome, LuMapPin, LuPanelLeftClose, LuPanelLeftOpen } from '@qwikest/icons/lucide';
 import { cn } from '@qwik-ui/utils';
 import { Separator } from '~/components/ui';
 import { _ } from 'compiled-i18n';
@@ -21,6 +21,7 @@ export default component$<MenuProps>(() => {
     const { url } = useLocation();
 
     const geography = [
+        { name: _`Global`, path: '/global/', icon: <span class="text-2xl">🌎</span> },
         { name: _`International`, path: '/international/', icon: <><LuGlobe class="w-6 h-6" /></> },
         { name: _`Nationals`, path: '/national/', icon: <LuFlag class="w-6 h-6" /> },
     ];
@@ -50,13 +51,13 @@ export default component$<MenuProps>(() => {
                 </li>}
                 {!isOpenMenu.value && <Separator orientation="horizontal" class="separator-top my-2" />}
                 <li class="text-lg text-gray-500 rounded-lg flex justify-between gap-2 items-center">
-                    <Link href="/global" class={cn(
+                    <Link href="/" class={cn(
                         "p-2 flex items-center gap-2 text-slate-500 hover:bg-gray-100 rounded-lg w-full",
-                        url.pathname.startsWith('/global') ? 'bg-gray-300 font-extrabold text-primary-700' : '', // Modificado para incluir subrutas
+                        url.pathname === '/' ? 'bg-gray-300 font-extrabold text-primary-700' : '',
                         isOpenMenu.value ? 'justify-start' : 'justify-center',
                     )}>
-                        <span><LuGlobe2 class="w-6 h-6" /></span>
-                        <span class={`transition-opacity duration-200 ${isOpenMenu.value ? 'opacity-100' : 'opacity-0 hidden'}`}>{_`Global`}</span>
+                        <span><LuHome class="w-6 h-6" /></span>
+                        <span class={`transition-opacity duration-200 ${isOpenMenu.value ? 'opacity-100' : 'opacity-0 hidden'}`}>{_`Home`}</span>
                     </Link>
                     {isOpenMenu.value && <button class="pl-4 hover:text-slate-700" onClick$={toggleMenu}>
                         <LuPanelLeftClose class="w-6 h-6" />
@@ -73,7 +74,7 @@ export default component$<MenuProps>(() => {
                         key={item.path}
                         class={cn(
                             'p-2 text-lg text-gray-700 hover:bg-gray-100 rounded-lg flex gap-2 items-center text-center',
-                            url.pathname.startsWith(item.path) ? 'bg-gray-300 font-extrabold text-primary-700' : '', // Modificado para incluir subrutas
+                            url.pathname.startsWith(item.path) ? 'bg-gray-300 font-extrabold text-primary-700' : '',
                         )}
                     >
                         <Link

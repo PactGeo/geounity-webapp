@@ -1,8 +1,8 @@
 import { formAction$, valiForm$ } from "@modular-forms/qwik";
 import { _ } from "compiled-i18n";
 import { DebateStatus } from "~/constants";
-import type { CountryForm, PollForm } from "~/schemas";
-import { CountrySchema, PollSchema } from "~/schemas";
+import type { CountryForm, PollForm, UserForm } from "~/schemas";
+import { CountrySchema, PollSchema, UserSchema } from "~/schemas";
 import { type DebateForm, DebateSchema } from "~/schemas/debateSchema";
 
 export type PollResponseData = {
@@ -110,4 +110,49 @@ export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
         }
     },
     valiForm$(DebateSchema)
+);
+
+export type UserResponseData = {
+    title: string;
+    description: string;
+    status: string;
+    type: string;
+}
+
+export const useUserFormAction = formAction$<UserForm, UserResponseData>(
+    async (values, event) => {
+        console.log('useUserFormAction')
+        console.log('values', values)
+        const session = event.sharedMap.get('session')
+        const token = session?.accessToken
+
+        const payload = {
+            name: values.name,
+            bio: values.bio,
+            location: values.location,
+            website: values.website,
+            banner: values.banner,
+            image: values.image,
+            username: values.username,
+        }
+
+        console.log('payload', payload)
+
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/${values.name}/opinion`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return {
+            success: true,
+            message: _`Point of view created successfully`,
+            data: data
+        }
+        // Runs on server
+    },
+    valiForm$(UserSchema)
 );

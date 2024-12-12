@@ -2,8 +2,8 @@ import { routeLoader$, routeAction$, zod$, z } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
 import { CommunityType, DebateStatus, PollType } from "~/constants";
 import type { UserType } from "~/contexts/UserContext";
-import type { CountryForm, PollForm } from "~/schemas";
-import { DebateForm } from "~/schemas/debateSchema";
+import type { CountryForm, PollForm, UserForm } from "~/schemas";
+import type { DebateForm } from "~/schemas/debateSchema";
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -11,7 +11,14 @@ export const useServerTimeLoader = routeLoader$(() => {
     };
 });
 
-export const useUser = routeLoader$(async ({ sharedMap }) => {
+// get me
+export const useUser = routeLoader$(async (requestEvent) => {
+    const { cookie, sharedMap } = requestEvent;
+    const user = sharedMap.get('user') as UserType | undefined;
+    if (user) {
+        console.log(1)
+        return user;
+    }
     const session = sharedMap.get('session');
     const token = session?.accessToken;
     if (!token) {
@@ -24,7 +31,27 @@ export const useUser = routeLoader$(async ({ sharedMap }) => {
         },
     });
     const data = await response.json();
+    console.log('dat4a', data)
+
+    cookie.set('geounity.user', { username: data.username, role: data.role });
     return data as UserType;
+});
+
+export const useGetUserByUsername = routeLoader$(async ({ params, sharedMap }) => {
+    const session = sharedMap.get('session');
+    const token = session?.accessToken;
+    if (!token) {
+        return null;
+    }
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/${params.username}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Basic ${token}`
+        },
+    });
+    const data = await response.json();
+    console.log('useGetUserByUsername data', data)
+    return data;
 });
 
 export const useGetTags = routeLoader$(async () => {
@@ -338,5 +365,18 @@ export const useFormCountryLoader = routeLoader$<InitialValues<CountryForm>>(({ 
     console.log('pathname', pathname)
     return {
         country: '',
+    };
+});
+
+export const useUserFormLoader = routeLoader$<InitialValues<UserForm>>(({ pathname }) => {
+    console.log('pathname', pathname)
+    return {
+        name: '',
+        bio: '',
+        location: '',
+        website: '',
+        image: '',
+        banner: '',
+        username: '',
     };
 });

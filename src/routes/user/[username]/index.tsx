@@ -1,100 +1,108 @@
-import { component$ } from "@builder.io/qwik";
-import { routeLoader$, useLocation } from "@builder.io/qwik-city";
+import { component$, useContext, useSignal } from "@builder.io/qwik";
+import { useLocation } from "@builder.io/qwik-city";
+import { LuImageOff, LuUser2 } from "@qwikest/icons/lucide";
+import { _ } from "compiled-i18n";
+import FormEditUser from "~/components/forms/FormEditUser";
+import Modal from "~/components/modal/modal";
 import { Avatar, Button, Tabs } from "~/components/ui";
+import { UserContext } from "~/contexts/UserContext";
+import { useGetUserByUsername } from "~/shared/loaders";
 
-export const useGetUser = routeLoader$(async (req) => {
-    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/${req.params.username}`, {
-        headers: {
-            Accept: 'application/json',
-            Authorization: 'Basic c2ViYToxMjM0NTY='
-        },
-    });
-    return await response.json();
-});
+export { useGetUserByUsername, useUserFormLoader } from '~/shared/loaders';
+export { useUserFormAction } from '~/shared/actions';
 
 export default component$(() => {
-    const userData = useGetUser();
+    const user = useContext(UserContext);
+    const userPage = useGetUserByUsername();
     const username = useLocation().params.username;
 
+    const isOpenModalEditUser = useSignal(false)
+
     return (
-        <main class="w-full max-w-3xl mx-auto">
-            <div class="relative">
-                <img
-                    src="/placeholder.svg?height=200&width=800"
-                    alt="Profile banner"
-                    class="w-full h-48 object-cover"
-                />
-                <Avatar.Root class="absolute bottom-0 left-4 transform translate-y-1/2 w-24 h-24 border-4 border-white">
-                    {userData.value.image
-                        ? <Avatar.Image src={userData.value.image} alt={`Imagen de ${username}`} />
-                        : <Avatar.Image src="https://placehold.co/600x400" alt="Image is missing" />
+        <main class="w-full">
+            <div class="relative w-full">
+                {userPage.value.banner
+                    ? (
+                        <img
+                            src={userPage.value.banner}
+                            alt="Profile banner"
+                            class="w-full h-48 object-cover"
+                        />
+                    )
+                    : <div class="w-full h-48 object-cover flex justify-center items-center text-5xl bg-gray-200"><LuImageOff /></div>
+                }
+                <Avatar.Root class="absolute bottom-0 left-10 transform translate-y-1/2 w-24 h-24 border-4 border-white">
+                    {userPage.value.image
+                        ? <Avatar.Image src={userPage.value.image} alt={`Imagen de ${username}`} />
+                        : <LuUser2 class="w-10 h-10" />
                     }
-                    <Avatar.Fallback>UN</Avatar.Fallback>
+                    <Avatar.Fallback><LuUser2 class="w-10 h-10" /></Avatar.Fallback>
                 </Avatar.Root>
             </div>
-            <div class="mt-16 px-4">
-                <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-2xl font-bold">John Doe</h1>
-                    <p class="text-gray-500">@johndoe</p>
+            <div class="max-w-3xl mx-auto px-4 mt-16">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold">{userPage.value.name}</h1>
+                        <p class="text-gray-500">@{userPage.value.username}</p>
+                    </div>
+                    {userPage.value.username === user.username ? (
+                        <Button look="outline" onClick$={() => isOpenModalEditUser.value = !isOpenModalEditUser.value}>{_`Edit profile`}</Button>
+                    )
+                    : (
+                        <Button look="primary">{_`Follow`}</Button>
+                    )}
                 </div>
-                <Button look="outline">Edit profile</Button>
-                </div>
-                <p class="mt-4">Web Developer. Passionate about creating intuitive and efficient user experiences.</p>
+                {userPage.value.bio && <p class="mt-4">{userPage.value.bio}</p>}
                 <div class="mt-4 flex space-x-4 text-gray-500">
-                <span>🌍 New York, USA</span>
-                <span>🔗 johndoe.com</span>
-                </div>
-                <div class="mt-4 flex space-x-4 text-gray-500">
-                <span>📅 Joined January 2020</span>
+                    {userPage.value.location && <span>🌍 {userPage.value.location}</span>}
+                    {userPage.value.website && <span>🔗 {userPage.value.website}</span>}
                 </div>
                 <div class="mt-4 flex space-x-4">
-                <span><strong>1.5K</strong> Following</span>
-                <span><strong>2.3K</strong> Followers</span>
-                </div>
-                <div class="mt-4">
-                <h2 class="font-semibold">Communities</h2>
-                <div class="mt-2 flex space-x-2">
-                    <span class="bg-gray-200 rounded-full px-3 py-1 text-sm">Web Developers</span>
-                    <span class="bg-gray-200 rounded-full px-3 py-1 text-sm">UI/UX Designers</span>
-                </div>
+                    <span><strong>{userPage.value.following_count}</strong> {_`Following`}</span>
+                    <span><strong>{userPage.value.followers_count}</strong> {_`Followers`}</span>
                 </div>
             </div>
-            <section class="lg:w-2/3">
+            <section class="max-w-3xl mx-auto px-4 mt-16">
                 <Tabs.Root class="w-full">
                     <Tabs.List class="grid w-full grid-cols-4">
-                        <Tabs.Tab value="home">Home</Tabs.Tab>
-                        <Tabs.Tab value="polls">Polls</Tabs.Tab>
-                        <Tabs.Tab value="debates">Debates</Tabs.Tab>
-                        <Tabs.Tab value="projects">Projects</Tabs.Tab>
+                        <Tabs.Tab value="home">{_`Communities`}</Tabs.Tab>
+                        <Tabs.Tab value="polls">{_`Polls`}</Tabs.Tab>
+                        <Tabs.Tab value="debates">{_`Debates`}</Tabs.Tab>
+                        <Tabs.Tab value="projects">{_`Projects`}</Tabs.Tab>
                     </Tabs.List>
                     {/* Panels para cada Tab */}
                     <Tabs.Panel class="mt-6">
-                        <h3 class="text-xl font-semibold mb-4">Home</h3>
+                        <h3 class="text-xl font-semibold mb-4">{_`Communities`}</h3>
                         <div class="space-y-6">
                             {/* Contenido de Home */}
                         </div>
                     </Tabs.Panel>
                     <Tabs.Panel class="mt-6">
-                        <h3 class="text-xl font-semibold mb-4">Polls</h3>
+                        <h3 class="text-xl font-semibold mb-4">{_`Polls`}</h3>
                         <div class="space-y-6">
                             {/* Contenido de Polls */}
                         </div>
                     </Tabs.Panel>
                     <Tabs.Panel class="mt-6">
-                        <h3 class="text-xl font-semibold mb-4">Debates</h3>
+                        <h3 class="text-xl font-semibold mb-4">{_`Debates`}</h3>
                         <ul class="space-y-4">
                             {/* Lista de debates */}
                         </ul>
                     </Tabs.Panel>
                     <Tabs.Panel class="mt-6">
-                        <h3 class="text-xl font-semibold mb-4">Projects</h3>
+                        <h3 class="text-xl font-semibold mb-4">{_`Projects`}</h3>
                         <ul class="space-y-4">
                             {/* Lista de proyectos */}
                         </ul>
                     </Tabs.Panel>
                 </Tabs.Root>
             </section>
+            <Modal
+                isOpen={isOpenModalEditUser}
+                title={_`Edit profile`}
+            >
+                <FormEditUser />
+            </Modal>
         </main>
     );
 });

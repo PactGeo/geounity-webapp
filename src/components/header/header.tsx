@@ -18,10 +18,10 @@ interface LoggedInMenuProps {
     image?: string;
 }
 
-const LuUserIcon = component$(() => <LuUser />);
-const LuLogOutIcon = component$(() => <LuLogOut />);
-const LuGlobeIcon = component$(() => <LuGlobe />);
-const LuMapPinIcon = component$(() => <LuMapPin />);
+const LuUserIcon = component$(() => <LuUser class="w-5 h-5" />);
+const LuLogOutIcon = component$(() => <LuLogOut class="w-5 h-5" />);
+const LuGlobeIcon = component$(() => <LuGlobe class="w-5 h-5" />);
+const LuMapPinIcon = component$(() => <LuMapPin class="w-5 h-5" />);
 const ThemeSwitchIcon = component$(() => <ThemeSwitch />);
 
 interface AvatarFallbackProps {
@@ -49,7 +49,7 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
     const signOut = useSignOut();
 
     return (
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 text-lg">
             <Dropdown as={<LuBellIcon />}>
                 <Dropdown.Item>
                     <span>{_`No notificacions here.`}</span>

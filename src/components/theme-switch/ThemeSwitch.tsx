@@ -30,7 +30,7 @@ export const ThemeSwitch = component$(() => {
                     }}
                 />
                 <span>
-                    <span class="theme-icon">{theme.value === "light" ? <LuSun /> : <LuMoon />}</span>
+                    <span>{theme.value === "light" ? <LuSun class="w-5 h-5" /> : <LuMoon class="w-5 h-5" />}</span>
                     {_`Theme`}: {theme.value === "light" ? _`Light` : _`Dark`}
                 </span>
             </label>

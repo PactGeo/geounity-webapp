@@ -5,7 +5,7 @@ import { getErrors, getValue, insert, remove, useForm, valiForm$ } from '@modula
 import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
-import { Checkbox, Select, TextInput, ChipGroup } from "~/components/input";
+import { Checkbox, TextInput, ChipGroup } from "~/components/input";
 import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
 import { PollSchema } from "~/schemas";
@@ -16,6 +16,7 @@ import {dataArray as countries} from "~/data/countries";
 import styles from "./form.css?inline";
 import { InputLabel } from "../input/InputLabel";
 import { TagInput } from "../input/TagInput";
+import { CountrySelectInput } from "../input/CountrySelectInput";
 
 export { useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from '~/shared/actions';
@@ -56,6 +57,19 @@ export default component$<FormPollProps>(({ tags }) => {
             onSubmit$={handleSubmit}
             class="space-y-2 md:space-y-3 lg:space-y-4"
         >
+            {/* COMMUNITIES */}
+            <Field name="community_ids" type="string[]">
+                {(field, props) => community_type != CommunityType.GLOBAL && (
+                    <CountrySelectInput
+                        {...props}
+                        form={pollForm}
+                        label={_`Countries involved`}
+                        predefinedCountries={countriesOptions}
+                        error={field.error}
+                    />
+                )}
+            </Field>
+
             {/* TITLE */}
             <Field name="title">
                 {(field, props) => (
@@ -155,19 +169,6 @@ export default component$<FormPollProps>(({ tags }) => {
                     </div>
                 )}
             </FieldArray>
-
-            <Field name="community_ids" type="string[]">
-                {(field, props) => community_type != CommunityType.GLOBAL && (
-                    <Select
-                        {...props}
-                        label={_`Countries`}
-                        options={countriesOptions}
-                        value={field.value}
-                        error={field.error}
-                        multiple
-                    />
-                )}
-            </Field>
 
             <Field name="community_type" type="string">
                 {(field, props) => (

@@ -1,5 +1,5 @@
 import { component$, Slot, useContextProvider, useSignal, useStore } from "@builder.io/qwik";
-import { useLocation, type RequestHandler } from "@builder.io/qwik-city";
+import { type Cookie, type RequestHandler } from "@builder.io/qwik-city";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
 import Menu from "~/components/menu/menu";
@@ -14,12 +14,24 @@ import { MenuContext } from "~/contexts/MenuContext";
 
 export { useGetCountry, useUser } from '~/shared/loaders';
 
-export const onRequest: RequestHandler = async ({ query, headers, locale }) => {
+function loadUserFromCookie(cookie: Cookie): string | null {
+  const user = cookie.get('geounity.user');
+  if (user) {
+    return JSON.parse(user.value)
+  } else {
+    return null;
+  }
+}
+
+export const onRequest: RequestHandler = async ({ cookie, query, headers, locale, sharedMap }) => {
   // Allow overriding locale with query param `locale`
   const maybeLocale = query.get('locale') || headers.get('accept-language')
   locale(guessLocale(maybeLocale))
+  const user = loadUserFromCookie(cookie);
+  if (user) {
+    sharedMap.set('user', user);
+  }
 }
-
 export const onGet: RequestHandler = async (requestEvent) => {
   const { cacheControl } = requestEvent;
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -33,23 +45,23 @@ export const onGet: RequestHandler = async (requestEvent) => {
 };
 
 export default component$(() => {
-  const { url } = useLocation();
   const session = useSession();
-  // const user = useUser();
+  const user = useUser()
+  console.log('user0', user.value)
   const serverTime = useServerTimeLoader();
   const currentYear = new Date(serverTime.value.date).getFullYear();
 
-  const user = useUser()
-  console.log('user.value', user.value)
-
   const userStore = useStore<UserType>({
-    // id: user.value?.id || 0,
     id: 0,
     name: session.value?.user?.name || '',
     email: session.value?.user?.email || '',
     image: session.value?.user?.image || '',
-    // username: user.value?.username || '',
-    username: '',
+    username: user.value?.username || '',
+    role: user.value?.role || '',
+    bio: user.value?.bio || '',
+    location: user.value?.location || '',
+    website: user.value?.website || '',
+    banner: user.value?.banner || '',
     isAuthenticated: !!session.value?.user?.email,
   });
   const isOpenMenu = useSignal(true);
@@ -61,7 +73,7 @@ export default component$(() => {
     <div class="flex flex-col h-screen">
       <Header />
       <div class="flex flex-1 overflow-hidden">
-        {url.pathname !== '/' && <Menu />}
+        {!!session.value?.user?.email && <Menu />}
         <main class="flex-1 overflow-y-auto">
           <Slot />
         </main>

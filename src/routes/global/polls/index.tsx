@@ -29,7 +29,6 @@ export default component$(() => {
     const filteredPolls = useSignal(polls.value);
     
     const selectedTag = useStore({ id: 0, name: 'all' });
-    console.log('selectedTag', selectedTag)
     
     useTask$(async ({ track }) => {
         track(() => selectedIndexSig.value);

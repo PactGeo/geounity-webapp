@@ -6,6 +6,11 @@ export interface UserType {
     email: string;
     image: string;
     username: string;
+    bio: string;
+    location: string;
+    website: string;
+    banner: string;
+    role: string;
     isAuthenticated: boolean;
 }
 
