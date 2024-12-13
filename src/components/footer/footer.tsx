@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { LuFacebook, LuTwitter, LuExternalLink, LuCoffee } from "@qwikest/icons/lucide";
+import { LuExternalLink, LuCoffee } from "@qwikest/icons/lucide";
 import { QwikLogo } from '~/icons/qwik';
 import { Button } from "~/components/ui";
 import { _ } from 'compiled-i18n';
