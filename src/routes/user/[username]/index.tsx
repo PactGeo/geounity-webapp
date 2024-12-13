@@ -1,6 +1,6 @@
 import { component$, useContext, useSignal } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
-import { LuImageOff, LuUser2 } from "@qwikest/icons/lucide";
+import { LuExternalLink, LuImageOff, LuUser2 } from "@qwikest/icons/lucide";
 import { _ } from "compiled-i18n";
 import FormEditUser from "~/components/forms/FormEditUser";
 import Modal from "~/components/modal/modal";
@@ -55,7 +55,7 @@ export default component$(() => {
                 {userPage.value.bio && <p class="mt-4">{userPage.value.bio}</p>}
                 <div class="mt-4 flex space-x-4 text-gray-500">
                     {userPage.value.location && <span>🌍 {userPage.value.location}</span>}
-                    {userPage.value.website && <span>🔗 {userPage.value.website}</span>}
+                    {userPage.value.website && <span class="flex flex-nowrap items-center gap-1">🔗 <a href={userPage.value.website}>{userPage.value.website}</a><LuExternalLink class="h-3 w-3" /></span>}
                 </div>
                 <div class="mt-4 flex space-x-4">
                     <span><strong>{userPage.value.following_count}</strong> {_`Following`}</span>

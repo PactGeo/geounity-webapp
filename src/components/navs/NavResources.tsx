@@ -38,7 +38,7 @@ export default component$(() => {
     }
 
     return (
-        <div class="sticky top-0 z-10"> {/* Ajusta según el tamaño de tu header */}
+        <div class="sticky top-0 z-10">
             <nav class="px-4 bg-slate-200 border-b border-slate-300">
                 <ul class="flex items-center space-x-4">
                     {items.filter(item => !item.hidden).map((item) => (

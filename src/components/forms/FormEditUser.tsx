@@ -1,13 +1,12 @@
-import { Textarea } from '~/components/ui';
 import { useForm, valiForm$, type SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
-import { _ } from "compiled-i18n";
 import { $, component$ } from '@builder.io/qwik';
 import { useUserFormLoader } from '~/shared/loaders';
 import { useUserFormAction } from '~/shared/actions';
 import type { UserResponseData } from '~/shared/actions';
-import { type UserForm, UserSchema } from '~/schemas';
-import { InputLabel } from '~/components/input/InputLabel';
+import { MAX_BIO_LENGTH, MAX_LOCATION_LENGTH, MAX_NAME_LENGTH, MAX_USERNAME_LENGTH, MAX_WEBSITE_LENGTH, type UserForm, UserSchema } from '~/schemas';
+import { TextInput2 } from '~/components/input/TextInput2';
+import { TextArea } from '~/components/input/TextArea';
 
 interface FormEditUserProps {
     onSubmitCompleted?: () => void;
@@ -33,63 +32,7 @@ export default component$<FormEditUserProps>(() => {
             class="space-y-4 md:space-y-6 lg:space-y-8"
         >
             <div class="space-y-4 md:space-y-6 lg:space-y-8">
-                <Field name="name">
-                    {(field, props) => (
-                        <div class="space-y-1">
-                            <InputLabel name={field.name} label={field.name} required />
-                            <input
-                                {...props}
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                                placeholder={_`Enter a name`}
-                                type="text"
-                                required
-                            />
-                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                        </div>
-                    )}
-                </Field>
-                <Field name="bio">
-                    {(field, props) => (
-                        <div class="space-y-1">
-                            <InputLabel name={field.name} label={field.name} />
-                            <Textarea
-                                {...props}
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                                placeholder={_`Enter a bio`}
-                            />
-                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                        </div>
-                    )}
-                </Field>
-                <Field name="location">
-                    {(field, props) => (
-                        <div class="space-y-1">
-                            <InputLabel name={field.name} label={field.name} />
-                            <input
-                                {...props}
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                                placeholder={_`Enter a location`}
-                                type="text"
-                            />
-                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                        </div>
-                    )}
-                </Field>
-                <Field name="website">
-                    {(field, props) => (
-                        <div class="space-y-1">
-                            <InputLabel name={field.name} label={field.name} />
-                            <input
-                                {...props}
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                                placeholder={_`Enter a website`}
-                                type="text"
-                            />
-                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                        </div>
-                    )}
-                </Field>
-                <Field name="banner">
+                {/* <Field name="banner">
                     {(field, props) => (
                         <div class="space-y-1">
                             <InputLabel name={field.name} label={field.name} />
@@ -97,7 +40,7 @@ export default component$<FormEditUserProps>(() => {
                                 {...props}
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
                                 placeholder={_`Enter a banner`}
-                                type="text"
+                                type="file"
                             />
                             {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
                         </div>
@@ -111,25 +54,80 @@ export default component$<FormEditUserProps>(() => {
                                 {...props}
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
                                 placeholder={_`Enter an image`}
-                                type="text"
+                                type="file"
                             />
                             {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
                         </div>
                     )}
-                </Field>
+                </Field> */}
                 <Field name="username">
                     {(field, props) => (
-                        <div class="space-y-1">
-                            <InputLabel name={field.name} label={field.name} required />
-                            <input
-                                {...props}
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                                placeholder={_`Enter a username`}
-                                type="text"
-                                required
-                            />
-                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                        </div>
+                        <TextInput2
+                            {...props}
+                            class="space-y-1"
+                            error={field.error}
+                            label={field.name}
+                            maxLength={MAX_USERNAME_LENGTH}
+                            name={field.name}
+                            required
+                            value={field.value}
+                        />
+                    )}
+                </Field>
+                <Field name="name">
+                    {(field, props) => (
+                        <TextInput2
+                            {...props}
+                            class="space-y-1"
+                            error={field.error}
+                            label={field.name}
+                            maxLength={MAX_NAME_LENGTH}
+                            name={field.name}
+                            required
+                            value={field.value}
+                        />
+                    )}
+                </Field>
+                <Field name="bio">
+                    {(field, props) => (
+                        <TextArea
+                            {...props}
+                            class="space-y-1"
+                            error={field.error}
+                            label={field.name}
+                            maxLength={MAX_BIO_LENGTH}
+                            name={field.name}
+                            required
+                            value={field.value}
+                        />
+                    )}
+                </Field>
+                <Field name="location">
+                    {(field, props) => (
+                        <TextInput2
+                            {...props}
+                            class="space-y-1"
+                            error={field.error}
+                            label={field.name}
+                            maxLength={MAX_LOCATION_LENGTH}
+                            name={field.name}
+                            required
+                            value={field.value}
+                        />
+                    )}
+                </Field>
+                <Field name="website">
+                    {(field, props) => (
+                        <TextInput2
+                            {...props}
+                            class="space-y-1"
+                            error={field.error}
+                            label={field.name}
+                            maxLength={MAX_WEBSITE_LENGTH}
+                            name={field.name}
+                            required
+                            value={field.value}
+                        />
                     )}
                 </Field>
             </div>

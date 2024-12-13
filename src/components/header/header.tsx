@@ -1,16 +1,15 @@
 import { $, component$, useContext, useStyles$, useStylesScoped$ } from "@builder.io/qwik";
-import { useSignOut } from '~/routes/plugin@auth';
 import { Button } from "~/components/ui";
 import { Link } from "@builder.io/qwik-city";
-import { LuBell, LuGlobe, LuLogOut, LuMapPin, LuPanelLeftOpen, LuUser } from "@qwikest/icons/lucide";
+import { LuBell, LuPanelLeftOpen } from "@qwikest/icons/lucide";
 import Logo from '~/icons/logo.svg?jsx';
 import styles from "./header.css?inline";
 
-import { ThemeSwitch } from "~/components/theme-switch/ThemeSwitch";
 import { _ } from "compiled-i18n";
 import { UserContext } from "~/contexts/UserContext";
 import { MenuContext } from "~/contexts/MenuContext";
-import { Avatar, Dropdown } from "flowbite-qwik";
+import { Dropdown } from "flowbite-qwik";
+import { NestedDropdown } from "../nested-dropdown";
 
 interface LoggedInMenuProps {
     name?: string,
@@ -18,35 +17,12 @@ interface LoggedInMenuProps {
     image?: string;
 }
 
-const LuUserIcon = component$(() => <LuUser class="w-5 h-5" />);
-const LuLogOutIcon = component$(() => <LuLogOut class="w-5 h-5" />);
-const LuGlobeIcon = component$(() => <LuGlobe class="w-5 h-5" />);
-const LuMapPinIcon = component$(() => <LuMapPin class="w-5 h-5" />);
-const ThemeSwitchIcon = component$(() => <ThemeSwitch />);
-
-interface AvatarFallbackProps {
-    img?: string;
-    alt?: string;
-}
-
-const AvatarFallback = component$((props: AvatarFallbackProps) => (
-    <div class="mt-1">
-        <Avatar
-            img={props.img}
-            alt={props.alt}
-            size="sm"
-            rounded
-        />
-    </div>
-));
-
 const LuBellIcon = component$(() => <div class="mt-1 p-3 hover:bg-purple-500 rounded-full"><LuBell class="w-5 h-5" /></div>);
 
-export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
+export const LoggedInMenu = component$<LoggedInMenuProps>(() => {
     useStyles$(styles);
     
     const user = useContext(UserContext);
-    const signOut = useSignOut();
 
     return (
         <div class="flex items-center gap-4 text-lg">
@@ -55,37 +31,11 @@ export const LoggedInMenu = component$<LoggedInMenuProps>((props) => {
                     <span>{_`No notificacions here.`}</span>
                 </Dropdown.Item>
             </Dropdown>
-            <Dropdown as={<AvatarFallback img={props.image} alt={props.name} />}>
-                <Dropdown.Item>
-                    <Link href={`/user/${user.username}`}>
-                        <div class="flex items-center">
-                            <LuUserIcon /><span>{_`My profile`}</span>
-                        </div>
-                    </Link>
-                </Dropdown.Item>
-                <Dropdown.Item divider />
-                <Dropdown.Item>
-                    <div class="flex items-center gap-1">
-                        <LuGlobeIcon /> <span>{_`Language`}</span>
-                    </div>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                    <div class="flex items-center gap-1">
-                        <LuMapPinIcon /> <span>{_`Location`}</span>
-                    </div>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                    <div class="flex items-center gap-1">
-                        <ThemeSwitchIcon />
-                    </div>
-                </Dropdown.Item>
-                <Dropdown.Item divider />
-                <Dropdown.Item onClick$={() => console.log('LOGOUT')}>
-                    <div class="flex items-center gap-1" onClick$={() => signOut.submit({ redirectTo: "/" })}>
-                        <LuLogOutIcon /> <span>{_`Log Out`}</span>
-                    </div>
-                </Dropdown.Item>
-            </Dropdown>
+            <NestedDropdown
+                name={user.name}
+                email={user.email}
+                image={user.image}
+            />
         </div>
     );
 });

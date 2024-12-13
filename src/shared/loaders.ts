@@ -16,7 +16,6 @@ export const useUser = routeLoader$(async (requestEvent) => {
     const { cookie, sharedMap } = requestEvent;
     const user = sharedMap.get('user') as UserType | undefined;
     if (user) {
-        console.log(1)
         return user;
     }
     const session = sharedMap.get('session');
@@ -368,15 +367,17 @@ export const useFormCountryLoader = routeLoader$<InitialValues<CountryForm>>(({ 
     };
 });
 
-export const useUserFormLoader = routeLoader$<InitialValues<UserForm>>(({ pathname }) => {
+export const useUserFormLoader = routeLoader$<InitialValues<UserForm>>(async ({ pathname, resolveValue }) => {
     console.log('pathname', pathname)
+    const user = await resolveValue(useGetUserByUsername)
+    console.log('user ###', user)
     return {
-        name: '',
-        bio: '',
-        location: '',
-        website: '',
-        image: '',
-        banner: '',
-        username: '',
+        username: user.username ?? '',
+        name: user.name ?? '',
+        bio: user.bio ?? '',
+        location: user.location ?? '',
+        website: user.website ?? '',
+        // image: '',
+        // banner: '',
     };
 });

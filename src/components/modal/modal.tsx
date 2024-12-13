@@ -27,19 +27,17 @@ export default component$<ModalProps>((props) => {
             {props.trigger && <Modal.Trigger class="modal-trigger">{props.trigger}</Modal.Trigger>}
             <Modal.Panel class="modal-panel pt-2">
                 <div class="flex justify-between items-center gap-2 py-2">
+                    <Modal.Title class="modal-title">{props.title}</Modal.Title>
                     <div class="flex items-center gap-2">
                         {!!props.onClickPreview && <LuEye 
                             class="text-xl cursor-pointer" 
                             onClick$={() => isPreview.value = !isPreview.value} 
                             />}
                         {props.onClickExpand && <Modal.Close onClick$={props.onClickExpand}><LuExpand class="text-lg" /></Modal.Close>}
-                    </div>
-                    <div class="flex items-center gap-2">
                         <Modal.Close><LuX class="text-2xl"/></Modal.Close>
                     </div>
                 </div>
                 <Separator orientation="horizontal" class="mb-2" />
-                {props.title && <Modal.Title class="modal-title">{props.title}</Modal.Title>}
                 {props.description && (
                     <Modal.Description class="modal-description">
                         {props.description}

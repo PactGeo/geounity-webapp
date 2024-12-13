@@ -127,26 +127,28 @@ export const useUserFormAction = formAction$<UserForm, UserResponseData>(
         const token = session?.accessToken
 
         const payload = {
+            username: values.username,
             name: values.name,
             bio: values.bio,
             location: values.location,
             website: values.website,
-            banner: values.banner,
-            image: values.image,
-            username: values.username,
+            // banner: values.banner,
+            // image: values.image,
         }
 
         console.log('payload', payload)
 
-        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates/${values.name}/opinion`, {
-            method: 'POST',
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/me`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(payload),
         });
+        console.log('response', response)
         const data = await response.json();
+        console.log('data', data)
         return {
             success: true,
             message: _`Point of view created successfully`,

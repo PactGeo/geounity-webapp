@@ -12,6 +12,7 @@ export interface UserType {
     banner: string;
     role: string;
     isAuthenticated: boolean;
+    language: string;
 }
 
 export const UserContext = createContextId<UserType>('app.user-context');
