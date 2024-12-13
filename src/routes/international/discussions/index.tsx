@@ -24,7 +24,7 @@ export default component$(() => {
 
     const isOpenModal = useSignal(false);
     const onClickExpand = $(() => nav('/discussions/new'))
-    const onSubmitCompleted = $(() => isOpenModal.value = false)
+    // const onSubmitCompleted = $(() => isOpenModal.value = false)
     const onClickAction = $(() => isOpenModal.value = !isOpenModal.value)
 
     return (

@@ -10,9 +10,9 @@ export default component$(() => {
                 <section class="mb-6">
                     <h2 class="text-2xl font-semibold text-gray-700">{_`1. Introduction`}</h2>
                     <p class="mt-2 text-gray-600">
-                        {_`Welcome to Geounity. These Terms of Service ("Terms") govern your access to and use of our platform available at `}
+                        {_`Welcome to Geounity. These Terms of Service (Terms) govern your access to and use of our platform available at `}
                         <a href="http://geounity.org/" class="text-blue-500 underline">{_`geounity.org`}</a>
-                        {_` ("Service"). By using our Service, you agree to comply with these Terms. If you do not agree, do not use the Service.`}
+                        {_` (Service). By using our Service, you agree to comply with these Terms. If you do not agree, do not use the Service.`}
                     </p>
                 </section>
 

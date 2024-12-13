@@ -1,4 +1,4 @@
-import { $, component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useComputed$, useContext, useSignal, useStore } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import { LuThumbsUp, LuThumbsDown, LuMessageSquare, LuTag, LuUser, LuTimer, LuShare2, LuTrash2, LuFlag } from '@qwikest/icons/lucide';
 import { timeAgo } from "~/utils";
@@ -6,6 +6,7 @@ import { Progress } from "~/components/Progress";
 import { useReactToPoll, useVotePoll } from "~/shared/loaders";
 import { _ } from "compiled-i18n";
 import { Button } from "~/components/ui";
+import { UserContext } from "~/contexts/UserContext";
 
 interface CardPollProps {
     poll: any;
@@ -53,6 +54,7 @@ export default component$<CardPollProps>(({
     poll
 }) => {
     const nav = useNavigate();
+    const user = useContext(UserContext);
 
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
@@ -168,7 +170,7 @@ export default component$<CardPollProps>(({
             }));
     });
 
-    const isOwener = true
+    const isOwner = creator_username === user.username
 
     const handleBorrar = $(async () => {
         console.log('++++++++++++ handleBorrar ++++++++++++')
@@ -269,7 +271,7 @@ export default component$<CardPollProps>(({
                     <Button class="text-gray-600 hover:text-green-500" look="ghost">
                         <LuShare2 class="h-5 w-5" />
                     </Button>
-                    {isOwener ? (
+                    {isOwner ? (
                         <Button look="ghost" onClick$={handleBorrar}>
                             <LuTrash2 class="h-5 w-5 text-red-500" />
                         </Button>
