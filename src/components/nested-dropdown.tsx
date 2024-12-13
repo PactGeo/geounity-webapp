@@ -1,6 +1,6 @@
 import { component$, useSignal, $, useStylesScoped$, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { LuUser, LuChevronRight, LuGlobe, LuMapPin, LuLogOut } from '@qwikest/icons/lucide';
+import { LuUser, LuChevronRight, LuGlobe, LuMapPin, LuLogOut, LuCheck } from '@qwikest/icons/lucide';
 import { _ } from 'compiled-i18n';
 import { Avatar } from 'flowbite-qwik';
 import { UserContext } from '~/contexts/UserContext';
@@ -17,13 +17,12 @@ interface NestedDropdownProps {
 interface Language {
     code: string;
     name: string;
+    native: string;
 }
 
 const languages: Language[] = [
-    { code: "en", name: "English" },
-    { code: "es", name: "Español" },
-    { code: "fr", name: "Français" },
-    // Agrega más idiomas según sea necesario
+    { code: "en", name: "English", native: _`English` },
+    { code: "es", name: "Español", native: _`Spanish` },
 ];
 
 export const NestedDropdown = component$<NestedDropdownProps>((props) => {
@@ -66,7 +65,7 @@ export const NestedDropdown = component$<NestedDropdownProps>((props) => {
                 </div>
             </button>
             <div class={`dropdown-content ${isOpen.value ? 'show' : ''}`}>
-                <div class="dropdown-item">
+                <div class="dropdown-item" onClick$={() => isOpen.value = false}>
                     <Link href={`/user/${user.username}`} class="flex items-center">
                         <LuUser class="w-5 h-5" />
                         <span>{_`My Profile`}</span>
@@ -86,7 +85,7 @@ export const NestedDropdown = component$<NestedDropdownProps>((props) => {
                                 class={`dropdown-item ${user.language === lang.code ? 'font-bold' : ''}`}
                                 onClick$={() => selectLanguage(lang.code)}
                             >
-                                {lang.name} {user.language === lang.code && _`(Selected)`}
+                                {lang.name} ({lang.native}) &nbsp; {user.language === lang.code && <LuCheck />}
                             </div>
                         ))}
                     </div>

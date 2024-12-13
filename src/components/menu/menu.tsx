@@ -24,6 +24,8 @@ export default component$<MenuProps>(() => {
         { name: _`Global`, path: '/global/', icon: <span class="text-2xl">🌎</span> },
         { name: _`International`, path: '/international/', icon: <><LuGlobe class="w-6 h-6" /></> },
         { name: _`Nationals`, path: '/national/', icon: <LuFlag class="w-6 h-6" /> },
+        { name: _`Regions`, path: '/subnation/'},
+        { name: _`Cities`, path: '/city/'},
     ];
 
     const isOpenMenu = useContext(MenuContext);

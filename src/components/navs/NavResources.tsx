@@ -24,7 +24,7 @@ export default component$(() => {
             { name: _`Discussions`, icon: <LuMessageSquare />, href: `/${basePath}/${country}/discussions/` },
             { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/${country}/issues/`, hidden: isGlobal || isInternational },
             { name: _`Projects`, icon: <LuLandmark />, href: `/${basePath}/${country}/projects/`, hidden: isGlobal || isInternational },
-            { name: _`People`, icon: <LuUser />, href: `/${basePath}/${country}/people/`, hidden: isGlobal || isInternational },
+            { name: _`People`, icon: <LuUser />, href: `/${basePath}/${country}/people/`},
         ];
     } else {
         items = [
@@ -33,7 +33,7 @@ export default component$(() => {
             { name: _`Discussions`, icon: <LuMessageSquare />, href: `/${basePath}/discussions/` },
             { name: _`Issues`, icon: <LuMessageCircle />, href: `/${basePath}/issues/`, hidden: isGlobal || isInternational },
             { name: _`Projects`, icon: <LuLandmark />, href: `/${basePath}/projects/`, hidden: isGlobal || isInternational },
-            { name: _`People`, icon: <LuUser />, href: `/${basePath}/people/`, hidden: isGlobal || isInternational },
+            { name: _`People`, icon: <LuUser />, href: `/${basePath}/people/` },
         ];
     }
 

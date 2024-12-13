@@ -62,6 +62,7 @@ export default component$(() => {
     location: user.value?.location || '',
     website: user.value?.website || '',
     banner: user.value?.banner || '',
+    language: user.value?.language || 'en',
     isAuthenticated: !!session.value?.user?.email,
   });
   const isOpenMenu = useSignal(true);
