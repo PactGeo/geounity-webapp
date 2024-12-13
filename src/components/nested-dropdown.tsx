@@ -1,4 +1,4 @@
-import { component$, useSignal, $, useStylesScoped$, useContext } from '@builder.io/qwik';
+import { component$, useSignal, $, useStylesScoped$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { LuUser, LuChevronRight, LuGlobe, LuMapPin, LuLogOut, LuCheck } from '@qwikest/icons/lucide';
 import { _ } from 'compiled-i18n';
@@ -32,6 +32,7 @@ export const NestedDropdown = component$<NestedDropdownProps>((props) => {
     const user = useContext(UserContext);
     const isOpen = useSignal(false);
     const isSubOpen = useSignal(false);
+    const dropdownRef = useSignal<HTMLDivElement>();
 
     const toggleDropdown = $(() => {
         isOpen.value = !isOpen.value;
@@ -52,8 +53,20 @@ export const NestedDropdown = component$<NestedDropdownProps>((props) => {
         // Aquí podrías agregar lógica adicional para cambiar el idioma en la aplicación
     });
 
+    useVisibleTask$(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+                isOpen.value = false;
+                isSubOpen.value = false;
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    });
+
     return (
-        <div class="dropdown">
+        <div class="dropdown" ref={dropdownRef}>
             <button onClick$={toggleDropdown}>
                 <div class="mt-1">
                     <Avatar

@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { LuFacebook, LuTwitter, LuYoutube, LuExternalLink } from "@qwikest/icons/lucide";
+import { LuFacebook, LuTwitter, LuExternalLink, LuCoffee } from "@qwikest/icons/lucide";
 import { QwikLogo } from '~/icons/qwik';
 import { Button } from "~/components/ui";
 import { _ } from 'compiled-i18n';
@@ -11,19 +11,9 @@ interface FooterProps {
 
 const socialMedia = [
     {
-        label: 'Youtube',
-        link: '/youtube',
-        icon: () => <LuYoutube />,
-    },
-    {
-        label: 'Twitter',
-        link: '/twitter',
-        icon: () => <LuTwitter />,
-    },
-    {
-        label: 'Facebook',
-        link: 'https://www.facebook.com/geounityapp/',
-        icon: () => <LuFacebook />,
+        label: 'Donate',
+        link: 'https://ko-fi.com/geounity',
+        icon: () => <LuCoffee />,
     }
 ];
 
@@ -49,11 +39,11 @@ export default component$<FooterProps>(({ currentYear }) => {
                                 <Button
                                     aria-label={`Go to ${label} page`}
                                     key={label}
-                                    class="text-white active:text-white hover:text-white hover:!bg-neutral-500 active:bg-transparent"
+                                    class="text-white active:text-white hover:text-white hover:!bg-neutral-500 active:bg-transparent no-underline"
                                     look="link"
                                 >
-                                    <div class="text-xl">
-                                        <Icon />
+                                    <div class="text-xl flex items-center gap-1">
+                                        <Icon /> <span>{label}</span>
                                     </div>
                                 </Button>
                             </a>
