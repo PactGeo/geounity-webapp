@@ -1,3 +1,4 @@
+import { routeAction$ } from "@builder.io/qwik-city";
 import { formAction$, valiForm$ } from "@modular-forms/qwik";
 import { _ } from "compiled-i18n";
 import { DebateStatus } from "~/constants";
@@ -29,14 +30,14 @@ export const useFormPollAction = formAction$<PollForm, PollResponseData>(
             description: values.description,
             poll_type: values.type,
             is_anonymous: values.is_anonymous,
-            ends_at: values.endDate.active && values.endDate.value !== '' ? values.endDate.value : null,
+            ends_at: values.endDate !== '' ? values.endDate : null,
             community_ids: values.community_ids,
-            community_type: values.community_type,
+            scope: values.scope,
             options: values.options,
             status: 'ACTIVE',
             tags: values.tags,
         }
-        console.log('payload', payload)
+        
 
         const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls`, {
             method: 'POST',
@@ -80,8 +81,6 @@ export type DebateResponseData = {
 
 export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
     async (values, event) => {
-        console.log('############ useFormDebateAction ############')
-        console.log('values', values)
         const session = event.sharedMap.get('session');
         const token = session?.accessToken;
         
@@ -92,7 +91,6 @@ export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
             type: values.type,
             tags: values.tags,
         }
-        console.log('payload', payload)
         
         const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates`, {
             method: 'POST',
@@ -136,8 +134,6 @@ export const useUserFormAction = formAction$<UserForm, UserResponseData>(
             // image: values.image,
         }
 
-        console.log('payload', payload)
-
         const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/users/me`, {
             method: 'PATCH',
             headers: {
@@ -146,9 +142,7 @@ export const useUserFormAction = formAction$<UserForm, UserResponseData>(
             },
             body: JSON.stringify(payload),
         });
-        console.log('response', response)
         const data = await response.json();
-        console.log('data', data)
         return {
             success: true,
             message: _`Point of view created successfully`,
@@ -158,3 +152,21 @@ export const useUserFormAction = formAction$<UserForm, UserResponseData>(
     },
     valiForm$(UserSchema)
 );
+
+export const useRemovePollAction = routeAction$(async ({ pollId }, event) => {
+    const session = event.sharedMap.get('session')
+    const token = session?.accessToken
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/polls/${pollId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const data = await response.json();
+    return {
+        success: true,
+        message: _`Poll removed successfully`,
+        data: data
+    }
+})

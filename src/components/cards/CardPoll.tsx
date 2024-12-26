@@ -7,6 +7,9 @@ import { useReactToPoll, useVotePoll } from "~/shared/loaders";
 import { _ } from "compiled-i18n";
 import { Button } from "~/components/ui";
 import { UserContext } from "~/contexts/UserContext";
+import { ConfirmationModal } from "~/components/modal/ConfirmationModal";
+import Modal from "~/components/modal/modal";
+import { useRemovePollAction } from "~/shared/actions";
 
 interface CardPollProps {
     poll: any;
@@ -58,16 +61,19 @@ export default component$<CardPollProps>(({
 
     const actionVote = useVotePoll();
     const actionReact = useReactToPoll();
+    const removePollAction = useRemovePollAction()
 
     const pollState = useStore({ poll });
 
     const likesCount = useSignal(likes_count);
     const dislikesCount = useSignal(dislikes_count);
-    const userVotedOptions = useSignal<number[]>(user_voted_options);  // Options voted by the user
-    const userReaction = useSignal<string | null>(user_reaction_type);  // Reaction of the user (like or dislike)
+    const userVotedOptions = useSignal<number[]>(user_voted_options);
+    const userReaction = useSignal<string | null>(user_reaction_type);
     const showComments = useSignal(false);
     const comments = useSignal<CommentRead[]>(poll.comments);
     const newCommentContent = useSignal('');
+    const isOpenModalDeletePoll = useSignal(false);
+    const isOpenModalReportPoll = useSignal(false);
 
     const onClickUsername = $((username: string) => nav(`/profile/${username}`));
 
@@ -172,12 +178,15 @@ export default component$<CardPollProps>(({
 
     const isOwner = creator_username === user.username
 
-    const handleBorrar = $(async () => {
-        console.log('++++++++++++ handleBorrar ++++++++++++')
+    const handleDelete = $(async () => {
+        await removePollAction.submit({ pollId: id });
     })
+
+    const handleCancel = $(() => {});
 
     const handleReportar = $(async () => {
         console.log('++++++++++++ handleReportar ++++++++++++')
+        console.log('Estas reportando el poll con ID:  ', id)
     })
 
     const totalVotos = useComputed$(() => {
@@ -190,7 +199,7 @@ export default component$<CardPollProps>(({
             <h2 class="text-3xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
                 <span class="badge text-xl">
-                    {poll.community_type === "GLOBAL" && <span>🌎</span>}
+                    {poll.scope === "GLOBAL" && <span>🌎</span>}
                 </span>
             </h2>
 
@@ -272,11 +281,11 @@ export default component$<CardPollProps>(({
                         <LuShare2 class="h-5 w-5" />
                     </Button>
                     {isOwner ? (
-                        <Button look="ghost" onClick$={handleBorrar}>
+                        <Button look="ghost" onClick$={() => isOpenModalDeletePoll.value = true}>
                             <LuTrash2 class="h-5 w-5 text-red-500" />
                         </Button>
                         ) : (
-                        <Button look="ghost" onClick$={handleReportar}>
+                        <Button look="ghost" onClick$={() => isOpenModalReportPoll.value = true}>
                             <LuFlag class="h-5 w-5 text-yellow-500" />
                         </Button>
                     )}
@@ -312,7 +321,19 @@ export default component$<CardPollProps>(({
                     </form>
                 </div>
             )}
-
+            <ConfirmationModal
+                isOpen={isOpenModalDeletePoll}
+                title={_`Confirm Deletion`}
+                description={_`Are you sure you want to delete this item? This action cannot be undone.`}
+                onConfirm={handleDelete}
+                onCancel={handleCancel}
+            />
+            <Modal
+                isOpen={isOpenModalReportPoll}
+                title={_`Report Poll`}
+            >
+                Formulario para reportar
+            </Modal>
         </div>
     );
 });

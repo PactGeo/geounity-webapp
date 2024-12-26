@@ -14,7 +14,7 @@ import { UserContext } from "~/contexts/UserContext";
 import SocialLoginButtons from "~/components/SocialLoginButtons";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
-export { useFormPollAction } from "~/shared/actions";
+export { useFormPollAction, useRemovePollAction } from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();
@@ -40,7 +40,7 @@ export default component$(() => {
             url.searchParams.append('tags', selectedTag.name);
         }
         if (communityType) {
-            url.searchParams.append('community_type', communityType);
+            url.searchParams.append('scope', communityType);
         }
         if(selectedIndexSig.value !== 0) {
             const getFilter = (index: number) => {

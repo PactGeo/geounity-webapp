@@ -2,18 +2,20 @@ import * as v from 'valibot'
 import { PollType } from '~/constants';
 import { _ } from "compiled-i18n";
 
+export const MAX_TITLE_LENGTH = 100;
+export const MAX_DESCRIPTION_LENGTH = 5000;
+
 export const PollSchema = v.object({
-    type: v.enum(PollType),
-    title: v.pipe(
+    community_ids: v.union([
+        v.array(v.string()),
         v.string(),
-        v.nonEmpty(_`Please enter a title.`),
-        v.minLength(5, _`Your password must have 5 characters or more.`),
-        v.maxLength(100, _`Your password must have 100 characters or less.`),
-    ),
+    ]),
     description: v.pipe(
         v.string(),
-        v.maxLength(5000, _`Your password must have 5000 characters or less.`),
+        v.maxLength(MAX_DESCRIPTION_LENGTH, _`Your password must have ${MAX_DESCRIPTION_LENGTH} characters or less.`),
     ),
+    endDate: v.string(),
+    is_anonymous: v.boolean(),
     options: v.pipe(
         v.array(
             v.pipe(v.string(), v.nonEmpty(_`Please enter a name for the option.`))
@@ -21,14 +23,15 @@ export const PollSchema = v.object({
         v.minLength(2, _`You must have at least 2 options.`),
         v.maxLength(10, _`You must have at most 10 options.`),
     ),
+    scope: v.string(),
     tags: v.array(v.string()),
-    endDate: v.object({
-        active: v.boolean(),
-        value: v.string(),
-    }),
-    is_anonymous: v.boolean(),
-    community_ids: v.array(v.string()),
-    community_type: v.string()
+    title: v.pipe(
+        v.string(),
+        v.nonEmpty(_`Please enter a title.`),
+        v.minLength(5, _`Your password must have 5 characters or more.`),
+        v.maxLength(MAX_TITLE_LENGTH, _`Your password must have ${MAX_TITLE_LENGTH} characters or less.`),
+    ),
+    type: v.enum(PollType),
 });
 
 export type PollForm = v.InferInput<typeof PollSchema>;

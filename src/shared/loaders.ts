@@ -30,7 +30,6 @@ export const useUser = routeLoader$(async (requestEvent) => {
         },
     });
     const data = await response.json();
-    console.log('dat4a', data)
 
     cookie.set('geounity.user', { username: data.username, role: data.role });
     return data as UserType;
@@ -79,7 +78,7 @@ export const useGetPolls = routeLoader$(async (requestEvent) => {
         url.searchParams.append('tags', tags);
     }
     if (communityType) {
-        url.searchParams.append('community_type', communityType);
+        url.searchParams.append('scope', communityType);
     }
     const response = await fetch(url.toString(), {
         headers: {
@@ -330,18 +329,15 @@ export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathna
     const segments = pathname.split('/').filter(Boolean);
     const communityType = segments[0];
     return {
-        type: PollType.Binary,
-        title: '',
-        description: '',
-        options: ['', ''],
-        tags: [],
-        endDate: {
-            active: true,
-            value: '',
-        },
-        is_anonymous: false,
         community_ids: communityType.toUpperCase() === "GLOBAL" ? ['1'] : [],
-        community_type: communityType.toUpperCase(),
+        description: '',
+        endDate: '',
+        is_anonymous: false,
+        options: ['', ''],
+        scope: communityType.toUpperCase(),
+        type: PollType.Binary,
+        tags: [],
+        title: '',
     };
 });
 

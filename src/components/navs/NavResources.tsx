@@ -4,7 +4,6 @@ import { LuDatabase, LuHome, LuLandmark, LuMessageCircle, LuMessageSquare, LuUse
 import { _ } from "compiled-i18n";
 import { NavLink } from "~/components/nav-link/NavLink";
 
-
 export default component$(() => {
     const loc = useLocation();
     const pathname = loc.url.pathname;

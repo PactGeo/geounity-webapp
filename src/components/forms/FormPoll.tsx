@@ -1,22 +1,26 @@
-import { $, component$, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStyles$, useTask$ } from "@builder.io/qwik";
 import { Button } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
-import { getErrors, getValue, insert, remove, useForm, valiForm$ } from '@modular-forms/qwik';
-import type { SubmitHandler } from '@modular-forms/qwik';
+import { insert, remove, setValue, SubmitHandler, useForm, valiForm$ } from '@modular-forms/qwik';
+// import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
-import { Checkbox, TextInput, ChipGroup } from "~/components/input";
+import { TextInput, ChipGroup, Select } from "~/components/input";
 import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
-import { PollSchema } from "~/schemas";
+import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH, PollSchema } from "~/schemas";
 import type { PollResponseData } from "~/shared/actions";
 import { useFormPollAction } from "~/shared/actions";
 import { useFormPollLoader } from "~/shared/loaders";
-import {dataArray as countries} from "~/data/countries";
+import { dataArray as countries } from "~/data/countries";
 import styles from "./form.css?inline";
-import { InputLabel } from "../input/InputLabel";
-import { TagInput } from "../input/TagInput";
-import { CountrySelectInput } from "../input/CountrySelectInput";
+import { TagInput } from "~/components/input/TagInput";
+import { CountrySelectInput } from "~/components/input/CountrySelectInput";
+import { TextInput2 } from "~/components/input/TextInput2";
+import { TextArea } from "~/components/input/TextArea";
+import { Toggle } from "flowbite-qwik";
+import { Checkbox } from "~/components/input";
+import { UserContext } from "~/contexts/UserContext";
 
 export { useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from '~/shared/actions';
@@ -28,6 +32,7 @@ interface FormPollProps {
 
 export default component$<FormPollProps>(({ tags }) => {
     useStyles$(styles);
+    const user = useContext(UserContext);
 
     const [pollForm, { Form, Field, FieldArray }] = useForm<PollForm, PollResponseData>({
         loader: useFormPollLoader(),
@@ -35,204 +40,267 @@ export default component$<FormPollProps>(({ tags }) => {
         fieldArrays: ['options'],
         validate: valiForm$(PollSchema),
     });
-    
-    const community_type = getValue(pollForm, 'community_type')
 
-    const errors = getErrors(pollForm);
-    console.log('errors', errors)
+    console.log('==================================================')
 
-    const handleSubmit = $<SubmitHandler<PollForm>>((values, event) => {
-        console.log('== PollForm handleSubmit ==')
-        console.log('event', event)
-        console.log('values', values)
-        // Runs on client
+    console.log('Form submitting:', pollForm.submitting);
+    console.log('Form values:', pollForm.internal.fields);
+    console.log('Is form valid?', !pollForm.invalid);
+    console.log('pollForm', pollForm)
+    console.log('pollForm.internal', pollForm.internal)
+
+    const hasEndDate = useSignal(false);
+    const isAnonymous = useSignal(false);
+
+    useTask$(({ track }) => {
+        track(isAnonymous);
+        setValue(pollForm, 'is_anonymous', isAnonymous.value);
+    })
+
+    const handleSubmit = $<SubmitHandler<PollForm>>((values) => {
+        console.log('== PollForm handleSubmit ==');
+        console.log('values', values);
     });
 
-    const hasEndDate = getValue(pollForm, 'endDate.active');
-
     const countriesOptions = countries.map(c => ({ value: c.name, name: `${c.flag} ${c.name}` }))
+    const provincesOptions: { value: string, name: string }[] = []
+
+    {console.log('###pollForm.internal.fields.scope?.value', pollForm.internal.fields.scope?.value)}
 
     return (
         <Form
             onSubmit$={handleSubmit}
-            class="space-y-2 md:space-y-3 lg:space-y-4"
+            class="space-y-6"
         >
-            {/* COMMUNITIES */}
-            <Field name="community_ids" type="string[]">
-                {(field, props) => community_type != CommunityType.GLOBAL && (
-                    <CountrySelectInput
-                        {...props}
-                        form={pollForm}
-                        label={_`Countries involved`}
-                        predefinedCountries={countriesOptions}
-                        error={field.error}
-                    />
-                )}
-            </Field>
-
-            {/* TITLE */}
-            <Field name="title">
-                {(field, props) => (
-                    <div class="space-y-1">
-                        <InputLabel name={field.name} label={field.name} required />
-                        <input
+            <div class="space-y-6">
+                {/* SCOPE */}
+                <Field name="scope">
+                    {(field, props) => (
+                        <ChipGroup
                             {...props}
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                            placeholder="Enter a title"
-                            type="text"
+                            name="scope"
+                            value={field.value || CommunityType.GLOBAL}
+                            options={[
+                                { value: CommunityType.GLOBAL, label: 'Global', description: 'A poll visible to the entire global community.' },
+                                { value: CommunityType.INTERNATIONAL, label: 'International', description: 'A poll involving multiple countries.' },
+                                { value: CommunityType.NATIONAL, label: 'National', description: 'A poll for a single country.' },
+                                { value: CommunityType.SUBNATIONAL, label: 'Subnational', description: 'A poll for provinces or subnational regions.' },
+                            ]}
+                            label="Scope"
                             required
-                        />
-                        {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                    </div>
-                )}
-            </Field>
-
-            {/* DESCRIPTION */}
-            <Field name="description">
-                {(field, props) => (
-                    <div class="space-y-1">
-                        <InputLabel name={field.name} label={field.name} />
-                        <textarea
-                            {...props}
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 p-3"
-                            placeholder={_`Enter a description`}
-                            rows={4}
-                        />
-                        {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                    </div>
-                )}
-            </Field>
-
-            {/* TYPE */}
-            <Field name="type">
-                {(field, props) => (
-                    <ChipGroup
-                        {...props}
-                        name="type"
-                        value={field.value || PollType.SingleChoice}
-                        options={[
-                            { value: PollType.Binary, label: 'Binary', description: 'A binary poll has only two options, such as Yes or No.' },
-                            { value: PollType.SingleChoice, label: 'Single Choice', description: 'A single choice poll allows participants to select only one option.' },
-                            { value: PollType.MultipleChoice, label: 'Multiple Choice', description: 'A multiple choice poll allows participants to select multiple options.' },
-                        ]}
-                        label="Type"
-                        required
-                        error={field.error}
-                        class="mt-1 h-4 w-4 cursor-pointer lg:mt-1 lg:h-5 lg:w-5 transition-colors duration-200 rounded-full hover:bg-blue-100"
-                    />
-                )}
-            </Field>
-
-            {/* OPTIONS */}
-            <FieldArray name="options">
-                {(fieldArray) => (
-                    <div class="space-y-2">
-                        {fieldArray.items.map((option, index) => (
-                            <div key={option} class="flex items-center space-x-2">
-                                <Field name={`options.${index}`}>
-                                    {(field, props) => (
-                                        <div>
-                                            <input
-                                                {...props}
-                                                placeholder={`${_`Opción`} ${index + 1}`}
-                                                type="text"
-                                                required
-                                            />
-                                            {field.error && <div class="text-red-500 text-sm mt-1">{field.error}</div>}
-                                        </div>
-                                    )}
-                                </Field>
-                                {fieldArray.items.length > 2 && (
-                                    <Button
-                                        type="button"
-                                        onClick$={() => remove(pollForm, 'options', { at:index})}
-                                        aria-label={`${_`Eliminar Opción`} ${index + 1}`}
-                                    >
-                                        <LuMinus />
-                                    </Button>
-                                )}
-                            </div>
-                        ))}
-                        {fieldArray.items.length < 10 && pollForm.internal.fields.type?.value !== PollType.Binary && (
-                            <Button
-                                type="button"
-                                onClick$={() => insert(pollForm, 'options', { value: '' })}
-                                look="ghost"
-                                size="sm"
-                            >
-                                <LuPlus class="mr-2" />
-                                
-                                {_`Add option`}
-                            </Button>
-                        )}
-                        {fieldArray.error && <div class="text-red-500">{fieldArray.error}</div>}
-                    </div>
-                )}
-            </FieldArray>
-
-            <Field name="community_type" type="string">
-                {(field, props) => (
-                    <div class="hidden">
-                        <TextInput
-                            {...props}
-                            type="text"
-                            label={field.name}
-                            value={field.value}
                             error={field.error}
+                            class="transition-colors duration-200 rounded-full hover:bg-green-100"
                         />
-                    </div>
-                )}
-            </Field>
-            
-            {/* TAGS */}
-            <Field name="tags" type="string[]">
-                {(field, props) => (
-                    <TagInput
-                        {...props}
-                        error={field.error}
-                        form={pollForm}
-                        label={_`Tags`}
-                        predefinedTags={tags}
-                    />
-                )}
-            </Field>
+                    )}
+                </Field>
 
-            <Field name="endDate.active" type="boolean">
-                {(field, props) => (
-                    <Checkbox
-                        {...props}
-                        checked={field.value}
-                        error={field.error}
-                        label={field.value ? _`Set an end date` : _`Set an end date (Always open)`}
-                    />
-                )}
-            </Field>
+                {/* COMMUNITY_IDS */}
+                <Field name="community_ids" type="string[]">
+                    {(field, props) => {
+                        const scope = pollForm.internal.fields.scope?.value;
 
-            <Field name="endDate.value">
-                {(field, props) => hasEndDate && (
-                    <TextInput
-                        {...props}
-                        type="date"
-                        label={_`End Date`}
-                        value={field.value}
-                        error={field.error}
-                    />
-                )}
-            </Field>
+                        switch (scope) {
+                            case CommunityType.GLOBAL:
+                                return <input type="hidden" {...props} value="1" />;
 
-            <Field name="is_anonymous" type="boolean">
-                {(field, props) => (
-                    <Checkbox
-                        {...props}
-                        checked={field.value}
-                        error={field.error}
-                        label={_`Anonymous`}
-                        helperText={_`Hide your identity as the creator of the poll.`}
-                    />
-                )}
-            </Field>
-            
+                            case CommunityType.INTERNATIONAL:
+                                return (
+                                    <CountrySelectInput
+                                        {...props}
+                                        form={pollForm}
+                                        label={_`Countries involved`}
+                                        predefinedCountries={countriesOptions}
+                                        error={field.error}
+                                    />
+                                );
+
+                            case CommunityType.NATIONAL:
+                                return (
+                                    <Select
+                                        {...props}
+                                        options={countriesOptions}
+                                        label={_`Select a country`}
+                                        value={field.value}
+                                        error={field.error}
+                                    />
+                                );
+
+                            case CommunityType.SUBNATIONAL:
+                                return (
+                                    <Select
+                                        {...props}
+                                        options={provincesOptions}
+                                        label={_`Select a province`}
+                                        value={field.value}
+                                        error={field.error}
+                                    />
+                                );
+
+                            default:
+                                return null;
+                        }
+                    }}
+                </Field>
+
+
+                {/* TITLE */}
+                <Field name="title">
+                    {(field, props) => (
+                        <TextInput2
+                            {...props}
+                            class="space-y-2"
+                            error={field.error}
+                            label={_`Title`}
+                            placeholder={_`Enter poll title`}
+                            maxLength={MAX_TITLE_LENGTH}
+                            required
+                            value={field.value}
+                            autofocus
+                        />
+                    )}
+                </Field>
+
+                {/* DESCRIPTION */}
+                <Field name="description">
+                    {(field, props) => (
+                        <TextArea
+                            {...props}
+                            class="space-y-2"
+                            error={field.error}
+                            label={_`Description`}
+                            placeholder={_`Provide more details about the poll`}
+                            maxLength={MAX_DESCRIPTION_LENGTH}
+                            required
+                            value={field.value}
+                        />
+                    )}
+                </Field>
+
+                {/* TYPE */}
+                <Field name="type">
+                    {(field, props) => (
+                        <ChipGroup
+                            {...props}
+                            name="type"
+                            value={field.value || PollType.SingleChoice}
+                            options={[
+                                { value: PollType.Binary, label: 'Binary', description: 'A binary poll has only two options, such as Yes or No.' },
+                                { value: PollType.SingleChoice, label: 'Single Choice', description: 'A single choice poll allows participants to select only one option.' },
+                                { value: PollType.MultipleChoice, label: 'Multiple Choice', description: 'A multiple choice poll allows participants to select multiple options.' },
+                            ]}
+                            label="Type"
+                            required
+                            error={field.error}
+                            class="transition-colors duration-200 rounded-full hover:bg-blue-100"
+                        />
+                    )}
+                </Field>
+
+                {/* OPTIONS */}
+                <FieldArray name="options">
+                    {(fieldArray) => (
+                        <div class="space-y-4">
+                            {fieldArray.items.map((option, index) => (
+                                <div key={option} class="flex items-center space-x-2">
+                                    <Field name={`options.${index}`}>
+                                        {(field, props) => (
+                                            <TextInput2
+                                                {...props}
+                                                class="space-y-2"
+                                                error={field.error}
+                                                label={`${_`Option`} ${index + 1}`}
+                                                placeholder={_`Enter option ${index + 1}`}
+                                                maxLength={MAX_TITLE_LENGTH}
+                                                required
+                                                value={field.value}
+                                            />
+                                        )}
+                                    </Field>
+                                    {fieldArray.items.length > 2 && (
+                                        <Button
+                                            type="button"
+                                            onClick$={() => remove(pollForm, 'options', { at: index })}
+                                            aria-label={`${_`Remove Option`} ${index + 1}`}
+                                        >
+                                            <LuMinus />
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                            {fieldArray.items.length < 10 && pollForm.internal.fields.type?.value !== PollType.Binary && (
+                                <Button
+                                    type="button"
+                                    onClick$={() => insert(pollForm, 'options', { value: '' })}
+                                    look="ghost"
+                                    size="sm"
+                                >
+                                    <LuPlus class="mr-2" />
+                                    {_`Add option`}
+                                </Button>
+                            )}
+                            {fieldArray.error && <div class="text-red-500">{fieldArray.error}</div>}
+                        </div>
+                    )}
+                </FieldArray>
+
+                {/* TAGS */}
+                <Field name="tags" type="string[]">
+                    {(field, props) => (
+                        <TagInput
+                            {...props}
+                            error={field.error}
+                            form={pollForm}
+                            label={_`Tags`}
+                            predefinedTags={tags}
+                        />
+                    )}
+                </Field>
+
+                {/* END DATE */}
+                <div>
+                    <Toggle label={_`Set an end date`} bind:checked={hasEndDate} />
+                    <Field name="endDate">
+                        {(field, props) => hasEndDate.value && (
+                            <TextInput
+                                {...props}
+                                type="date"
+                                label={_`End Date`}
+                                value={field.value}
+                                error={field.error}
+                            />
+                        )}
+                    </Field>
+                    <p class="mt-2 text-sm text-gray-500">
+                        {_`Specify when the poll will end. Participants will not be able to vote after this date.`}
+                    </p>
+                </div>
+
+                {/* ANONYMOUS */}
+                <div>
+                    <Toggle label={_`Anonymous`} bind:checked={isAnonymous} />
+                    <p class="mt-2 text-sm text-gray-500">
+                        {isAnonymous.value
+                            ? _`Your identity will be hidden as the creator of the poll.`
+                            : _`Your username "${user.username}" will be displayed as the creator of the poll.`}
+                    </p>
+                    <Field name="is_anonymous" type="boolean">
+                        {(field, props) => (
+                            <div class="hidden">
+                                <Checkbox
+                                    {...props}
+                                    checked={field.value}
+                                    error={field.error}
+                                    label={_`Anonymous`}
+                                    helperText={_`Hide your identity as the creator of the poll.`}
+                                />
+                            </div>
+                        )}
+                    </Field>
+                </div>
+
+            </div>
+
             <FormFooter of={pollForm} />
         </Form>
-    )
+    );
 });

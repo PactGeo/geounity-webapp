@@ -239,4 +239,22 @@
 
 /* end progress */
 
+textarea {
+  field-sizing: content;
+}
 
+
+/* General Button Styling */
+button {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+button:focus {
+  outline: 2px solid #a855f7; /* Purple focus outline */
+  outline-offset: 2px;
+}
+
+button:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}

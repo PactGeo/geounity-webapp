@@ -4,6 +4,7 @@ import { InputError } from './InputError';
 import { capitalizeFirst } from '~/utils';
 
 type TextInputProps = {
+    autofocus?: boolean;
     class?: string;
     error: string;
     label: string;
@@ -33,9 +34,9 @@ export const TextInput2 = component$(
                         props.class
                     )}
                 />
-                <div class="absolute top-2 left-3 text-sm pointer-events-none transition-colors duration-200">
+                {label && <div class="absolute top-2 left-3 text-sm pointer-events-none transition-colors duration-200">
                     {capitalizeFirst(label)}
-                </div>
+                </div>}
                 <div class="absolute top-2 right-3 text-sm text-gray-600 dark:text-gray-300">
                     {props.value?.length} / {props.maxLength}
                 </div>

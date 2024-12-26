@@ -9,26 +9,26 @@ type FormFooterProps = {
     form?: string;
 };
 
-/**
- * Form footer with buttons to reset and submit the form.
- */
 export function FormFooter({
     of: formStore,
     resetAction,
     form,
 }: FormFooterProps) {
     return (
-        <footer class="flex justify-center space-x-4 mt-6">
+        <footer class="flex flex-col md:flex-row justify-center items-center gap-4 mt-6">
+            {/* Botón de Submit */}
             <ActionButton
-                class="w-full px-8 py-2"
+                class="w-full md:w-auto"
                 variant="primary"
                 label={_`Submit`}
                 type="submit"
                 form={form}
             />
+
+            {/* Botón de Reset */}
             {resetAction && (
                 <ActionButton
-                    class="w-auto px-8 py-2"
+                    class="w-full md:w-auto"
                     variant="secondary"
                     label={_`Reset`}
                     type="button"

@@ -1,8 +1,7 @@
 import { component$, Slot, useSignal, useStyles$ } from "@builder.io/qwik";
-import { LuExpand, LuEye, LuX } from "@qwikest/icons/lucide";
-import { Button, Modal, Separator } from '~/components/ui';
+import { LuExpand, LuShrink, LuEye, LuX } from "@qwikest/icons/lucide";
+import { Modal, Separator } from '~/components/ui';
 import styles from "./modal.css?inline";
-// import { Modal } from '@qwik-ui/headless';
 
 interface ModalProps {
     trigger?: string;
@@ -20,51 +19,65 @@ interface ModalProps {
 export default component$<ModalProps>((props) => {
     useStyles$(styles);
     const isOpen = props.isOpen || useSignal(false);
-    const show = useSignal(false)
     const isPreview = useSignal(false);
+    const isExpanded = useSignal(false);
+
     return (
         <Modal.Root bind:show={isOpen}>
-            {props.trigger && <Modal.Trigger class="modal-trigger">{props.trigger}</Modal.Trigger>}
-            <Modal.Panel class="modal-panel pt-2">
-                <div class="flex justify-between items-center gap-2 py-2">
+            {props.trigger && (
+                <Modal.Trigger class="modal-trigger">{props.trigger}</Modal.Trigger>
+            )}
+            <Modal.Panel
+                class={`modal-panel ${isExpanded.value ? 'modal-expanded' : ''}`}
+            >
+                {/* Header */}
+                <div class="modal-header flex justify-between items-center gap-4 p-4">
                     <Modal.Title class="modal-title">{props.title}</Modal.Title>
-                    <div class="flex items-center gap-2">
-                        {!!props.onClickPreview && <LuEye 
-                            class="text-xl cursor-pointer" 
-                            onClick$={() => isPreview.value = !isPreview.value} 
-                            />}
-                        {props.onClickExpand && <Modal.Close onClick$={props.onClickExpand}><LuExpand class="text-lg" /></Modal.Close>}
-                        <Modal.Close><LuX class="text-2xl"/></Modal.Close>
+                    <div class="flex items-center gap-3">
+                        {!!props.onClickPreview && (
+                            <LuEye
+                                class="text-xl cursor-pointer hover:text-blue-500"
+                                onClick$={() => isPreview.value = !isPreview.value}
+                            />
+                        )}
+                        {props.onClickExpand && (
+                            <button
+                                class="modal-icon"
+                                aria-label={isExpanded.value ? "Shrink Modal" : "Expand Modal"}
+                                title={isExpanded.value ? "Shrink Modal" : "Expand Modal"}
+                                onClick$={() => isExpanded.value = !isExpanded.value}
+                            >
+                                {isExpanded.value ? (
+                                    <LuShrink class="text-lg hover:text-green-500" />
+                                ) : (
+                                    <LuExpand class="text-lg hover:text-green-500" />
+                                )}
+                            </button>
+                        )}
+                        <Modal.Close>
+                            <LuX
+                                class="text-2xl rounded-full hover:text-red-500 hover:bg-gray-200 p-1"
+                                aria-label="Close Modal"
+                            />
+                        </Modal.Close>
                     </div>
                 </div>
-                <Separator orientation="horizontal" class="mb-2" />
+
+                {/* Separator */}
+                <Separator orientation="horizontal" class="mb-4" />
+
+                {/* Description */}
                 {props.description && (
                     <Modal.Description class="modal-description">
                         {props.description}
                     </Modal.Description>
                 )}
-                <Slot />
+
+                {/* Slot Content */}
+                <div class="modal-content">
+                    <Slot />
+                </div>
             </Modal.Panel>
         </Modal.Root>
     );
-    return (
-        <Modal.Root bind:show={show}>
-            <Modal.Trigger>Open modal</Modal.Trigger>
-            <Modal.Panel>
-                <Modal.Title>Title</Modal.Title>
-                <Modal.Description>Description</Modal.Description>
-                <div>...</div>
-                <footer>
-                <Button look="primary" onClick$={() => (show.value = false)}>
-                    Save
-                </Button>
-                </footer>
-                <Modal.Close>
-                <LuX class="h-5 w-5" />
-                </Modal.Close>
-            </Modal.Panel>
-        </Modal.Root>
-    
-    )
 });
-

@@ -40,7 +40,7 @@ export default component$(() => {
             url.searchParams.append('tags', selectedTag.name);
         }
         if (communityType) {
-            url.searchParams.append('community_type', communityType);
+            url.searchParams.append('scope', communityType);
         }
         if(selectedIndexSig.value !== 0) {
             const getFilter = (index: number) => {
