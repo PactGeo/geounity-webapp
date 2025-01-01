@@ -4,6 +4,7 @@ import { CommunityType, DebateStatus, PollType } from "~/constants";
 import type { UserType } from "~/contexts/UserContext";
 import type { CountryForm, PollForm, UserForm } from "~/schemas";
 import type { DebateForm } from "~/schemas/debateSchema";
+import { ContentType, ReasonType } from "~/schemas/reportSchema";
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -377,3 +378,10 @@ export const useUserFormLoader = routeLoader$<InitialValues<UserForm>>(async ({ 
         // banner: '',
     };
 });
+
+export const useFormReportLoader = routeLoader$(() => ({
+    content_type: ContentType.Poll,
+    content_id: "",
+    reason: ReasonType.Offensive,
+    description: "",
+}));

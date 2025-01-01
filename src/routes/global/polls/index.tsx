@@ -13,8 +13,20 @@ import ListTags from "~/components/list/ListTags";
 import { UserContext } from "~/contexts/UserContext";
 import SocialLoginButtons from "~/components/SocialLoginButtons";
 
-export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
-export { useFormPollAction, useRemovePollAction } from "~/shared/actions";
+export {
+    useGetTags,
+    useGetPolls,
+    usePostPoll,
+    useVotePoll,
+    useReactToPoll,
+    useFormPollLoader,
+    useFormReportLoader,
+} from '~/shared/loaders';
+export {
+    useFormPollAction,
+    useRemovePollAction,
+    useFormReportAction,
+} from "~/shared/actions";
 
 export default component$(() => {
     const nav = useNavigate();

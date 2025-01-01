@@ -5,6 +5,7 @@ import { DebateStatus } from "~/constants";
 import type { CountryForm, PollForm, UserForm } from "~/schemas";
 import { CountrySchema, PollSchema, UserSchema } from "~/schemas";
 import { type DebateForm, DebateSchema } from "~/schemas/debateSchema";
+import { type ReportForm, ReportSchema } from "~/schemas/reportSchema";
 
 export type PollResponseData = {
     type: string;
@@ -153,6 +154,55 @@ export const useUserFormAction = formAction$<UserForm, UserResponseData>(
     valiForm$(UserSchema)
 );
 
+export type ReportResponseData = {
+    title: string;
+    description: string;
+    status: string;
+    type: string;
+}
+
+export const useFormReportAction = formAction$<ReportForm, ReportResponseData>(
+    async (values, event) => {
+        console.log('===== useFormReportAction =====')
+        console.log('values', values)
+        const token = event.sharedMap.get("session")?.accessToken;
+        console.log('token', token)
+
+        const payload = {
+            content_type: values.content_type,
+            content_id: values.content_id,
+            reason: values.reason,
+            description: values.description,
+        }
+
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/reports`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: "Failed to submit the report",
+            };
+        }
+
+        const data = await response.json();
+
+        return {
+            success: true,
+            message: _`Report submitted successfully`,
+            data
+        };
+    },
+
+    valiForm$(ReportSchema)
+);
+
 export const useRemovePollAction = routeAction$(async ({ pollId }, event) => {
     const session = event.sharedMap.get('session')
     const token = session?.accessToken
@@ -170,3 +220,13 @@ export const useRemovePollAction = routeAction$(async ({ pollId }, event) => {
         data: data
     }
 })
+
+export interface SharePollResponseData {
+    success: boolean; // Indica si la operación fue exitosa
+    message: string; // Mensaje de respuesta (ej. "Poll shared successfully")
+    data?: {
+        poll_id: string; // ID de la encuesta compartida
+        share_link: string; // Link generado para compartir
+        timestamp?: string; // Opcional: Hora/fecha en que se compartió
+    };
+}

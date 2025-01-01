@@ -7,6 +7,7 @@ type TextInputProps = {
     autofocus?: boolean;
     class?: string;
     error: string;
+    hidden?: boolean;
     label: string;
     maxLength: number;
     name: string;
@@ -16,11 +17,12 @@ type TextInputProps = {
 };
 
 export const TextInput2 = component$(
-    ({ label, name, error, ...props }: TextInputProps) => {
+    ({ label, name, error, hidden, ...props }: TextInputProps) => {
         return (
             <div class={clsx(
                 "w-full space-y-1 relative",
-                error ? "text-red-500" : "focus-within:text-blue-500"
+                error ? "text-red-500" : "focus-within:text-blue-500",
+                hidden ? "hidden" : ""
             )}>
                 <input
                     {...props}

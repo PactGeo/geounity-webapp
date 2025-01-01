@@ -10,6 +10,9 @@ import { UserContext } from "~/contexts/UserContext";
 import { ConfirmationModal } from "~/components/modal/ConfirmationModal";
 import Modal from "~/components/modal/modal";
 import { useRemovePollAction } from "~/shared/actions";
+import FormReport from "~/components/forms/FormReport";
+import FormShare from "../forms/FormShare";
+// import FormShare from "~/components/forms/FormShare";
 
 interface CardPollProps {
     poll: any;
@@ -72,6 +75,7 @@ export default component$<CardPollProps>(({
     const showComments = useSignal(false);
     const comments = useSignal<CommentRead[]>(poll.comments);
     const newCommentContent = useSignal('');
+    const isOpenModalSharePoll = useSignal(false);
     const isOpenModalDeletePoll = useSignal(false);
     const isOpenModalReportPoll = useSignal(false);
 
@@ -184,14 +188,16 @@ export default component$<CardPollProps>(({
 
     const handleCancel = $(() => {});
 
-    const handleReportar = $(async () => {
-        console.log('++++++++++++ handleReportar ++++++++++++')
-        console.log('Estas reportando el poll con ID:  ', id)
-    })
+    // const handleReportar = $(async () => {
+    //     console.log('++++++++++++ handleReportar ++++++++++++')
+    //     console.log('Estas reportando el poll con ID:  ', id)
+    // })
 
     const totalVotos = useComputed$(() => {
         return votesCount.value + userVotedOptions.value.length;
     })
+
+    const onSubmitCompleted = $(() => {isOpenModalReportPoll.value = false;isOpenModalSharePoll.value = false;});
 
     return (
         <div class="p-4 mb-4 border rounded-lg shadow-md bg-gray-50 hover:shadow-lg transition-shadow w-full">
@@ -277,7 +283,7 @@ export default component$<CardPollProps>(({
                         <LuMessageSquare class="h-5 w-5" />
                         <span class="ml-1">{comments_count}</span>
                     </Button>
-                    <Button class="text-gray-600 hover:text-green-500" look="ghost">
+                    <Button look="ghost" onClick$={() => isOpenModalSharePoll.value = true} class="text-gray-600 hover:text-green-500">
                         <LuShare2 class="h-5 w-5" />
                     </Button>
                     {isOwner ? (
@@ -321,6 +327,14 @@ export default component$<CardPollProps>(({
                     </form>
                 </div>
             )}
+            <Modal
+                isOpen={isOpenModalSharePoll}
+                title={_`Share Poll`}
+            >
+                <FormShare
+                    share_link={`http://localhost:5173/global/polls/${poll.slug}`}
+                />
+            </Modal>
             <ConfirmationModal
                 isOpen={isOpenModalDeletePoll}
                 title={_`Confirm Deletion`}
@@ -332,7 +346,10 @@ export default component$<CardPollProps>(({
                 isOpen={isOpenModalReportPoll}
                 title={_`Report Poll`}
             >
-                Formulario para reportar
+                <FormReport
+                    content_id={id}
+                    onSubmitCompleted={onSubmitCompleted}
+                />
             </Modal>
         </div>
     );
