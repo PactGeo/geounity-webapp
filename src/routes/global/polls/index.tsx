@@ -2,7 +2,7 @@ import { $, component$, useContext, useSignal, useStore, useTask$ } from "@build
 import { useLocation, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import Modal from '~/components/modal/modal';
 import NavResources from "~/components/navs/NavResources";
-import { Button, Tabs } from "~/components/ui";
+import { Button } from "~/components/ui";
 import FormPoll from "~/components/forms/FormPoll";
 import { LuPlus } from "@qwikest/icons/lucide";
 import EmptyPolls from "~/components/empty-state/EmptyPolls";
@@ -119,34 +119,7 @@ export default component$(() => {
                     : <EmptyPolls onClickAction={onClickAction} />
             )}
             {polls.value.length > 0 && (
-                <Tabs.Root
-                    onSelectedIndexChange$={(index) => {
-                        selectedIndexSig.value = index;
-                    }}
-                >
-                    <Tabs.List class="mx-4 grid grid-cols-5">
-                        <Tabs.Tab value="all">{_`All`}</Tabs.Tab>
-                        <Tabs.Tab>{_`Pending`}</Tabs.Tab>
-                        <Tabs.Tab>{_`Answered`}</Tabs.Tab>
-                        <Tabs.Tab>{_`Finished`}</Tabs.Tab>
-                        <Tabs.Tab>{_`My polls`}</Tabs.Tab>
-                    </Tabs.List>
-                    <Tabs.Panel>
-                        <ListPolls polls={polls.value} type="GLOBAL" />
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
-                    </Tabs.Panel>
-                </Tabs.Root>
+                <ListPolls polls={polls.value} type="GLOBAL" />
             )}
             {user.isAuthenticated ? (
                 <Modal
