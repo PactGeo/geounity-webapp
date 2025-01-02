@@ -5,7 +5,7 @@ import { useUserFormLoader } from '~/shared/loaders';
 import { useUserFormAction } from '~/shared/actions';
 import type { UserResponseData } from '~/shared/actions';
 import { MAX_BIO_LENGTH, MAX_LOCATION_LENGTH, MAX_NAME_LENGTH, MAX_USERNAME_LENGTH, MAX_WEBSITE_LENGTH, type UserForm, UserSchema } from '~/schemas';
-import { TextInput2 } from '~/components/input/TextInput2';
+import { TextInput } from '~/components/input/TextInput';
 import { TextArea } from '~/components/input/TextArea';
 
 interface FormEditUserProps {
@@ -62,7 +62,7 @@ export default component$<FormEditUserProps>(() => {
                 </Field> */}
                 <Field name="username">
                     {(field, props) => (
-                        <TextInput2
+                        <TextInput
                             {...props}
                             class="space-y-1"
                             error={field.error}
@@ -76,7 +76,7 @@ export default component$<FormEditUserProps>(() => {
                 </Field>
                 <Field name="name">
                     {(field, props) => (
-                        <TextInput2
+                        <TextInput
                             {...props}
                             class="space-y-1"
                             error={field.error}
@@ -104,7 +104,7 @@ export default component$<FormEditUserProps>(() => {
                 </Field>
                 <Field name="location">
                     {(field, props) => (
-                        <TextInput2
+                        <TextInput
                             {...props}
                             class="space-y-1"
                             error={field.error}
@@ -118,7 +118,7 @@ export default component$<FormEditUserProps>(() => {
                 </Field>
                 <Field name="website">
                     {(field, props) => (
-                        <TextInput2
+                        <TextInput
                             {...props}
                             class="space-y-1"
                             error={field.error}

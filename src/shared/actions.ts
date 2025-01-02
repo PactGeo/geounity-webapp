@@ -4,7 +4,7 @@ import { _ } from "compiled-i18n";
 import { DebateStatus } from "~/constants";
 import type { CountryForm, PollForm, UserForm } from "~/schemas";
 import { CountrySchema, PollSchema, UserSchema } from "~/schemas";
-import { type DebateForm, DebateSchema } from "~/schemas/debateSchema";
+import { type DiscussionForm, DiscussionSchema } from "~/schemas/discussionSchema";
 import { type ReportForm, ReportSchema } from "~/schemas/reportSchema";
 
 export type PollResponseData = {
@@ -80,8 +80,10 @@ export type DebateResponseData = {
     type: string;
 }
 
-export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
+export const useFormDiscussionAction = formAction$<DiscussionForm, DebateResponseData>(
     async (values, event) => {
+        console.log('***************** useFormDiscussionAction **********************')
+        console.log('values', values)
         const session = event.sharedMap.get('session');
         const token = session?.accessToken;
         
@@ -89,9 +91,10 @@ export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
             title: values.title,
             description: values.description,
             status: DebateStatus.OPEN,
-            type: values.type,
+            type: values.scope,
             tags: values.tags,
         }
+        console.log('payload', payload)
         
         const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/debates`, {
             method: 'POST',
@@ -108,7 +111,7 @@ export const useFormDebateAction = formAction$<DebateForm, DebateResponseData>(
             data,
         }
     },
-    valiForm$(DebateSchema)
+    valiForm$(DiscussionSchema)
 );
 
 export type UserResponseData = {

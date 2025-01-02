@@ -3,7 +3,7 @@ import type { InitialValues } from "@modular-forms/qwik";
 import { CommunityType, DebateStatus, PollType } from "~/constants";
 import type { UserType } from "~/contexts/UserContext";
 import type { CountryForm, PollForm, UserForm } from "~/schemas";
-import type { DebateForm } from "~/schemas/debateSchema";
+import type { DiscussionForm } from "~/schemas/discussionSchema";
 import { ContentType, ReasonType } from "~/schemas/reportSchema";
 
 export const useServerTimeLoader = routeLoader$(() => {
@@ -342,7 +342,7 @@ export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathna
     };
 });
 
-export const useFormDebateLoader = routeLoader$<InitialValues<DebateForm>>(({ pathname }) => {
+export const useFormDiscussionLoader = routeLoader$<InitialValues<DiscussionForm>>(({ pathname }) => {
     console.log('pathname', pathname)
     return {
         title: '',
@@ -351,9 +351,10 @@ export const useFormDebateLoader = routeLoader$<InitialValues<DebateForm>>(({ pa
         file: {
             images: [],
         },
-        type: CommunityType.GLOBAL,
+        scope: CommunityType.GLOBAL,
         public: true,
         status: DebateStatus.OPEN,
+        is_anonymous: false,
     }
 });
 

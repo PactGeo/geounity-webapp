@@ -9,11 +9,11 @@ import { _ } from "compiled-i18n";
 import EmptyDebates from "~/components/empty-state/EmptyDebates";
 import ListDebates from "~/components/list/ListDebates";
 import Modal from "~/components/modal/modal";
-import FormDebate from "~/components/forms/FormDebate";
+import FormDiscussion from "~/components/forms/FormDiscussion";
 import { UserContext } from "~/contexts/UserContext";
 
-export { useGetTags, useGetDiscussions, useFormDebateLoader } from '~/shared/loaders';
-export { useFormDebateAction } from '~/shared/actions';
+export { useGetTags, useGetDiscussions, useFormDiscussionLoader } from '~/shared/loaders';
+export { useFormDiscussionAction } from '~/shared/actions';
 
 export default component$(() => {
     const nav = useNavigate();
@@ -66,7 +66,7 @@ export default component$(() => {
                     onClickExpand={onClickExpand}
                     title={_`Create a New Global Discussion`}
                 >
-                    <FormDebate
+                    <FormDiscussion
                         onSubmitCompleted={onSubmitCompleted}
                         tags={tags.value}
                     />

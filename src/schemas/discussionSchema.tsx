@@ -5,12 +5,15 @@ import type { NoSerialize } from '@builder.io/qwik';
 
 const isBlob = (input: unknown) => input instanceof Blob;
 
-export const DebateSchema = v.object({
+export const MAX_TITLE_LENGTH = 100
+export const MAX_DESCRIPTION_LENGTH = 5000
+
+export const DiscussionSchema = v.object({
     title: v.pipe(
         v.string(),
         v.nonEmpty(_`Please enter a title.`),
         v.minLength(5, _`Your password must have 5 characters or more.`),
-        v.maxLength(100, _`Your password must have 100 characters or less.`),
+        v.maxLength(MAX_TITLE_LENGTH, _`Your password must have ${MAX_TITLE_LENGTH} characters or less.`),
     ),
     description: v.pipe(
         v.string(),
@@ -20,7 +23,9 @@ export const DebateSchema = v.object({
     file: v.object({
         images: v.optional(v.array(v.custom<NoSerialize<Blob>>(isBlob))),
     }),
-    type: v.enum(CommunityType),
+    scope: v.enum(CommunityType),
+    is_anonymous: v.boolean(),
+    public: v.boolean()
 });
 
-export type DebateForm = v.InferInput<typeof DebateSchema>;
+export type DiscussionForm = v.InferInput<typeof DiscussionSchema>;

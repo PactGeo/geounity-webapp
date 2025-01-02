@@ -1,11 +1,11 @@
 import { $, component$, useContext, useSignal, useStyles$, useTask$ } from "@builder.io/qwik";
 import { Button } from '~/components/ui';
 import { LuMinus, LuPlus } from "@qwikest/icons/lucide";
-import { insert, remove, setValue, SubmitHandler, useForm, valiForm$ } from '@modular-forms/qwik';
-// import type { SubmitHandler } from '@modular-forms/qwik';
+import { insert, remove, setValue, useForm, valiForm$ } from '@modular-forms/qwik';
+import type { SubmitHandler } from '@modular-forms/qwik';
 import { FormFooter } from "./FormFooter";
 import { _ } from "compiled-i18n";
-import { TextInput, ChipGroup, Select } from "~/components/input";
+import { ChipGroup, Select } from "~/components/input";
 import { CommunityType, PollType } from "~/constants";
 import type { PollForm } from "~/schemas";
 import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH, PollSchema } from "~/schemas";
@@ -16,7 +16,7 @@ import { dataArray as countries } from "~/data/countries";
 import styles from "./form.css?inline";
 import { TagInput } from "~/components/input/TagInput";
 import { CountrySelectInput } from "~/components/input/CountrySelectInput";
-import { TextInput2 } from "~/components/input/TextInput2";
+import { TextInput } from "~/components/input/TextInput";
 import { TextArea } from "~/components/input/TextArea";
 import { Toggle } from "flowbite-qwik";
 import { Checkbox } from "~/components/input";
@@ -146,7 +146,7 @@ export default component$<FormPollProps>(({ tags }) => {
                 {/* TITLE */}
                 <Field name="title">
                     {(field, props) => (
-                        <TextInput2
+                        <TextInput
                             {...props}
                             class="space-y-2"
                             error={field.error}
@@ -204,7 +204,7 @@ export default component$<FormPollProps>(({ tags }) => {
                                 <div key={option} class="flex items-center space-x-2">
                                     <Field name={`options.${index}`}>
                                         {(field, props) => (
-                                            <TextInput2
+                                            <TextInput
                                                 {...props}
                                                 class="space-y-2"
                                                 error={field.error}

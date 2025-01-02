@@ -1,6 +1,6 @@
 import { $, component$, useSignal, useStyles$, useTask$ } from "@builder.io/qwik";
 import { TextArea } from "~/components/input/TextArea";
-import { TextInput2 } from "~/components/input/TextInput2";
+import { TextInput } from "~/components/input/TextInput";
 import { Select } from "~/components/input/Select";
 import type { SubmitHandler } from "@modular-forms/qwik";
 import { setValue, useForm, valiForm$ } from "@modular-forms/qwik";
@@ -46,7 +46,7 @@ export default component$<FormReportProps>(({ content_id }) => {
                 <Field name="content_id" type="string">
                     {(field, props) => (
                         <div class="hidden">
-                            <TextInput2
+                            <TextInput
                                 {...props}
                                 error={field.error}
                                 label={_`Content ID`}
