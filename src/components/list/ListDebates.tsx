@@ -1,5 +1,5 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import CardDebate from "~/components/cards/CardDebate";
+import CardDiscussion from "~/components/cards/CardDiscussion";
 
 interface ListDebates {
     debates: any[];
@@ -20,7 +20,7 @@ export default component$<ListDebates>(({
                 <ul class="grid grid-cols-1 gap-6 p-4">
                     {debates.map((debate) => (
                         <li key={`debate-${debate.id}`} class="flex">
-                            <CardDebate
+                            <CardDiscussion
                                 title={debate.title}
                                 description={debate.description}
                                 images={debate.images}
