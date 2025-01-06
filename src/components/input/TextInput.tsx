@@ -3,16 +3,17 @@ import clsx from 'clsx';
 import { InputError } from './InputError';
 import { capitalizeFirst } from '~/utils';
 
-type TextInputProps = {
+export type TextInputProps = {
     autofocus?: boolean;
     class?: string;
     error: string;
     hidden?: boolean;
     label: string;
-    maxLength: number;
+    maxLength?: number;
     name: string;
     placeholder?: string;
     required?: boolean;
+    type?: string;
     value?: string;
 };
 

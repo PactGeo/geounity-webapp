@@ -1,8 +1,9 @@
 import { component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead} from "@builder.io/qwik-city";
-import { routeLoader$, useLocation } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { LuEye, LuMessageSquare, LuSend, LuThumbsDown, LuThumbsUp } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
+import { _ } from "compiled-i18n";
 import { Avatar, Badge, Button, Input, Tabs } from "~/components/ui";
 import { useSession } from "~/routes/plugin@auth";
 import { formatDateISO } from "~/utils";
@@ -39,6 +40,7 @@ export const useGetDebateBySlug = routeLoader$(async (req) => {
     });
     return (await response.json()) as Array<{
         id: string;
+        tags: Array<any>;
         type: string;
         title: string;
         slug: string;
@@ -77,14 +79,14 @@ const PointOfViewSummary = component$(({ pov }: { pov: PointOfView }) => (
 ))
 
 const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; userCountry: string }) => {
-    const newComment = useSignal('')
+    // const newComment = useSignal('')
 
-    const handleSubmitComment = (e) => {
-        e.preventDefault()
-        // Aquí iría la lógica para enviar el comentario al backend
-        console.log(`New comment for ${pov.country}:`, newComment)
-        newComment.value = ''
-    }
+    // const handleSubmitComment = (e) => {
+    //     e.preventDefault()
+    //     // Aquí iría la lógica para enviar el comentario al backend
+    //     console.log(`New comment for ${pov.country}:`, newComment)
+    //     newComment.value = ''
+    // }
 
     return (
         <div>
@@ -128,7 +130,6 @@ const PointOfViewDetail = component$(({ pov, userCountry }: { pov: PointOfView; 
 })
 
 export default component$(() => {
-    const slug = useLocation().params.slug
     const debate = useGetDebateBySlug()
 
     const userCountry = "Argentina"
@@ -208,71 +209,71 @@ export default component$(() => {
                     <Image
                         alt="Climate Crisis Illustration"
                         class="w-full h-full object-cover"
-                        src={debate.value.images[0]}
+                        src={debate.value[0].image_url}
                         height="1087"
                         width="1932"
                     />
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6">
-                        <h1 class="text-3xl font-bold text-white">{debate.value.title}</h1>
+                        <h1 class="text-3xl font-bold text-white">{debate.value[0].title}</h1>
                     </div>
                 </div>
                 <div class="my-4 mx-2">
                     <div class="flex justify-between items-center space-x-4">
                         <div class="flex items-center space-x-4">
                             <Avatar.Root>
-                                <Avatar.Image src={session.value?.user?.image ?? ''} alt={`@${debate.value.creator_username ?? ''}`} />
+                                <Avatar.Image src={session.value?.user?.image ?? ''} alt={`@${debate.value[0].creator_username}`} />
                                 <Avatar.Fallback>SC</Avatar.Fallback>
                             </Avatar.Root>
                             <div>
-                                <p class="text-sm font-medium">Created by @{debate.value.creator_username}</p>
-                                <p class="text-xs text-muted-foreground">{formatDateISO(debate.value.created_at)}</p>
+                                <p class="text-sm font-medium">{_`Created by @${debate.value[0].creator_username}`}</p>
+                                <p class="text-xs text-muted-foreground">{formatDateISO(debate.value[0].created_at)}</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
                             <span class="flex items-center">
                                 <span class="mr-1 h-4 w-4"><LuEye /></span>
-                                {debate.value.views_count} views
+                                {_`${debate.value[0].views_count} views`}
                             </span>
                             <span class="flex items-center">
                                 <span class="mr-1 h-4 w-4"><LuThumbsUp /></span>
-                                {debate.value.likes_count} likes
+                                {_`${debate.value[0].likes_count} likes`}
                             </span>
                             <span class="flex items-center">
                                 <span class="mr-1 h-4 w-4"><LuThumbsDown /></span>
-                                {debate.value.dislikes_count} dislikes
+                                {_`${debate.value[0].dislikes_count} dislikes`}
                             </span>
                             <span class="flex items-center">
                                 <span class="mr-1 h-4 w-4"><LuMessageSquare /></span>
-                                {pointsOfView.value.reduce((acc, pov) => acc + pov.comments.length, 0)} comments
+                                {_`${pointsOfView.value.reduce((acc, pov) => acc + pov.comments.length, 0)} comments`}
                             </span>
                         </div>
                     </div>
                 </div>
                 <div>
                     <p class="text-muted-foreground mb-4">
-                        {debate.value.description}
+                        {debate.value[0].description}
                     </p>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        {debate.value.tags.map((tag) => (
+                        {debate.value[0].tags.map((tag) => (
                             <Badge look="secondary">{tag}</Badge>
                         ))}
                     </div>
                 </div>
                 <div class="bg-muted px-2">
                     <div class="flex justify-between items-center w-full">
-                        <p class="text-sm font-medium">Status: {debate.value.status}</p>
+                        <p class="text-sm font-medium">{_`Status: ${debate.value[0].status}`}</p>
                     </div>
                 </div>
             </div>
 
-            <h2 class="text-2xl font-bold mb-4">Points of View</h2>
+            <h2 class="text-2xl font-bold mb-4">{_`Points of View`}</h2>
             <div class="mb-4">
                 <div class="relative">
                     <Input
                         type="text"
                         placeholder="Search countries..."
                         value={searchTerm.value}
-                        onInput$={(e) => searchTerm.value = e?.target?.value }
+                        onInput$={(e) => searchTerm.value = (e.target as HTMLInputElement).value }
                         class="pl-10"
                     />
                     <Input class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -280,8 +281,8 @@ export default component$(() => {
             </div>
             <Tabs.Root class="w-full">
                 <Tabs.List class="grid w-full grid-cols-2">
-                    <Tabs.Tab value="summary">Summary</Tabs.Tab>
-                    <Tabs.Tab value="details">Details</Tabs.Tab>
+                    <Tabs.Tab value="summary">{_`Summary`}</Tabs.Tab>
+                    <Tabs.Tab value="details">{_`Details`}</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -309,12 +310,13 @@ export default component$(() => {
 
 export const head: DocumentHead = ({ resolveValue, params }) => {
     const debate = resolveValue(useGetDebateBySlug);
+    console.log('debate', debate)
     return {
-        title: debate.title,
+        title: 'TITULO DEBATE',
         meta: [
             {
                 name: 'description',
-                content: debate.description,
+                content: 'DESCRIPTION',
             },
             {
                 name: 'slug',

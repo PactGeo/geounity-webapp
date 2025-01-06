@@ -1,6 +1,6 @@
 import { $, component$, useStylesScoped$ } from "@builder.io/qwik";
 import { LuArrowUpCircle, LuArrowDownCircle } from '@qwikest/icons/lucide';
-import styles from "./card-debate.css?inline";
+import styles from "./card-discussion.css?inline";
 import { formatDateISO } from "~/utils";
 import { Button } from "~/components/ui";
 import { useVoteOpinion } from "~/shared/loaders";

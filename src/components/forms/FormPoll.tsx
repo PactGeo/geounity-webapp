@@ -281,7 +281,7 @@ export default component$<FormPollProps>(({ tags }) => {
                     <p class="mt-2 text-sm text-gray-500">
                         {isAnonymous.value
                             ? _`Your identity will be hidden as the creator of the poll.`
-                            : _`Your username "${user.username}" will be displayed as the creator of the poll.`}
+                            : _`Your username ${user.username} will be displayed as the creator of the poll.`}
                     </p>
                     <Field name="is_anonymous" type="boolean">
                         {(field, props) => (
