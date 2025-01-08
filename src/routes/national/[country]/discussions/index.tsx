@@ -10,6 +10,7 @@ import EmptyDebates from "~/components/empty-state/EmptyDebates";
 import ListDebates from "~/components/list/ListDebates";
 import Modal from "~/components/modal/modal";
 import { UserContext } from "~/contexts/UserContext";
+import { CommunityType } from "~/constants";
 
 export { useGetTags, useGetDiscussions } from '~/shared/loaders';
 
@@ -45,7 +46,7 @@ export default component$(() => {
                 </div>
             </div>
             {debates.value.length === 0 && <EmptyDebates onClickAction={onClickAction} />}
-            <ListDebates debates={debates.value} type="GLOBAL" />
+            <ListDebates debates={debates.value} type={CommunityType.GLOBAL} />
             {user.isAuthenticated ? (
                 <Modal
                     description={_`Share the most important challenge facing your community.`}

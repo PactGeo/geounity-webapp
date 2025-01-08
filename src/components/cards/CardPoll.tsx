@@ -12,6 +12,7 @@ import Modal from "~/components/modal/modal";
 import { useRemovePollAction } from "~/shared/actions";
 import FormReport from "~/components/forms/FormReport";
 import FormShare from "../forms/FormShare";
+import { CommunityType } from "~/constants";
 // import FormShare from "~/components/forms/FormShare";
 
 interface CardPollProps {
@@ -205,7 +206,7 @@ export default component$<CardPollProps>(({
             <h2 class="text-3xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
                 <span class="badge text-xl">
-                    {poll.scope === "GLOBAL" && <span>🌎</span>}
+                    {poll.scope === CommunityType.GLOBAL && <span>🌎</span>}
                 </span>
             </h2>
 

@@ -11,6 +11,7 @@ import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 import ListTags from "~/components/list/ListTags";
 import { UserContext } from "~/contexts/UserContext";
+import { CommunityType } from "~/constants";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from "~/shared/actions";
@@ -120,19 +121,19 @@ export default component$(() => {
                         <Tabs.Tab>{_`My polls`}</Tabs.Tab>
                     </Tabs.List>
                     <Tabs.Panel>
-                        <ListPolls polls={polls.value} type="GLOBAL" />
+                        <ListPolls polls={polls.value} type={CommunityType.GLOBAL} />
                     </Tabs.Panel>
                     <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
+                        <ListPolls polls={filteredPolls.value} type={CommunityType.GLOBAL} />
                     </Tabs.Panel>
                     <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
+                        <ListPolls polls={filteredPolls.value} type={CommunityType.GLOBAL} />
                     </Tabs.Panel>
                     <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
+                        <ListPolls polls={filteredPolls.value} type={CommunityType.GLOBAL} />
                     </Tabs.Panel>
                     <Tabs.Panel>
-                        <ListPolls polls={filteredPolls.value} type="GLOBAL" />
+                        <ListPolls polls={filteredPolls.value} type={CommunityType.GLOBAL} />
                     </Tabs.Panel>
                 </Tabs.Root>
             )}

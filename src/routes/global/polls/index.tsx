@@ -12,6 +12,7 @@ import { _ } from "compiled-i18n";
 import ListTags from "~/components/list/ListTags";
 import { UserContext } from "~/contexts/UserContext";
 import SocialLoginButtons from "~/components/SocialLoginButtons";
+import { CommunityType } from "~/constants";
 
 export {
     useGetTags,
@@ -119,7 +120,7 @@ export default component$(() => {
                     : <EmptyPolls onClickAction={onClickAction} />
             )}
             {polls.value.length > 0 && (
-                <ListPolls polls={polls.value} type="GLOBAL" />
+                <ListPolls polls={polls.value} type={CommunityType.GLOBAL} />
             )}
             {user.isAuthenticated ? (
                 <Modal

@@ -10,6 +10,7 @@ import ListPolls from "~/components/list/ListPolls";
 import { useGetPolls, useGetTags } from '~/shared/loaders';
 import { _ } from "compiled-i18n";
 import { UserContext } from "~/contexts/UserContext";
+import { CommunityType } from "~/constants";
 
 export { useGetTags, useGetPolls, usePostPoll, useVotePoll, useReactToPoll, useFormPollLoader } from '~/shared/loaders';
 export { useFormPollAction } from '~/shared/actions';
@@ -48,7 +49,7 @@ export default component$(() => {
                 </div>
             </div>
             {polls.value.length === 0 && <EmptyPolls onClickAction={onClickAction} />}
-            <ListPolls polls={polls.value} type="GLOBAL" />
+            <ListPolls polls={polls.value} type={CommunityType.GLOBAL} />
             {user.isAuthenticated ? (
                 <Modal
                     description={_`Share the most important challenge facing your community.`}

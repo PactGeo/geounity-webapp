@@ -330,7 +330,7 @@ export const useFormPollLoader = routeLoader$<InitialValues<PollForm>>(({ pathna
     const segments = pathname.split('/').filter(Boolean);
     const communityType = segments[0];
     return {
-        community_ids: communityType.toUpperCase() === "GLOBAL" ? ['1'] : [],
+        community_ids: communityType.toUpperCase() === CommunityType.GLOBAL ? ['1'] : [],
         description: '',
         endDate: '',
         is_anonymous: false,

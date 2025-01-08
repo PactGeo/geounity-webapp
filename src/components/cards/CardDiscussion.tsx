@@ -3,6 +3,7 @@ import { LuCalendar, LuMessageSquare, LuUser, LuTag } from '@qwikest/icons/lucid
 import styles from "./card-discussion.css?inline";
 import { useNavigate } from "@builder.io/qwik-city";
 import { timeAgo } from "~/utils";
+import { CommunityType } from "~/constants";
 
 interface CardDiscussionProps {
     title: string;
@@ -40,7 +41,7 @@ export default component$<CardDiscussionProps>(({
             {/* Title and type badge */}
             <h2 class="text-3xl font-semibold text-gray-800 flex items-center justify-between">
                 {title}
-                {scope === "GLOBAL" && <span>🌎</span>}
+                {scope === CommunityType.GLOBAL && <span>🌎</span>}
             </h2>
 
             {/* Description */}
